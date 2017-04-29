@@ -10,8 +10,6 @@
 
 using namespace std;
 
-#define INV_MASK 0x1
-
 class CirGate;
 class CirGateV;
 
@@ -38,17 +36,20 @@ typedef vector<CirGate*> GateList;
 class CirGateV
 {
 public:
-	explicit CirGateV(CirGate* g = 0, bool inv = false): _gateV((size_t)g) {
+	explicit CirGateV(CirGate* g = 0, bool inv = false): _gateV(reinterpret_cast<size_t>(g)) {
 		if( inv ) setInv();
 	}
 	~CirGateV() {}
 	
-	CirGate* getGate() { return (CirGate*)(_gateV & ~(size_t)INV_MASK); }
-	bool isInv() const { return _gateV & (size_t)INV_MASK; }
-	void setInv() { _gateV |= (size_t)INV_MASK; }
-	void flipInv() { _gateV ^= (size_t)INV_MASK; }
+	CirGate* getGate() { return (CirGate*)(_gateV & PTR_MASK); }
+	bool isInv() const { return _gateV & INV_MASK; }
+	void setInv() { _gateV |= INV_MASK; }
+	void flipInv() { _gateV ^= INV_MASK; }
 
 private:
+        static const size_t INV_MASK = 0x1;
+        static const size_t EDGE_BIT = 2;
+        static const size_t PTR_MASK = (~(size_t(0)) >> EDGE_BIT) << EDGE_BIT;
 	size_t _gateV;
 };
 
