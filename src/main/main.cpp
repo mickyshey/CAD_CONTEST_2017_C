@@ -18,6 +18,6 @@ int main(int argc, char** argv) {
 	cout << "=====" << endl;
 	//dup -> reportNetList();
         g -> reportNetList();
-	
+        cirMgr.addWeight(argv[3]);	
 }
 

@@ -14,12 +14,12 @@ CirMgr::checkPo()
 {
     SatSolver solver;
     
-    solver.initialize();
+    solver.init();
     genProofModel(solver);
 }
 
 void
-CirMgr::genProofModel(Solver& solver)
+CirMgr::genProofModel(SatSolver& solver)
 {
     varI1F.clear();
     varI1G.clear();

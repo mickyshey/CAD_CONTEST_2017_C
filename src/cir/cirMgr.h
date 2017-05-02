@@ -27,13 +27,14 @@ public:
 //	in cirParse.cpp
 	bool readVerilog(const string& filename, bool isF);
 	bool removeComment(const string& inFileName, const string& outFileName) const;
+        bool addWeight(const string& fileName);
 
 //	in cirDup.cpp
 	CirNet* dupNet(CirNet* n) const;
 
 //      in cirProof.cpp
         void checkPo();
-        void genProofModel(Solver& solver);
+        void genProofModel(SatSolver& solver);
 
 //      in cirMgr.cpp
         CirNet* miterCkt(CirNet* f, CirNet* g) { return _out;} // FIXME
