@@ -13,10 +13,11 @@ int main(int argc, char** argv) {
 	CirNet* g = cirMgr.getG();
 	f -> reportNetList();
 	f -> buildTopoList();
-	f -> reportTopoList();
+	//f -> reportTopoList();
 	CirNet* dup = cirMgr.dupNet(f);
 	cout << "=====" << endl;
-	dup -> reportNetList();
-	
+	//dup -> reportNetList();
+        g -> reportNetList();
+        cirMgr.addWeight(argv[3]);	
 }
 

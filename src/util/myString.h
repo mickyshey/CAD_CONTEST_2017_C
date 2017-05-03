@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <string>
+#include <ctype.h>
 
 std::vector<std::string> mySplit(const std::string& str) {
   std::vector<std::string> ret;

@@ -226,3 +226,28 @@ bool CirNet::parse(const std::string& filename) {
   ifs.close();
   return true;
 }
+
+bool
+CirMgr::addWeight(const string& fileName)
+{
+    std::ifstream ifs(fileName.c_str());
+    std::string str;
+    std::vector<std::string> tokens;
+    bool validWeight = false;
+
+    if(ifs.fail()) {
+        cerr << "Cannot open file \"" << fileName <<  "\"!!" << endl;
+        return false;
+    }
+    while(!ifs.eof()) {
+        str = readUntil(ifs, '\n');
+        tokens = split(str, " \r\n");
+        if(tokens.size() < 2) break;
+        CirGate* gate = _F->getGateByName(tokens[0]);
+        // gate->report();
+        int num;
+        validWeight = str2Int(tokens[1], num);
+        if(validWeight) gate->setWeight(num);
+    }
+    return validWeight;
+}

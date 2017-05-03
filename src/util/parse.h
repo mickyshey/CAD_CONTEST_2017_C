@@ -23,6 +23,13 @@ std::string readUntil(std::ifstream& ifs, char end) {
   return str;
 }
 
+std::string getLineSafe(std::ifstream& ifs) {
+  std::string str;
+
+
+  return str;
+}
+
 std::vector<std::string> split(const std::string& str, const std::string& sep) {
   unsigned n = str.size();
   std::vector<std::string> vec;
@@ -49,6 +56,24 @@ std::string myToString(unsigned n) {
     n /= 10;
   }
   return ret;
+}
+
+bool str2Int(const std::string& str, int& num) {
+  num = 0;
+  size_t i = 0;
+  int sign = 1;
+  if(str[0] == '-') { sign = -1; i = 1; }
+  bool valid = false;
+  for(; i < str.size(); ++i) {
+    if(isdigit(str[i])) {
+      num *= 10;
+      num += int(str[i] - '0');
+      valid = true;
+    }
+    else return false;
+  }
+  num *= sign;
+  return valid;
 }
 
 #endif  // UTIL_PARSE_H_

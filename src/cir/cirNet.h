@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <map>
 
 #include "cir/cirGate.h"
 
@@ -21,9 +22,14 @@ public:
 	~CirNet();
 
 //	net info
-	void setName(const string& n ) 			{ _name = n; }
+	void setName(const string& n ) 			        { _name = n; }
 	const string& getName() 				{ return _name; }
-	CirGate* getGateByName(const string& n) { return _name2GateMap[n]; }
+	CirGate* getGateByName(const string& n)                 { return _name2GateMap[n]; }
+        unsigned getPiNum()                                     { return _piList.size(); }
+        unsigned getPoNum()                                     { return _poList.size(); }
+        unsigned getGateNum()                                   { return _gateList.size(); }
+        CirGate* getGate(unsigned id)                           { return _gateList[id]; }
+        CirGate* getConstGate(bool inv)                         { if(inv) return _const0; else return _const1; }
 
 //	in cirNet.cpp
 	void init();
@@ -31,6 +37,7 @@ public:
 	void createConst(bool is0);
 	const GateList& buildTopoList();
 	void buildTopoListRec(CirGate* g);
+        void sweep();
 
 //	in cirParse.cpp
 	bool parse(const string& filename);
