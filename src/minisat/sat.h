@@ -58,7 +58,9 @@ class SatSolver {
   void addUnitCNF(Var var, bool inv);
   void addEqCNF(Var var0, Var var1, bool inv);
   void addAndCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
+  void addOrCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
   void addXorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
+  void addXnorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
 
   // functions for solving
   bool solve() { return solver_->solve(); }

@@ -164,65 +164,104 @@ bool CirNet::parse(const std::string& filename) {
 	} else if(tokens[0] == "and") {
       // and (<name0>, <name1>, <name2>, <name3>, ...) 
       assert(n >= 4);				
-	  CirGate* andGate = _name2GateMap[tokens[1]];
-	  andGate -> setFaninSize(n - 2);
+	  /*andGate -> setFaninSize(n - 2);
 	  for( unsigned i = 2; i < n; ++i ) {
       	CirGate* in = _name2GateMap[tokens[i]];
 	  	andGate -> setFanin(CirGateV(in, false), i - 2);
 		in -> pushBackFanout(CirGateV(andGate, false));
-	  }
+	  }*/
+	  connect(tokens, Gate_And);
 	} else if(tokens[0] == "or") {
       // or (<name0>, <name1>, <name2>, <name3>, ...) 
       assert(n >= 4);			
-	  CirGate* orGate = _name2GateMap[tokens[1]];
-	  orGate -> setFaninSize(n - 2);
+	  /*orGate -> setFaninSize(n - 2);
 	  for( unsigned i = 2; i < n; ++i ) {
       	CirGate* in = _name2GateMap[tokens[i]];
 	  	orGate -> setFanin(CirGateV(in, false), i - 2);
 		in -> pushBackFanout(CirGateV(orGate, false));
-	  }
+	  }*/
+	  connect(tokens, Gate_Or);
 	} else if(tokens[0] == "nand") {
       // nand (<name0>, <name1>, <name2>, <name3>, ...) 
       assert(n >= 4);		
-	  CirGate* nandGate = _name2GateMap[tokens[1]];
+	  /*CirGate* nandGate = _name2GateMap[tokens[1]];
 	  nandGate -> setFaninSize(n - 2);
 	  for( unsigned i = 2; i < n; ++i ) {
       	CirGate* in = _name2GateMap[tokens[i]];
 	  	nandGate -> setFanin(CirGateV(in, false), i - 2);
 		in -> pushBackFanout(CirGateV(nandGate, false));
-	  }
+	  }*/
+	  connect(tokens, Gate_Nand);
 	} else if(tokens[0] == "nor") {
       // nor (<name0>, <name1>, <name2>, <name3>, ...) 
       assert(n >= 4);			
-	  CirGate* norGate = _name2GateMap[tokens[1]];
+	  /*CirGate* norGate = _name2GateMap[tokens[1]];
 	  norGate -> setFaninSize(n - 2);
 	  for( unsigned i = 2; i < n; ++i ) {
       	CirGate* in = _name2GateMap[tokens[i]];
 	  	norGate -> setFanin(CirGateV(in, false), i - 2);
 		in -> pushBackFanout(CirGateV(norGate, false));
-	  }
+	  }*/
+	  connect(tokens, Gate_Nor);
 	} else if(tokens[0] == "xor") {
       // xor (<name0>, <name1>, <name2>, <name3>, ...) 
       assert(n >= 4);		
-	  CirGate* xorGate = _name2GateMap[tokens[1]];
+	  /*CirGate* xorGate = _name2GateMap[tokens[1]];
 	  xorGate -> setFaninSize(n - 2);
 	  for( unsigned i = 2; i < n; ++i ) {
       	CirGate* in = _name2GateMap[tokens[i]];
 	  	xorGate -> setFanin(CirGateV(in, false), i - 2);
 		in -> pushBackFanout(CirGateV(xorGate, false));
-	  }
+	  }*/
+	  connect(tokens, Gate_Xor);
 	} else if(tokens[0] == "xnor") {
       // xnor (<name0>, <name1>, <name2>, <name3>, ...) 
       assert(n >= 4);	
-	  CirGate* xnorGate = _name2GateMap[tokens[1]];
+	  /*CirGate* xnorGate = _name2GateMap[tokens[1]];
 	  xnorGate -> setFaninSize(n - 2);
 	  for( unsigned i = 2; i < n; ++i ) {
       	CirGate* in = _name2GateMap[tokens[i]];
 	  	xnorGate -> setFanin(CirGateV(in, false), i - 2);
 		in -> pushBackFanout(CirGateV(xnorGate, false));
-	  }
+	  }*/
+	  connect(tokens, Gate_Xnor);
 	}
   }
   ifs.close();
   return true;
+}
+
+void
+CirNet::connect(const vector<string>& tokens, const GateType& t)
+{
+	  CirGate* g = _name2GateMap[tokens[1]];
+	  g -> setFaninSize(2);
+	  CirGate* in = _name2GateMap[tokens[2]];
+	  g -> setFanin(CirGateV(in, false), 0);
+	  in -> pushBackFanout(CirGateV(g, false));
+	  in = createGateRec(tokens, t, 3);
+	  g -> setFanin(CirGateV(in, false), 1);
+	  in -> pushBackFanout(CirGateV(g, false));
+}
+
+CirGate*
+CirNet::createGateRec(const vector<string>& tokens, const GateType& t, unsigned i)
+{
+	assert(tokens.size() >= 4);
+	if( tokens.size() == 4 ) return _name2GateMap[tokens[3]];
+	CirGate* g = createGate(t, tokens[1] + "_" + to_string(i - 2));
+	CirGate* in = _name2GateMap[tokens[i]];
+	g -> setFaninSize(2);
+	g -> setFanin(CirGateV(in, false), 0);
+	in -> pushBackFanout(CirGateV(g, false));
+	if( i == tokens.size() - 2 ) {
+		in = _name2GateMap[tokens[i + 1]];
+		g -> setFanin(CirGateV(in, false), 1);
+		in -> pushBackFanout(CirGateV(g, false));
+		return g;
+	}
+	CirGate* tmp = createGateRec(tokens, t, i + 1);
+	g -> setFanin(CirGateV(tmp, false), 1);
+	tmp -> pushBackFanout(CirGateV(g, false));
+	return g;
 }

@@ -19,7 +19,7 @@ CirConstGate	cir/cirGate.h	/^CirGateType(CirConstGate);$/;"	v
 CirErrorGate	cir/cirGate.h	/^CirGateType(CirErrorGate);$/;"	v
 CirGate	cir/cirGate.h	/^	CirGate(const string& name = "", unsigned id = 0): $/;"	f	class:CirGate
 CirGate	cir/cirGate.h	/^class CirGate$/;"	c
-CirGateType	cir/cirGate.h	100;"	d
+CirGateType	cir/cirGate.h	101;"	d
 CirGateV	cir/cirGate.h	/^	explicit CirGateV(CirGate* g = 0, bool inv = false): _gateV((size_t)g) {$/;"	f	class:CirGateV
 CirGateV	cir/cirGate.h	/^class CirGateV$/;"	c
 CirInvGate	cir/cirGate.h	/^CirGateType(CirInvGate);$/;"	v
@@ -182,8 +182,10 @@ _const0	cir/cirNet.h	/^	CirGate*							_const0;$/;"	m	class:CirNet
 _const1	cir/cirNet.h	/^	CirGate*							_const1;$/;"	m	class:CirNet
 _currentMem	util/myUsage.h	/^   double     _currentMem;$/;"	m	class:MyUsage
 _currentTick	util/myUsage.h	/^   double     _currentTick;$/;"	m	class:MyUsage
+_dupF	cir/cirMgr.h	/^	CirNet*								_dupF;$/;"	m	class:CirMgr
+_dupG	cir/cirMgr.h	/^	CirNet*								_dupG;$/;"	m	class:CirMgr
 _errorList	cir/cirNet.h	/^	GateList							_errorList;$/;"	m	class:CirNet
-_gateList	cir/cirNet.h	/^	GateList							_gateList;$/;"	m	class:CirNet
+_gateList	cir/cirNet.h	/^	GateList							_gateList;			$/;"	m	class:CirNet
 _gateV	cir/cirGate.h	/^	size_t _gateV;$/;"	m	class:CirGateV
 _globalRef	cir/cirGate.cpp	/^unsigned CirGate::_globalRef = 0;$/;"	m	class:CirGate	file:
 _globalRef	cir/cirGate.h	/^	static unsigned 		_globalRef;$/;"	m	class:CirGate
@@ -195,7 +197,7 @@ _insert	minisat/Map.h	/^    void   _insert (const K& k, const D& d) { $/;"	f	cla
 _name	cir/cirGate.h	/^	string					_name;$/;"	m	class:CirGate
 _name	cir/cirMgr.h	/^	string 								_name;$/;"	m	class:CirMgr
 _name	cir/cirNet.h	/^	string								_name;$/;"	m	class:CirNet
-_name2GateMap	cir/cirNet.h	/^	unordered_map<string, CirGate*>		_name2GateMap;$/;"	m	class:CirNet
+_name2GateMap	cir/cirNet.h	/^	unordered_map<string, CirGate*>		_name2GateMap;	$/;"	m	class:CirNet
 _out	cir/cirGate.h	/^	GateVList				_out;	$/;"	m	class:CirGate
 _patch	cir/cirMgr.h	/^	CirNet*								_patch;$/;"	m	class:CirMgr
 _periodUsedTime	util/myUsage.h	/^   double     _periodUsedTime;$/;"	m	class:MyUsage
@@ -313,6 +315,7 @@ copy	minisat/Alg.h	/^static inline void copy(const vec<T>& from, vec<T>& to, boo
 copyTo	minisat/IntMap.h	/^        void     copyTo (IntMap& to) const     { map.copyTo(to.map); to.index = index; }$/;"	f	class:Minisat::IntMap
 copyTo	minisat/Vec.h	/^    void copyTo(vec<T>& copy) const { copy.clear(); copy.growTo(sz); for (Size i = 0; i < sz; i++) copy[i] = data[i]; }$/;"	f	class:Minisat::vec
 cpuTime	minisat/System.h	/^static inline double Minisat::cpuTime(void) { return (double)clock() \/ CLOCKS_PER_SEC; }$/;"	f	class:Minisat
+createConst	cir/cirNet.cpp	/^CirNet::createConst(bool is0)$/;"	f	class:CirNet
 createGate	cir/cirNet.cpp	/^CirNet::createGate(const GateType& t, const string& name, unsigned id)$/;"	f	class:CirNet
 cref	minisat/Solver.h	/^        CRef cref;$/;"	m	struct:Minisat::Solver::Watcher
 crefs	minisat/SolverTypes.h	/^    const CRef*            crefs;$/;"	m	class:Minisat::ClauseIterator
@@ -332,6 +335,7 @@ dirties	minisat/SolverTypes.h	/^    vec<K>                   dirties;$/;"	m	clas
 dirty	minisat/SolverTypes.h	/^    IntMap<K, char, MkIndex> dirty;$/;"	m	class:Minisat::OccLists
 drand	minisat/Rnd.h	/^static inline double drand(double& seed)$/;"	f	namespace:Minisat
 drand	minisat/Solver.h	/^    static inline double drand(double& seed) {$/;"	f	class:Minisat::Solver
+dupNet	cir/cirDup.cpp	/^CirMgr::dupNet(CirNet* n) const$/;"	f	class:CirMgr
 eagerMatch	minisat/ParseUtils.h	/^static bool eagerMatch(B& in, const char* str) {$/;"	f	namespace:Minisat
 elems	minisat/Map.h	/^    int  elems() const { return size; }$/;"	f	class:Minisat::Map
 empty	minisat/Heap.h	/^    bool empty     ()          const { return heap.size() == 0; }$/;"	f	class:Minisat::Heap
@@ -353,18 +357,20 @@ free	minisat/SolverTypes.h	/^    void free(CRef cid)$/;"	f	class:Minisat::Clause
 free_vars	minisat/Solver.h	/^    vec<Var>            free_vars;$/;"	m	class:Minisat::Solver
 garbageCollect	minisat/Solver.cpp	/^void Solver::garbageCollect()$/;"	f	class:Solver
 garbage_frac	minisat/Solver.h	/^    double    garbage_frac;       \/\/ The fraction of wasted memory allowed before a garbage collection is triggered.$/;"	m	class:Minisat::Solver
-getF	cir/cirMgr.h	/^	CirNet* getF() { return _F; }$/;"	f	class:CirMgr
+getF	cir/cirMgr.h	/^	CirNet* getF() 					{ return _F; }$/;"	f	class:CirMgr
 getFanin	cir/cirGate.h	/^	CirGate* getFanin(unsigned idx) 				{ return _in[idx].getGate(); }$/;"	f	class:CirGate
 getFaninSize	cir/cirGate.h	/^	unsigned getFaninSize() 						{ return _in.size(); }$/;"	f	class:CirGate
 getFanout	cir/cirGate.h	/^	CirGate* getFanout(unsigned idx) 				{ return _out[idx].getGate(); }$/;"	f	class:CirGate
 getFanoutSize	cir/cirGate.h	/^	unsigned getFanoutSize() 						{ return _out.size(); }$/;"	f	class:CirGate
-getG	cir/cirMgr.h	/^	CirNet* getG() { return _G; }$/;"	f	class:CirMgr
+getG	cir/cirMgr.h	/^	CirNet* getG() 					{ return _G; }$/;"	f	class:CirMgr
 getGate	cir/cirGate.h	/^	CirGate* getGate() { return (CirGate*)(_gateV & ~(size_t)INV_MASK); }$/;"	f	class:CirGateV
+getGateByName	cir/cirNet.h	/^	CirGate* getGateByName(const string& n) { return _name2GateMap[n]; }$/;"	f	class:CirNet
 getHelpPrefixString	minisat/Options.h	/^    static const char*&  getHelpPrefixString() { static const char* help_prefix_str = ""; return help_prefix_str; }$/;"	f	class:Minisat::Option
 getId	cir/cirGate.h	/^	unsigned getId() 				{ return _id; }$/;"	f	class:CirGate
 getName	cir/cirGate.h	/^	const string& getName() 		{ return _name; }$/;"	f	class:CirGate
+getName	cir/cirNet.h	/^	const string& getName() 				{ return _name; }$/;"	f	class:CirNet
 getOptionList	minisat/Options.h	/^    static vec<Option*>& getOptionList () { static vec<Option*> options; return options; }$/;"	f	class:Minisat::Option
-getPath	cir/cirMgr.h	/^	CirNet* getPath() { return _patch; }$/;"	f	class:CirMgr
+getPath	cir/cirMgr.h	/^	CirNet* getPath() 				{ return _patch; }$/;"	f	class:CirMgr
 getType	cir/cirGate.cpp	/^CirAndGate::getType() const$/;"	f	class:CirAndGate
 getType	cir/cirGate.cpp	/^CirBufGate::getType() const$/;"	f	class:CirBufGate
 getType	cir/cirGate.cpp	/^CirConstGate::getType() const$/;"	f	class:CirConstGate
@@ -643,6 +649,7 @@ propagation_budget	minisat/Solver.h	/^    int64_t             propagation_budget
 propagations	minisat/Solver.h	/^    uint64_t solves, starts, decisions, rnd_decisions, propagations, conflicts;$/;"	m	class:Minisat::Solver
 push	minisat/Vec.h	/^    void     push  (const T& elem)     { if (sz == cap) capacity(sz+1); new (&data[sz++]) T(elem); }$/;"	f	class:Minisat::vec
 push	minisat/Vec.h	/^    void     push  (void)              { if (sz == cap) capacity(sz+1); new (&data[sz]) T(); sz++; }$/;"	f	class:Minisat::vec
+pushBackFanin	cir/cirGate.h	/^	void pushBackFanin(CirGateV gateV) 				{ _in.push_back(gateV); }$/;"	f	class:CirGate
 pushBackFanout	cir/cirGate.h	/^	void pushBackFanout(CirGateV gateV) 			{ _out.push_back(gateV); }$/;"	f	class:CirGate
 push_	minisat/Vec.h	/^    void     push_ (const T& elem)     { assert(sz < cap); data[sz++] = elem; }$/;"	f	class:Minisat::vec
 qhead	minisat/Solver.h	/^    int                 qhead;            \/\/ Head of queue (as index into the trail -- no more explicit propagation queue in MiniSat).$/;"	m	class:Minisat::Solver
@@ -722,8 +729,8 @@ setHelpPrefixStr	minisat/Options.cpp	/^void Minisat::setHelpPrefixStr  (const ch
 setId	cir/cirGate.h	/^	void setId(unsigned i) 			{ _id = i; }$/;"	f	class:CirGate
 setInv	cir/cirGate.h	/^	void setInv() { _gateV |= (size_t)INV_MASK; }$/;"	f	class:CirGateV
 setMemUsage	util/myUsage.h	/^   void setMemUsage() { _currentMem = checkMem() - _initMem; }$/;"	f	class:MyUsage
-setName	cir/cirMgr.h	/^	void setName(const string& n ) { _name = n; }$/;"	f	class:CirMgr
-setName	cir/cirNet.h	/^	void setName(const string& n ) { _name = n; }$/;"	f	class:CirNet
+setName	cir/cirMgr.h	/^	void setName(const string& n ) 	{ _name = n; }$/;"	f	class:CirMgr
+setName	cir/cirNet.h	/^	void setName(const string& n ) 			{ _name = n; }$/;"	f	class:CirNet
 setPolarity	minisat/Solver.h	/^inline void     Solver::setPolarity   (Var v, lbool b){ user_pol[v] = b; }$/;"	f	class:Minisat::Solver
 setPropBudget	minisat/Solver.h	/^inline void     Solver::setPropBudget(int64_t x){ propagation_budget = propagations + x; }$/;"	f	class:Minisat::Solver
 setRndFreq	minisat/sat.h	/^  void setRndFreq(double freq) { solver_->random_var_freq = freq; }$/;"	f	class:SatSolver

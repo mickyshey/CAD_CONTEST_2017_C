@@ -34,6 +34,19 @@ void SatSolver::addAndCNF(Var out, Var in0, bool inv0, Var in1, bool inv1) {
   solver_->addClause(~in0Lit, ~in1Lit, outLit);
 }
 
+void SatSolver::addOrCNF(Var out, Var in0, bool inv0, Var in1, bool inv1) {
+  Lit outLit = mkLit(out, false);
+  Lit in0Lit = mkLit(in0, inv0);
+  Lit in1Lit = mkLit(in1, inv1);
+  // out = in0 | in1
+  // clause (~in0 + out)
+  solver_->addClause(~in0Lit, outLit);
+  // clause (~in1 + out)
+  solver_->addClause(~in1Lit, outLit);
+  // clause (in0 + in1 + ~out)
+  solver_->addClause(in0Lit, in1Lit, ~outLit);
+}
+
 void SatSolver::addXorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1) {
   Lit outLit = mkLit(out, false);
   Lit in0Lit = mkLit(in0, inv0);
@@ -47,4 +60,19 @@ void SatSolver::addXorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1) {
   solver_->addClause(~in0Lit,  in1Lit,  outLit);
   // clause (~in0 + ~in1 + ~out)
   solver_->addClause(~in0Lit, ~in1Lit, ~outLit);
+}
+
+void SatSolver::addXnorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1) {
+  Lit outLit = mkLit(out, false);
+  Lit in0Lit = mkLit(in0, inv0);
+  Lit in1Lit = mkLit(in1, inv1);
+  // out = ~(in0 ^ in1)
+  // clause (in0 + in1 + out)
+  solver_->addClause( in0Lit,  in1Lit,  outLit);
+  // clause (in0 + ~in1 + ~out)
+  solver_->addClause( in0Lit, ~in1Lit, ~outLit);
+  // clause (~in0 + in1 + ~out)
+  solver_->addClause(~in0Lit,  in1Lit, ~outLit);
+  // clause (~in0 + ~in1 + out)
+  solver_->addClause(~in0Lit, ~in1Lit,  outLit);
 }

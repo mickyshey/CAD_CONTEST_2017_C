@@ -6,13 +6,14 @@
 #include <string>
 
 #include "cir/cirNet.h"
+#include "minisat/Solver.h"
 
 using namespace std;
 
 class CirMgr
 {
 public:
-	explicit CirMgr(const string& name = ""): _name(name), _F(NULL), _G(NULL), _patch(NULL) {}
+	explicit CirMgr(const string& name = ""): _name(name), _F(NULL), _G(NULL), _patch(NULL) { _s = new SatSolver; }
 	~CirMgr() {}//{ delete _F; delete _G; delete _patch; }
 
 //	info
@@ -27,13 +28,19 @@ public:
 
 //	in cirDup.cpp
 	CirNet* dupNet(CirNet* n) const;
+	CirNet* connectXor(CirNet* f, CirNet* g);
 
+//  test
+	void test();
 
 private:
 	string 								_name;
 	CirNet*								_F;
 	CirNet*								_G;
+	CirNet*								_dupF;
+	CirNet*								_dupG;
 	CirNet*								_patch;
+	SatSolver*							_s;
 };
 
 #endif

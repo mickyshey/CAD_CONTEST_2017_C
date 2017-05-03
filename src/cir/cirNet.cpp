@@ -128,7 +128,7 @@ CirNet::createConst(bool is0)
 }
 
 const GateList&
-CirNet::buildTopoList()
+CirNet::buildTopoList() const
 {
 	CirGate::incRef();
 	_topoList.clear();
@@ -142,7 +142,7 @@ CirNet::buildTopoList()
 }
 
 void
-CirNet::buildTopoListRec(CirGate* g)
+CirNet::buildTopoListRec(CirGate* g) const
 {
 	if( g -> isRef() ) return;
 	g -> setToRef();

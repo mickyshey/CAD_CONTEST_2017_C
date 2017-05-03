@@ -6,4 +6,13 @@
 
 using namespace std;
 
-
+void
+CirMgr::test()
+{
+	//_dupF = dupNet(_F);
+	//_dupF -> reportGateAll();
+	//_F -> reportGateAll();
+	//_F -> reportNetList();
+	_s -> init();
+	_F -> addToSolver(_s);
+}
