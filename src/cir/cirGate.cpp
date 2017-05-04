@@ -28,8 +28,8 @@ CirConstGate::report() const
 void
 CirConstGate::addToSolver(SatSolver* s) const
 {
-	if( _name == "1'b0" ) s -> addUnitCNF(_var, true);
-	else s -> addUnitCNF(_var, false);
+	if( _name == "1'b0" ) s -> addUnitCNF(_var, false);
+	else s -> addUnitCNF(_var, true);
 }
 /*************************
 		CirPiGate
