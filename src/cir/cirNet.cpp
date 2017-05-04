@@ -150,3 +150,22 @@ CirNet::buildTopoListRec(CirGate* g) const
 		buildTopoListRec(g -> getFanin(i));
 	_topoList.push_back(g);
 }
+
+void
+CirNet::sweep()
+{
+    /*
+        cout << "// Sweeping..." << endl;
+        for(size_t i = 0; i < _topoList.size(); i++) {
+            CirGate* g = _topoList[i];
+            GateType type = g.getType();
+            if(type != Gate_Buf && type != Gate_Inv) {
+                for(unsigned j = 0; j < g -> getFaninSize(); j++) {
+                    bool isInv = false;
+                    CirGate* in = g -> getFanin(j);
+
+                }
+            }
+        }
+    */
+}

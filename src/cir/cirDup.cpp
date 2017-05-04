@@ -31,12 +31,12 @@ CirMgr::dupNet(CirNet* n) const
 CirNet*
 CirMgr::connectXor(CirNet* f, CirNet* g)
 {
-	assert(f -> getPoSize() == g -> getPoSize());
+	assert(f -> getPoNum() == g -> getPoNum());
 	CirNet* newNet = new CirNet;
 	newNet -> setName(f -> getName() + " ^ " + g -> getName());
 	newNet -> createConst(0);
 	newNet -> createConst(1);
-	for( unsigned i = 0; i < f -> getPoSize(); ++i ) {
+	for( unsigned i = 0; i < f -> getPoNum(); ++i ) {
 		CirGate* fPo = f -> getPo(i);
 		CirGate* gPo = g -> getPo(i);
 		CirGate* xorGate = newNet -> createGate(Gate_Xor, fPo -> getName() + " ^ " + gPo -> getName());
@@ -46,4 +46,5 @@ CirMgr::connectXor(CirNet* f, CirNet* g)
 		gPo -> pushBackFanout(CirGateV(xorGate, false));
 	}
 	// start constructing net from the Xors, should record candidate, error, pi
+	return NULL;
 }

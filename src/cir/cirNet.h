@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <map>
 
 #include "cir/cirGate.h"
 #include "minisat/sat.h"
@@ -22,11 +23,15 @@ public:
 	~CirNet();
 
 //	net info
-	void setName(const string& n ) 			{ _name = n; }
-	const string& getName() 				{ return _name; }
-	unsigned getPoSize()					{ return _poList.size(); }
-	CirGate* getPo(unsigned idx)			{ return _poList[idx]; }
-	CirGate* getGateByName(const string& n) { return _name2GateMap[n]; }
+	void setName(const string& n ) 					        { _name = n; }
+	const string& getName() 								{ return _name; }
+    unsigned getPiNum()                                     { return _piList.size(); }
+    unsigned getPoNum()                                     { return _poList.size(); }
+    unsigned getGateNum()                                   { return _gateList.size(); }
+    CirGate* getConstGate(bool inv)                         { if(inv) return _const0; else return _const1; }
+	CirGate* getPo(unsigned idx)							{ return _poList[idx]; }
+    CirGate* getGate(unsigned id)                           { return _gateList[id]; }
+	CirGate* getGateByName(const string& n) 				{ return _name2GateMap[n]; }
 
 //	in cirNet.cpp
 	void init();
@@ -35,6 +40,7 @@ public:
 	const GateList& buildTopoList() const;			// from PI to PO
 	void buildTopoListRec(CirGate* g) const;
 	//CirNet* constructNet();
+    void sweep();
 
 //	in cirParse.cpp
 	bool parse(const string& filename);
@@ -60,7 +66,7 @@ private:
 	GateList							_piList, _poList;
 	GateList							_errorList;
 	unordered_map<string, CirGate*>		_name2GateMap;	
-	mutable GateList							_topoList;
+	mutable GateList					_topoList;
 };
 
 

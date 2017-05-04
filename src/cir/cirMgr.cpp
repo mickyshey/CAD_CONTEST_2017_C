@@ -1,5 +1,7 @@
 // File name [ cirMgr.cpp ]
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <cassert>
 
 #include "cir/cirMgr.h"
@@ -16,3 +18,13 @@ CirMgr::test()
 	_s -> init();
 	_F -> addToSolver(_s);
 }
+
+CirNet* out = 0;
+/*
+CirNet*
+CirMgr::miterCkt(CirNet* f, CirNet* g)
+{
+        ofstream out("miter.v", ios::out);
+        out << "module top(";
+
+}*/

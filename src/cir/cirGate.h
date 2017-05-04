@@ -10,8 +10,6 @@
 
 using namespace std;
 
-#define INV_MASK 0x1
-
 class CirGate;
 class CirGateV;
 
@@ -38,17 +36,21 @@ typedef vector<CirGate*> GateList;
 class CirGateV
 {
 public:
-	explicit CirGateV(CirGate* g = 0, bool inv = false): _gateV((size_t)g) {
+	explicit CirGateV(CirGate* g = 0, bool inv = false): _gateV(reinterpret_cast<size_t>(g)) {
 		if( inv ) setInv();
 	}
 	~CirGateV() {}
 	
-	CirGate* getGate() const 	{ return (CirGate*)(_gateV & ~(size_t)INV_MASK); }
+	CirGate* getGate() const 	{ return (CirGate*)(_gateV & PTR_MASK); }
+	//CirGate* getGate() const 	{ return (CirGate*)(_gateV & ~(size_t)INV_MASK); }
 	bool isInv() const 			{ return _gateV & (size_t)INV_MASK; }
 	void setInv() 				{ _gateV |= (size_t)INV_MASK; }
 	void flipInv() 				{ _gateV ^= (size_t)INV_MASK; }
 
 private:
+        static const size_t INV_MASK = 0x1;
+        static const size_t EDGE_BIT = 2;
+        static const size_t PTR_MASK = (~(size_t(0)) >> EDGE_BIT) << EDGE_BIT;
 	size_t _gateV;
 };
 
@@ -57,8 +59,9 @@ class CirGate
 public:
 	CirGate(const string& name = "", unsigned id = 0): 
 		_name	(name),
-		_id		(id),
-		_ref	(0) {}
+		_id 	(id),
+        _weight (0),
+		_ref	(0)	{}
 	virtual ~CirGate() {}
 
 	virtual void addToSolver(SatSolver* s) const = 0;
@@ -69,6 +72,7 @@ public:
 	void setVar(Var v)				{ _var = v; }
 	Var getVar()					{ return _var; }
 	const string& getName() 		{ return _name; }
+    void setWeight(unsigned w)      { _weight = w; }
 	virtual const GateType getType() const = 0;
 
 //	gate io
@@ -89,9 +93,9 @@ public:
 	CirGate* getFanout(unsigned idx) const			{ return _out[idx].getGate(); }
 
 //	dfs traversal
-	static void incRef() 	{ ++_globalRef; }
-	void setToRef() 		{ _ref = _globalRef; }
-	bool isRef() 			{ return _ref == _globalRef; }
+	static void incRef() 	        { ++_globalRef; }
+	void setToRef() 				{ _ref = _globalRef; }
+	bool isRef() 					{ return _ref == _globalRef; }
 
 //	report
 	virtual void report() const = 0;
@@ -101,7 +105,8 @@ protected:
 	unsigned				_id;
 	Var						_var;
 	GateVList				_in;
-	GateVList				_out;	
+	GateVList				_out;
+    unsigned				_weight;
 	static unsigned 		_globalRef;
 	mutable unsigned		_ref;
 };
