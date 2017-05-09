@@ -17,7 +17,7 @@ CirMgr::dupNet(CirNet* n) const
 	GateList topoList = n -> buildTopoList();
 	for( unsigned i = 2; i < topoList.size(); ++i ) {			// 0 for const0, 1 for const1
 		CirGate* g = topoList[i];
-		CirGate* dupG = newNet -> createGate(g -> getType(), g -> getName(), g -> getId());		// duplicate name and id
+		CirGate* dupG = newNet -> createGate(g -> getType(), g -> getName(), g -> getId());		// duplicate name and id, also maintain every lists
 		for( unsigned j = 0; j < g -> getFaninSize(); ++j ) {
 			CirGate* in = g -> getFanin(j);	
 			CirGate* dupIn = newNet -> getGateByName(in -> getName());

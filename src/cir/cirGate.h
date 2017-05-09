@@ -60,6 +60,7 @@ public:
 	CirGate(const string& name = "", unsigned id = 0): 
 		_name	(name),
 		_id 	(id),
+		_var	(0),
         _weight (0),
 		_ref	(0)	{}
 	virtual ~CirGate() {}

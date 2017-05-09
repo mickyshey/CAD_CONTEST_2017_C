@@ -55,7 +55,7 @@ class SatSolver {
 
   // functions for adding clauses
   Var newVar() { return solver_->newVar(); }
-  void addUnitCNF(Var var, bool inv);
+  void addUnitCNF(Var var, bool val);
   void addEqCNF(Var var0, Var var1, bool inv);
   void addAndCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
   void addOrCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);

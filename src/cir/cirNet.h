@@ -23,15 +23,18 @@ public:
 	~CirNet();
 
 //	net info
-	void setName(const string& n ) 					        { _name = n; }
-	const string& getName() 								{ return _name; }
-    unsigned getPiNum()                                     { return _piList.size(); }
-    unsigned getPoNum()                                     { return _poList.size(); }
-    unsigned getGateNum()                                   { return _gateList.size(); }
-    CirGate* getConst(bool val)                         { if(val) return _const1; else return _const0; }
-	CirGate* getPo(unsigned idx)							{ return _poList[idx]; }
-    CirGate* getGate(unsigned id)                           { return _gateList[id]; }
-	CirGate* getGateByName(const string& n) 				{ return _name2GateMap[n]; }
+	void setName(const string& n )					{ _name = n; }
+	const string& getName() const					{ return _name; }
+    unsigned getPiNum() const						{ return _piList.size(); }
+    unsigned getPoNum() const						{ return _poList.size(); }
+    unsigned getGateNum() const						{ return _gateList.size(); }
+	unsigned getErrorNum() const					{ return _errorList.size(); }
+    CirGate* getConst(bool val) 					{ if(val) return _const1; else return _const0; }
+	CirGate* getPi(unsigned idx) 					{ return _piList[idx]; }
+	CirGate* getPo(unsigned idx) 					{ return _poList[idx]; }
+    CirGate* getGate(unsigned id) 					{ return _gateList[id]; }
+	CirGate* getError(unsigned idx)					{ return _errorList[idx]; }
+	CirGate* getGateByName(const string& n) 		{ return _name2GateMap[n]; }
 
 //	in cirNet.cpp
 	void init();
@@ -55,6 +58,7 @@ public:
 
 //	in cirSat.cpp
 	//void reassignId() const;
+	void createVar(SatSolver* s) const;
 	void addToSolver(SatSolver* s) const;
 
 private:

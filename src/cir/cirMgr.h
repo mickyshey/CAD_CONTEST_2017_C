@@ -37,8 +37,9 @@ public:
 //  test
 	void test();
 
-//	SAT related function
-	void addToSolver(CirNet* n) { n -> addToSolver(_s); }
+//	in cirSat.cpp
+	void createVar(CirNet* n) const { n -> createVar(_s); }
+	void addToSolver(CirNet* n) const { n -> addToSolver(_s); }
 	void tiePi(CirNet* f, CirNet* g);					// _F = _G, _dupF = _dupG
 	void addXorConstraint(CirNet* f, CirNet* g);		// _F ^ _G, _dupF ^ _dupG
 	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
