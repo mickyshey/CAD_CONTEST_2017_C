@@ -32,17 +32,20 @@ public:
 
 //	in cirDup.cpp
 	CirNet* dupNet(CirNet* n) const;
-	CirNet* connectXor(CirNet* f, CirNet* g);
+	CirNet* connectXor(CirNet* f, CirNet* g);	// we shouldn't create the whole XOR net, instead, we simply add the XOR cnf constraint to the solver
 
 //  test
 	void test();
 
+//	SAT related function
+	void addToSolver(CirNet* n) { n -> addToSolver(_s); }
+	void tiePi(CirNet* f, CirNet* g);					// _F = _G, _dupF = _dupG
+	void addXorConstraint(CirNet* f, CirNet* g);		// _F ^ _G, _dupF ^ _dupG
+	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
+
 //      in cirProof.cpp
         void checkPo();
         void genProofModel(SatSolver& solver);
-
-//      in cirMgr.cpp
-        CirNet* miterCkt(CirNet* f, CirNet* g) { return _out;} // FIXME
 
 private:
 	string 								_name;

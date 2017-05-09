@@ -119,12 +119,12 @@ CirNet::createGate(const GateType& t, const string& name, unsigned id)
 }
 
 void
-CirNet::createConst(bool is0)
+CirNet::createConst(bool val)
 {
-	if( is0 ) {
-		_const0 = createGate(Gate_Const, "1'b0", 0);
+	if( val ) {
+		_const1 = createGate(Gate_Const, "1'b1", 1);
 	}
-	else _const1 = createGate(Gate_Const, "1'b1", 1);
+	else _const0 = createGate(Gate_Const, "1'b0", 0);
 }
 
 const GateList&

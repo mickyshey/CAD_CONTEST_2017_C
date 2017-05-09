@@ -28,7 +28,7 @@ public:
     unsigned getPiNum()                                     { return _piList.size(); }
     unsigned getPoNum()                                     { return _poList.size(); }
     unsigned getGateNum()                                   { return _gateList.size(); }
-    CirGate* getConstGate(bool inv)                         { if(inv) return _const0; else return _const1; }
+    CirGate* getConst(bool val)                         { if(val) return _const1; else return _const0; }
 	CirGate* getPo(unsigned idx)							{ return _poList[idx]; }
     CirGate* getGate(unsigned id)                           { return _gateList[id]; }
 	CirGate* getGateByName(const string& n) 				{ return _name2GateMap[n]; }

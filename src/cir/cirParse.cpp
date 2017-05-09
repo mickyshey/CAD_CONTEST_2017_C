@@ -135,6 +135,7 @@ bool CirNet::parse(const std::string& filename) {
 	po -> setFaninSize(1);
 	CirGate* in0 = _name2GateMap[outputs[i]];
 	po -> setFanin(CirGateV(in0, false), 0);
+	in0 -> pushBackFanout(CirGateV(po, false));
   }
   ifs.close();
   ifs.open(filename.c_str());
