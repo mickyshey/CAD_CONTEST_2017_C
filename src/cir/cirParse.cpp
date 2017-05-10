@@ -287,7 +287,10 @@ CirMgr::addWeight(const string& fileName)
         // gate->report();
         int num;
         validWeight = str2Int(tokens[1], num);
-        if(validWeight) gate->setWeight(num);
+        if(validWeight) {
+			gate->setWeight(num);
+			_candNameList.push_back(tokens[0]);
+		}
     }
     return validWeight;
 }

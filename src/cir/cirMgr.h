@@ -38,10 +38,14 @@ public:
 //  test
 	void test();
 
+//	in cirReport.cpp
+	void reportCandList() const;
+
 //	in cirSat.cpp
 	bool solve() { return _s -> solve(); }
 	void createVar(CirNet* n) const { n -> createVar(_s); }
 	void addToSolver(CirNet* n) const { n -> addToSolver(_s); }
+	void tieGate(CirGate* g1, CirGate* g2);
 	void tiePi(CirNet* f, CirNet* g);					// _F = _G, _dupF = _dupG
 	void addXorConstraint(CirNet* f, CirNet* g);		// _F ^ _G, _dupF ^ _dupG
 	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
@@ -59,6 +63,7 @@ private:
 	CirNet*								_patch;
 	SatSolver*							_s;
         CirNet*                                                         _out;
+	vector<string>						_candNameList;
 };
 
 #endif

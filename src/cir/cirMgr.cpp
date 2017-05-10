@@ -11,6 +11,7 @@ using namespace std;
 void
 CirMgr::test()
 {
+	reportCandList();
 	_dupF = dupNet(_F);
 	_dupG = dupNet(_G);
 	createVar(_F);
@@ -18,8 +19,9 @@ CirMgr::test()
 	createVar(_dupF);
 	createVar(_dupG);
 	tiePi(_F, _G);
-	tiePi(_F, _dupF);
-	tiePi(_F, _dupG);
+	//tiePi(_F, _dupF);
+	//tiePi(_F, _dupG);
+	tiePi(_dupF, _dupG);
 	addToSolver(_F);
 	addToSolver(_G);
 	addToSolver(_dupF);
@@ -28,6 +30,8 @@ CirMgr::test()
 	addXorConstraint(_dupF, _dupG);
 	addErrorConstraint(_F, 1);
 	addErrorConstraint(_dupF, 0);
+	tieGate(_F -> getGateByName("g1"), _dupF -> getGateByName("g1"));
+	tieGate(_F -> getGateByName("g2"), _dupF -> getGateByName("g2"));
 	bool isSat = solve();
 	cout << (isSat ? "SAT" : "UNSAT") << endl;
 	//_G -> reportGateAll();

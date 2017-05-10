@@ -24,6 +24,13 @@ CirNet::addToSolver(SatSolver* s) const
 	}
 }
 
+void
+CirMgr::tieGate(CirGate* g1, CirGate* g2)
+{
+	assert(g1 -> getName() == g2 -> getName());
+	g2 -> setVar(g1 -> getVar());
+}
+
 // make the var in _piList equal
 void
 CirMgr::tiePi(CirNet* f, CirNet* g)

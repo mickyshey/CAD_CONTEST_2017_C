@@ -65,3 +65,12 @@ CirNet::reportTopoList() const
 		cout << g -> getName() << endl;
 	}
 }
+
+void
+CirMgr::reportCandList() const
+{
+	for( unsigned i = 0; i < _candNameList.size(); ++i ) {
+		cout << _candNameList[i] << " ";
+	}
+	cout << endl;
+}
