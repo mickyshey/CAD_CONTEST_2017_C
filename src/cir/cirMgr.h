@@ -16,7 +16,7 @@ typedef map<CirGate*, Var> VarMap;
 class CirMgr
 {
 public:
-	explicit CirMgr(const string& name = ""): _name(name), _F(NULL), _G(NULL), _patch(NULL) { _s = new SatSolver; }
+	explicit CirMgr(const string& name = ""): _name(name), _F(NULL), _G(NULL), _patch(NULL) { _s = new SatSolver; _s -> init(); }
 	~CirMgr() {}//{ delete _F; delete _G; delete _patch; }
 
 //	info
@@ -24,6 +24,7 @@ public:
 	CirNet* getF() 					{ return _F; }
 	CirNet* getG() 					{ return _G; }
 	CirNet* getPath() 				{ return _patch; }
+	unsigned getVarNum() const		{ return _s -> nVars(); }
 
 //	in cirParse.cpp
 	bool readVerilog(const string& filename, bool isF);
@@ -38,6 +39,7 @@ public:
 	void test();
 
 //	in cirSat.cpp
+	bool solve() { return _s -> solve(); }
 	void createVar(CirNet* n) const { n -> createVar(_s); }
 	void addToSolver(CirNet* n) const { n -> addToSolver(_s); }
 	void tiePi(CirNet* f, CirNet* g);					// _F = _G, _dupF = _dupG

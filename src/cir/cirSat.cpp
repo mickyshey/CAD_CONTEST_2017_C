@@ -46,6 +46,9 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 		Var v = _s -> newVar();
 		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
 		// should i record these vars ? for later purpose: make assumption
+		
+		// we first assert all Xors to be 1
+		_s -> addUnitCNF(v, 1);
 	}
 }
 
