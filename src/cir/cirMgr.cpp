@@ -11,6 +11,8 @@ using namespace std;
 void
 CirMgr::test()
 {
+	unsigned numClauses;
+
 	reportCandList();
 	_dupF = dupNet(_F);
 	_dupG = dupNet(_G);
@@ -18,20 +20,37 @@ CirMgr::test()
 	createVar(_G);
 	createVar(_dupF);
 	createVar(_dupG);
+
+	/********************/
+	// tie variables
+	/*******************/
 	tiePi(_F, _G);
-	//tiePi(_F, _dupF);
-	//tiePi(_F, _dupG);
-	tiePi(_dupF, _dupG);
-	addToSolver(_F);
-	addToSolver(_G);
-	addToSolver(_dupF);
-	addToSolver(_dupG);
-	addXorConstraint(_F, _G);
-	addXorConstraint(_dupF, _dupG);
-	addErrorConstraint(_F, 1);
-	addErrorConstraint(_dupF, 0);
 	tieGate(_F -> getGateByName("g1"), _dupF -> getGateByName("g1"));
 	tieGate(_F -> getGateByName("g2"), _dupF -> getGateByName("g2"));
+	tiePi(_dupF, _dupG);
+	//tiePi(_F, _dupF);
+	//tiePi(_F, _dupG);
+
+	addToSolver(_F);
+	addToSolver(_G);
+	addXorConstraint(_F, _G);
+	addErrorConstraint(_F, 1);
+	/********************/
+	// mark onset clause 
+	/*******************/
+	numClauses = getNumClauses();
+	markOnsetClause(numClauses);
+
+	addToSolver(_dupF);
+	addToSolver(_dupG);
+	addXorConstraint(_dupF, _dupG);
+	addErrorConstraint(_dupF, 0);
+	/********************/
+	// mark onset clause 
+	/*******************/
+	numClauses = getNumClauses();
+	markOffsetClause(numClauses);
+
 	bool isSat = solve();
 	cout << (isSat ? "SAT" : "UNSAT") << endl;
 	//_G -> reportGateAll();
@@ -40,7 +59,7 @@ CirMgr::test()
 	//_F -> addToSolver(_s);
 }
 
-CirNet* out = 0;
+//CirNet* out = 0;
 /*
 CirNet*
 CirMgr::miterCkt(CirNet* f, CirNet* g)

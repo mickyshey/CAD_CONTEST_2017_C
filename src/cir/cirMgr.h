@@ -22,10 +22,11 @@ public:
 
 //	info
 	void setName(const string& n ) 	{ _name = n; }
-	CirNet* getF() 					{ return _F; }
-	CirNet* getG() 					{ return _G; }
-	CirNet* getPath() 				{ return _patch; }
-	unsigned getVarNum() const		{ return _s -> nVars(); }
+	CirNet* getF() 						{ return _F; }
+	CirNet* getG() 						{ return _G; }
+	CirNet* getPath() 					{ return _patch; }
+	unsigned getNumClauses() const 	{ return _s -> getNumClauses(); }
+	unsigned getNumVars() const		{ return _s -> nVars(); }
 
 //	in cirParse.cpp
 	bool readVerilog(const string& filename, bool isF);
@@ -50,6 +51,8 @@ public:
 	void tiePi(CirNet* f, CirNet* g);					// _F = _G, _dupF = _dupG
 	void addXorConstraint(CirNet* f, CirNet* g);		// _F ^ _G, _dupF ^ _dupG
 	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
+	void markOnsetClause(const ClauseId& cid);
+	void markOffsetClause(const ClauseId& cid);
 
 //      in cirProof.cpp
         void checkPo();
@@ -65,6 +68,8 @@ private:
 	SatSolverV*							_s;
         CirNet*                                                         _out;
 	vector<string>						_candNameList;
+
+	vector<bool>						_isClauseOn;
 };
 
 #endif

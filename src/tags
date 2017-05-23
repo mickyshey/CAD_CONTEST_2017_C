@@ -4,8 +4,10 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BUF_SIZE	sat/reader.h	17;"	d
 BoolOption	minisat/Options.h	/^    BoolOption(const char* c, const char* n, const char* d, bool v) $/;"	f	class:Minisat::BoolOption
 BoolOption	minisat/Options.h	/^class BoolOption : public Option$/;"	c	namespace:Minisat
+CC_MINIMIZATION	sat/SolverV.cpp	25;"	d	file:
 CIRMGR_H	cir/cirMgr.h	3;"	d
 CIRNET_H	cir/cirNet.h	3;"	d
 CIR_GATE_H	cir/cirGate.h	4;"	d
@@ -13,22 +15,44 @@ CMap	minisat/SolverTypes.h	/^class CMap$/;"	c	namespace:Minisat
 CRef	minisat/SolverTypes.h	/^typedef RegionAllocator<uint32_t>::Ref CRef;$/;"	t	namespace:Minisat
 CRefHash	minisat/SolverTypes.h	/^    struct CRefHash {$/;"	s	class:Minisat::CMap
 CRef_Undef	minisat/SolverTypes.h	/^const CRef CRef_Undef = RegionAllocator<uint32_t>::Ref_Undef;$/;"	m	namespace:Minisat
+CirAndGate	cir/cirGate.h	/^CirGateType(CirAndGate);$/;"	v
+CirBufGate	cir/cirGate.h	/^CirGateType(CirBufGate);$/;"	v
+CirConstGate	cir/cirGate.h	/^CirGateType(CirConstGate);$/;"	v
+CirErrorGate	cir/cirGate.h	/^CirGateType(CirErrorGate);$/;"	v
 CirGate	cir/cirGate.h	/^	CirGate(const string& name = "", unsigned id = 0): $/;"	f	class:CirGate
 CirGate	cir/cirGate.h	/^class CirGate$/;"	c
+CirGateType	cir/cirGate.h	116;"	d
 CirGateV	cir/cirGate.h	/^	explicit CirGateV(CirGate* g = 0, bool inv = false): _gateV(reinterpret_cast<size_t>(g)) {$/;"	f	class:CirGateV
 CirGateV	cir/cirGate.h	/^class CirGateV$/;"	c
-CirMgr	cir/cirMgr.h	/^	explicit CirMgr(const string& name = ""): _name(name), _F(NULL), _G(NULL), _patch(NULL) { _s = new SatSolver; }$/;"	f	class:CirMgr
+CirInvGate	cir/cirGate.h	/^CirGateType(CirInvGate);$/;"	v
+CirMgr	cir/cirMgr.h	/^	explicit CirMgr(const string& name = ""): _name(name), _F(NULL), _G(NULL), _patch(NULL) { _s = new SatSolverV; }\/\/_s -> init(); }$/;"	f	class:CirMgr
 CirMgr	cir/cirMgr.h	/^class CirMgr$/;"	c
+CirNandGate	cir/cirGate.h	/^CirGateType(CirNandGate);$/;"	v
 CirNet	cir/cirNet.h	/^	explicit CirNet(const string& name = "", unsigned id = 0): $/;"	f	class:CirNet
 CirNet	cir/cirNet.h	/^class CirNet$/;"	c
+CirNorGate	cir/cirGate.h	/^CirGateType(CirNorGate);$/;"	v
+CirOrGate	cir/cirGate.h	/^CirGateType(CirOrGate);$/;"	v
+CirPiGate	cir/cirGate.h	/^CirGateType(CirPiGate);$/;"	v
+CirPoGate	cir/cirGate.h	/^CirGateType(CirPoGate);$/;"	v
+CirXnorGate	cir/cirGate.h	/^CirGateType(CirXnorGate);$/;"	v
+CirXorGate	cir/cirGate.h	/^CirGateType(CirXorGate);$/;"	v
 Clause	minisat/SolverTypes.h	/^    Clause(const Clause& from, bool use_extra){$/;"	f	class:Minisat::Clause
 Clause	minisat/SolverTypes.h	/^    Clause(const vec<Lit>& ps, bool use_extra, bool learnt) {$/;"	f	class:Minisat::Clause
 Clause	minisat/SolverTypes.h	/^class Clause {$/;"	c	namespace:Minisat
+Clause	sat/SolverTypesV.h	/^    Clause(bool learnt, const vec<Lit>& ps, ClauseId id_ = ClauseId_NULL) {$/;"	f	class:Clause
+Clause	sat/SolverTypesV.h	/^class Clause {$/;"	c
 ClauseAllocator	minisat/SolverTypes.h	/^    ClauseAllocator() : extra_clause_field(false){}$/;"	f	class:Minisat::ClauseAllocator
 ClauseAllocator	minisat/SolverTypes.h	/^    ClauseAllocator(uint32_t start_cap) : ra(start_cap), extra_clause_field(false){}$/;"	f	class:Minisat::ClauseAllocator
 ClauseAllocator	minisat/SolverTypes.h	/^class ClauseAllocator$/;"	c	namespace:Minisat
+ClauseId	sat/SolverTypesV.h	/^typedef int ClauseId;     \/\/ (might have to use uint64 one day...)$/;"	t
+ClauseId_NULL	sat/SolverTypesV.h	/^const   int ClauseId_NULL = INT_MIN;$/;"	v
 ClauseIterator	minisat/SolverTypes.h	/^    ClauseIterator(const ClauseAllocator& _ca, const CRef* _crefs) : ca(_ca), crefs(_crefs){}$/;"	f	class:Minisat::ClauseIterator
 ClauseIterator	minisat/SolverTypes.h	/^class ClauseIterator {$/;"	c	namespace:Minisat
+Clause_new	sat/SolverTypesV.h	/^inline Clause* Clause_new(bool learnt, const vec<Lit>& ps, ClauseId id = ClauseId_NULL) {$/;"	f
+Current_Pos	sat/reader.h	/^	unsigned int Current_Pos()	{ return overall_pos; }$/;"	f	class:Reader
+DEFAULTS	sat/FileV.h	40;"	d
+DEFAULTS	sat/FileV.h	48;"	d
+Datum	sat/GlobalV.h	/^    typedef T   Datum;$/;"	t	class:vec
 DeepEqual	minisat/Map.h	/^template<class K> struct DeepEqual { bool     operator()(const K* k1, const K* k2) const { return *k1 == *k2; } };$/;"	s	namespace:Minisat
 DeepHash	minisat/Map.h	/^template<class K> struct DeepHash  { uint32_t operator()(const K* k)               const { return hash(*k);  } };$/;"	s	namespace:Minisat
 DoubleOption	minisat/Options.h	/^    DoubleOption(const char* c, const char* n, const char* d, double def = double(), DoubleRange r = DoubleRange(-HUGE_VAL, false, HUGE_VAL, false))$/;"	f	class:Minisat::DoubleOption
@@ -37,6 +61,19 @@ DoubleRange	minisat/Options.h	/^    DoubleRange(double b, bool binc, double e, b
 DoubleRange	minisat/Options.h	/^struct DoubleRange {$/;"	s	namespace:Minisat
 EDGE_BIT	cir/cirGate.h	/^        static const size_t EDGE_BIT = 2;$/;"	m	class:CirGateV
 Equal	minisat/Map.h	/^template<class K> struct Equal { bool     operator()(const K& k1, const K& k2) const { return k1 == k2; } };$/;"	s	namespace:Minisat
+Exception_EOF	sat/FileV.h	/^class Exception_EOF {};$/;"	c
+File	sat/FileV.h	/^    File(cchar* name, cchar* mode) : DEFAULTS {$/;"	f	class:File
+File	sat/FileV.h	/^    File(int fd, FileMode mode, bool own_fd = true) : DEFAULTS  {$/;"	f	class:File
+File	sat/FileV.h	/^    File(void) : DEFAULTS {}$/;"	f	class:File
+File	sat/FileV.h	/^class File {$/;"	c
+FileMode	sat/FileV.h	/^enum FileMode { READ, WRITE };$/;"	g
+File_BufSize	sat/FileV.h	22;"	d
+File_h	sat/FileV.h	2;"	d
+GClause	sat/SolverTypesV.h	/^    GClause(void* d) : data(d) {}$/;"	f	class:GClause
+GClause	sat/SolverTypesV.h	/^class GClause {$/;"	c
+GClause_NULL	sat/SolverTypesV.h	143;"	d
+GClause_new	sat/SolverTypesV.h	/^inline GClause GClause_new(Clause* c) { assert(((uintp)c & 1) == 0); return GClause((void*)c); }$/;"	f
+GClause_new	sat/SolverTypesV.h	/^inline GClause GClause_new(Lit p)     { return GClause((void*)(((intp)index(p) << 1) + 1)); }$/;"	f
 GateList	cir/cirGate.h	/^typedef vector<CirGate*> GateList;$/;"	t
 GateType	cir/cirGate.h	/^enum GateType$/;"	g
 GateVList	cir/cirGate.h	/^typedef vector<CirGateV> GateVList;$/;"	t
@@ -53,10 +90,16 @@ Gate_Po	cir/cirGate.h	/^	Gate_Po,$/;"	e	enum:GateType
 Gate_UNDEF	cir/cirGate.h	/^	Gate_UNDEF$/;"	e	enum:GateType
 Gate_Xnor	cir/cirGate.h	/^	Gate_Xnor,$/;"	e	enum:GateType
 Gate_Xor	cir/cirGate.h	/^	Gate_Xor,$/;"	e	enum:GateType
+Global_h	sat/GlobalV.h	21;"	d
 Hash	minisat/Map.h	/^template<class K> struct Hash  { uint32_t operator()(const K& k)               const { return hash(k);  } };$/;"	s	namespace:Minisat
 HashTable	minisat/SolverTypes.h	/^    typedef Map<CRef, T, CRefHash> HashTable;$/;"	t	class:Minisat::CMap
 Heap	minisat/Heap.h	/^    Heap(const Comp& c, MkIndex _index = MkIndex()) : indices(_index), lt(c) {}$/;"	f	class:Minisat::Heap
 Heap	minisat/Heap.h	/^class Heap {$/;"	c	namespace:Minisat
+Heap	sat/HeapV.h	/^    Heap(C c) : comp(c) { heap.push(-1); }$/;"	f	class:Heap
+Heap	sat/HeapV.h	/^class Heap {$/;"	c
+Heap_h	sat/HeapV.h	21;"	d
+I64_fmt	sat/GlobalV.h	41;"	d
+I64_fmt	sat/GlobalV.h	47;"	d
 INV_MASK	cir/cirGate.h	/^        static const size_t INV_MASK = 0x1;$/;"	m	class:CirGateV
 Int64Option	minisat/Options.h	/^    Int64Option(const char* c, const char* n, const char* d, int64_t def = int64_t(), Int64Range r = Int64Range(INT64_MIN, INT64_MAX))$/;"	f	class:Minisat::Int64Option
 Int64Option	minisat/Options.h	/^class Int64Option : public Option$/;"	c	namespace:Minisat
@@ -70,10 +113,17 @@ IntRange	minisat/Options.h	/^    IntRange(int b, int e) : begin(b), end(e) {}$/;
 IntRange	minisat/Options.h	/^struct IntRange {$/;"	s	namespace:Minisat
 IntSet	minisat/IntMap.h	/^    class IntSet$/;"	c	namespace:Minisat
 Key	minisat/Queue.h	/^    typedef T Key;$/;"	t	class:Minisat::Queue
+Key	sat/GlobalV.h	/^    typedef int Key;$/;"	t	class:vec
 LMap	minisat/SolverTypes.h	/^template<class T> class LMap : public IntMap<Lit, T, MkIndexLit>{};$/;"	c	namespace:Minisat
 LSet	minisat/SolverTypes.h	/^class LSet : public IntSet<Lit, MkIndexLit>{};$/;"	c	namespace:Minisat
+L_LIT	sat/SolverV.h	223;"	d
+L_lit	sat/SolverV.h	224;"	d
 LessThan_default	minisat/Sort.h	/^struct LessThan_default {$/;"	s	namespace:Minisat
+LessThan_default	sat/SortV.h	/^struct LessThan_default {$/;"	s
 Lit	minisat/SolverTypes.h	/^struct Lit {$/;"	s	namespace:Minisat
+Lit	sat/SolverTypesV.h	/^    Lit() : x(2*var_Undef) {}   \/\/ (lit_Undef)$/;"	f	class:Lit
+Lit	sat/SolverTypesV.h	/^    explicit Lit(Var var, bool sgn = false) : x((var+var) + (int)sgn) {}$/;"	f	class:Lit
+Lit	sat/SolverTypesV.h	/^class Lit {$/;"	c
 MINISAT_SAT_H_	minisat/sat.h	9;"	d
 MYCLK_TCK	util/myUsage.h	21;"	d
 MYCLK_TCK	util/myUsage.h	22;"	d
@@ -124,25 +174,50 @@ OptionLt	minisat/Options.h	/^    struct OptionLt {$/;"	s	class:Minisat::Option
 OutOfMemoryException	minisat/XAlloc.h	/^class OutOfMemoryException{};$/;"	c	namespace:Minisat
 PTR_MASK	cir/cirGate.h	/^        static const size_t PTR_MASK = (~(size_t(0)) >> EDGE_BIT) << EDGE_BIT;$/;"	m	class:CirGateV
 Pair	minisat/Map.h	/^    struct Pair { K key; D data; };$/;"	s	class:Minisat::Map
+Proof	sat/ProofV.cpp	/^Proof::Proof()$/;"	f	class:Proof
+Proof	sat/ProofV.cpp	/^Proof::Proof(ProofTraverser& t)$/;"	f	class:Proof
+Proof	sat/ProofV.h	/^class Proof {$/;"	c
+ProofTraverser	sat/ProofV.h	/^struct ProofTraverser {$/;"	s
+Proof_h	sat/ProofV.h	21;"	d
 Queue	minisat/Queue.h	/^    Queue() : buf(1), first(0), end(0) {}$/;"	f	class:Minisat::Queue
 Queue	minisat/Queue.h	/^class Queue {$/;"	c	namespace:Minisat
+RDR_EOF	sat/reader.h	18;"	d
+READ	sat/FileV.h	/^enum FileMode { READ, WRITE };$/;"	e	enum:FileMode
 RLIMIT_AS	minisat/System.cpp	114;"	d	file:
 RLIMIT_AS	minisat/System.cpp	130;"	d	file:
+Reader	sat/reader.h	/^	Reader():fd(-1)				{};$/;"	f	class:Reader
+Reader	sat/reader.h	/^class Reader{$/;"	c
 Ref	minisat/Alloc.h	/^    typedef uint32_t Ref;$/;"	t	class:Minisat::RegionAllocator
 Ref_Undef	minisat/Alloc.h	/^    enum { Ref_Undef = UINT32_MAX };$/;"	e	enum:Minisat::RegionAllocator::__anon1
 RegionAllocator	minisat/Alloc.h	/^    explicit RegionAllocator(uint32_t start_cap = 1024*1024) : memory(NULL), sz(0), cap(0), wasted_(0){ capacity(start_cap); }$/;"	f	class:Minisat::RegionAllocator
 RegionAllocator	minisat/Alloc.h	/^class RegionAllocator$/;"	c	namespace:Minisat
+SAT_C	sat/sat.cpp	10;"	d	file:
+SAT_H	sat/sat.h	10;"	d
+STATIC_ASSERTION_FAILURE	sat/GlobalV.h	/^template <> struct STATIC_ASSERTION_FAILURE<true>{};$/;"	s
 SatSolver	minisat/sat.h	/^  SatSolver(): solver_(NULL) {}$/;"	f	class:SatSolver
 SatSolver	minisat/sat.h	/^class SatSolver {$/;"	c
+SatSolverV	sat/sat.cpp	/^SatSolverV::SatSolverV()$/;"	f	class:SatSolverV
+SatSolverV	sat/sat.h	/^class SatSolverV$/;"	c
+SearchParams	sat/SolverV.h	/^    SearchParams(double v = 1, double c = 1, double r = 0) : var_decay(v), clause_decay(c), random_var_freq(r) { }$/;"	f	struct:SearchParams
+SearchParams	sat/SolverV.h	/^struct SearchParams {$/;"	s
 ShrinkStackElem	minisat/Solver.h	/^        ShrinkStackElem(uint32_t _i, Lit _l) : i(_i), l(_l){}$/;"	f	struct:Minisat::Solver::ShrinkStackElem
 ShrinkStackElem	minisat/Solver.h	/^    struct ShrinkStackElem {$/;"	s	class:Minisat::Solver
 Size	minisat/Vec.h	/^    typedef _Size Size;$/;"	t	class:Minisat::vec
 Solver	minisat/Solver.cpp	/^Solver::Solver() :$/;"	f	class:Solver
 Solver	minisat/Solver.h	/^class Solver {$/;"	c	namespace:Minisat
+SolverStats	sat/SolverV.h	/^    SolverStats() : starts(0), decisions(0), propagations(0), conflicts(0)$/;"	f	struct:SolverStats
+SolverStats	sat/SolverV.h	/^struct SolverStats {$/;"	s
+SolverTypes_h	sat/SolverTypesV.h	22;"	d
+SolverV	sat/SolverV.h	/^    SolverV() : ok               (true)$/;"	f	class:SolverV
+SolverV	sat/SolverV.h	/^class SolverV {$/;"	c
+Solver_h	sat/SolverV.h	21;"	d
+Sort_h	sat/SortV.h	21;"	d
 StreamBuffer	minisat/ParseUtils.h	/^    explicit StreamBuffer(gzFile i) : in(i), pos(0), size(0){$/;"	f	class:Minisat::StreamBuffer
 StreamBuffer	minisat/ParseUtils.h	/^class StreamBuffer {$/;"	c	namespace:Minisat
 StringOption	minisat/Options.h	/^    StringOption(const char* c, const char* n, const char* d, const char* def = NULL) $/;"	f	class:Minisat::StringOption
 StringOption	minisat/Options.h	/^class StringOption : public Option$/;"	c	namespace:Minisat
+TEMPLATE_FAIL	sat/GlobalV.h	58;"	d
+TempFiles	sat/ProofV.cpp	/^class TempFiles {$/;"	c	file:
 TrailIterator	minisat/SolverTypes.h	/^    TrailIterator(const Lit* _lits) : lits(_lits){}$/;"	f	class:Minisat::TrailIterator
 TrailIterator	minisat/SolverTypes.h	/^class TrailIterator {$/;"	c	namespace:Minisat
 UTIL_BOOL3V_H_	util/bool3v.h	9;"	d
@@ -157,19 +232,33 @@ Unit_Size	minisat/Alloc.h	/^    enum { Unit_Size = sizeof(T) };$/;"	e	enum:Minis
 Unit_Size	minisat/SolverTypes.h	/^    enum { Unit_Size = RegionAllocator<uint32_t>::Unit_Size };$/;"	e	enum:Minisat::ClauseAllocator::__anon6
 VMap	minisat/SolverTypes.h	/^template<class T> class VMap : public IntMap<Var, T>{};$/;"	c	namespace:Minisat
 Var	minisat/SolverTypes.h	/^typedef int Var;$/;"	t	namespace:Minisat
+Var	sat/SolverTypesV.h	/^typedef int Var;$/;"	t
 VarData	minisat/Solver.h	/^    struct VarData { CRef reason; int level; };$/;"	s	class:Minisat::Solver
 VarMap	cir/cirMgr.h	/^typedef map<CirGate*, Var> VarMap;$/;"	t
+VarOrder	sat/VarOrderV.h	/^    VarOrder(const vec<char>& ass, const vec<double>& act) :$/;"	f	class:VarOrder
+VarOrder	sat/VarOrderV.h	/^class VarOrder {$/;"	c
 VarOrderLt	minisat/Solver.h	/^        VarOrderLt(const IntMap<Var, double>&  act) : activity(act) { }$/;"	f	struct:Minisat::Solver::VarOrderLt
 VarOrderLt	minisat/Solver.h	/^    struct VarOrderLt {$/;"	s	class:Minisat::Solver
+VarOrder_h	sat/VarOrderV.h	21;"	d
+VarOrder_lt	sat/VarOrderV.h	/^    VarOrder_lt(const vec<double>&  act) : activity(act) { }$/;"	f	struct:VarOrder_lt
+VarOrder_lt	sat/VarOrderV.h	/^struct VarOrder_lt {$/;"	s
+WRITE	sat/FileV.h	/^enum FileMode { READ, WRITE };$/;"	e	enum:FileMode
 Watcher	minisat/Solver.h	/^        Watcher(CRef cr, Lit p) : cref(cr), blocker(p) {}$/;"	f	struct:Minisat::Solver::Watcher
 Watcher	minisat/Solver.h	/^    struct Watcher {$/;"	s	class:Minisat::Solver
 WatcherDeleted	minisat/Solver.h	/^        WatcherDeleted(const ClauseAllocator& _ca) : ca(_ca) {}$/;"	f	struct:Minisat::Solver::WatcherDeleted
 WatcherDeleted	minisat/Solver.h	/^    struct WatcherDeleted$/;"	s	class:Minisat::Solver
 _F	cir/cirMgr.h	/^	CirNet*								_F;$/;"	m	class:CirMgr
 _G	cir/cirMgr.h	/^	CirNet*								_G;$/;"	m	class:CirMgr
+_READER_H_	sat/reader.h	10;"	d
+__SGI_STL_INTERNAL_RELOPS	sat/GlobalV.h	276;"	d
+_aborted	sat/SolverV.h	/^   bool     _aborted;$/;"	m	class:SolverV
+_assump	sat/sat.h	/^      vec<Lit>            _assump;    \/\/ Assumption List for assumption solve$/;"	m	class:SatSolverV
+_candNameList	cir/cirMgr.h	/^	vector<string>						_candNameList;$/;"	m	class:CirMgr
 _cat	minisat/Solver.cpp	/^static const char* _cat = "CORE";$/;"	v	file:
+_conflictNum	sat/SolverV.h	/^   int      _conflictNum;$/;"	m	class:SolverV
 _const0	cir/cirNet.h	/^	CirGate*							_const0;$/;"	m	class:CirNet
 _const1	cir/cirNet.h	/^	CirGate*							_const1;$/;"	m	class:CirNet
+_curVar	sat/sat.h	/^      Var                 _curVar;    \/\/ Variable currently$/;"	m	class:SatSolverV
 _currentMem	util/myUsage.h	/^   double     _currentMem;$/;"	m	class:MyUsage
 _currentTick	util/myUsage.h	/^   double     _currentTick;$/;"	m	class:MyUsage
 _dupF	cir/cirMgr.h	/^	CirNet*								_dupF;$/;"	m	class:CirMgr
@@ -178,27 +267,30 @@ _errorList	cir/cirNet.h	/^	GateList							_errorList;$/;"	m	class:CirNet
 _gateList	cir/cirNet.h	/^	GateList							_gateList;			$/;"	m	class:CirNet
 _gateV	cir/cirGate.h	/^	size_t _gateV;$/;"	m	class:CirGateV
 _globalRef	cir/cirGate.cpp	/^unsigned CirGate::_globalRef = 0;$/;"	m	class:CirGate	file:
-_globalRef	cir/cirGate.h	/^	static unsigned 		_globalRef;$/;"	v
-_id	cir/cirGate.h	/^	unsigned				_id;$/;"	v
+_globalRef	cir/cirGate.h	/^	static unsigned 		_globalRef;$/;"	m	class:CirGate
+_id	cir/cirGate.h	/^	unsigned				_id;$/;"	m	class:CirGate
 _id	cir/cirNet.h	/^	unsigned 							_id;$/;"	m	class:CirNet
-_in	cir/cirGate.h	/^													  	_in[idx] = gateV; }$/;"	m	class:CirGate
-_in	cir/cirGate.h	/^	GateVList				_in;$/;"	v
+_in	cir/cirGate.h	/^	GateVList				_in;$/;"	m	class:CirGate
 _initMem	util/myUsage.h	/^   double     _initMem;$/;"	m	class:MyUsage
 _insert	minisat/Map.h	/^    void   _insert (const K& k, const D& d) { $/;"	f	class:Minisat::Map
-_name	cir/cirGate.h	/^	string					_name;$/;"	v
+_isClauseOn	cir/cirMgr.h	/^	vector<bool>						_isClauseOn;$/;"	m	class:CirMgr
+_name	cir/cirGate.h	/^	string					_name;$/;"	m	class:CirGate
 _name	cir/cirMgr.h	/^	string 								_name;$/;"	m	class:CirMgr
 _name	cir/cirNet.h	/^	string								_name;$/;"	m	class:CirNet
 _name2GateMap	cir/cirNet.h	/^	unordered_map<string, CirGate*>		_name2GateMap;	$/;"	m	class:CirNet
-_out	cir/cirGate.h	/^	GateVList				_out;$/;"	v
+_out	cir/cirGate.h	/^	GateVList				_out;$/;"	m	class:CirGate
+_out	cir/cirMgr.h	/^        CirNet*                                                         _out;$/;"	m	class:CirMgr
 _patch	cir/cirMgr.h	/^	CirNet*								_patch;$/;"	m	class:CirMgr
 _periodUsedTime	util/myUsage.h	/^   double     _periodUsedTime;$/;"	m	class:MyUsage
 _piList	cir/cirNet.h	/^	GateList							_piList, _poList;$/;"	m	class:CirNet
 _poList	cir/cirNet.h	/^	GateList							_piList, _poList;$/;"	m	class:CirNet
-_ref	cir/cirGate.h	/^	mutable unsigned		_ref;$/;"	v
+_ref	cir/cirGate.h	/^	mutable unsigned		_ref;$/;"	m	class:CirGate
+_s	cir/cirMgr.h	/^	SatSolverV*							_s;$/;"	m	class:CirMgr
+_solver	sat/sat.h	/^      SolverV            *_solver;    \/\/ Pointer to a Minisat solver$/;"	m	class:SatSolverV
 _topoList	cir/cirNet.h	/^	mutable GateList					_topoList;$/;"	m	class:CirNet
 _totalUsedTime	util/myUsage.h	/^   double     _totalUsedTime;$/;"	m	class:MyUsage
-_var	cir/cirGate.h	/^	Var						_var;$/;"	v
-_weight	cir/cirGate.h	/^        unsigned                                _weight;$/;"	v
+_var	cir/cirGate.h	/^	Var						_var;$/;"	m	class:CirGate
+_weight	cir/cirGate.h	/^    unsigned				_weight;$/;"	m	class:CirGate
 abs	minisat/SolverTypes.h	/^    union { Lit lit; float act; uint32_t abs; CRef rel; } data[0];$/;"	m	union:Minisat::Clause::__anon5
 abstractLevel	minisat/Solver.h	/^inline uint32_t Solver::abstractLevel (Var x) const   { return 1 << (level(x) & 31); }$/;"	f	class:Minisat::Solver
 abstraction	minisat/SolverTypes.h	/^    uint32_t     abstraction () const        { assert(header.has_extra); return data[header.size].abs; }$/;"	f	class:Minisat::Clause
@@ -206,7 +298,15 @@ act	minisat/SolverTypes.h	/^    union { Lit lit; float act; uint32_t abs; CRef r
 activity	minisat/Solver.h	/^        const IntMap<Var, double>&  activity;$/;"	m	struct:Minisat::Solver::VarOrderLt
 activity	minisat/Solver.h	/^    VMap<double>        activity;         \/\/ A heuristic measurement of the activity of a variable.$/;"	m	class:Minisat::Solver
 activity	minisat/SolverTypes.h	/^    float&       activity    ()              { assert(header.has_extra); return data[header.size].act; }$/;"	f	class:Minisat::Clause
+activity	sat/SolverTypesV.h	/^    float&    activity    ()      const { return *((float*)&data[size()]); }$/;"	f	class:Clause
+activity	sat/SolverV.h	/^    vec<double>         activity;         \/\/ A heuristic measurement of the activity of a variable.$/;"	m	class:SolverV
+activity	sat/VarOrderV.h	/^    const vec<double>&  activity;    \/\/ var->act. Pointer to external activity table.$/;"	m	class:VarOrder
+activity	sat/VarOrderV.h	/^    const vec<double>&  activity;$/;"	m	struct:VarOrder_lt
 addAndCNF	minisat/sat.cpp	/^void SatSolver::addAndCNF(Var out, Var in0, bool inv0, Var in1, bool inv1) {$/;"	f	class:SatSolver
+addAndCNF	sat/sat.cpp	/^void SatSolverV::addAndCNF(Var out, Var in0, bool inv0, Var in1, bool inv1)$/;"	f	class:SatSolverV
+addBinary	sat/SolverV.h	/^    void    addBinary (Lit p, Lit q)        { addBinary_tmp [0] = p; addBinary_tmp [1] = q; addClause(addBinary_tmp); }$/;"	f	class:SolverV
+addBinary	sat/sat.h	/^  		void addBinary(Lit lit0, Lit lit1) { _solver->addBinary(lit0, lit1); }$/;"	f	class:SatSolverV
+addBinary_tmp	sat/SolverV.h	/^    vec<Lit>            addBinary_tmp;$/;"	m	class:SolverV
 addClause	minisat/Solver.h	/^inline bool     Solver::addClause       (Lit p)                 { add_tmp.clear(); add_tmp.push(p); return addClause_(add_tmp); }$/;"	f	class:Minisat::Solver
 addClause	minisat/Solver.h	/^inline bool     Solver::addClause       (Lit p, Lit q)          { add_tmp.clear(); add_tmp.push(p); add_tmp.push(q); return addClause_(add_tmp); }$/;"	f	class:Minisat::Solver
 addClause	minisat/Solver.h	/^inline bool     Solver::addClause       (Lit p, Lit q, Lit r)   { add_tmp.clear(); add_tmp.push(p); add_tmp.push(q); add_tmp.push(r); return addClause_(add_tmp); }$/;"	f	class:Minisat::Solver
@@ -216,28 +316,46 @@ addClause	minisat/sat.h	/^  void addClause(Lit lit0) { solver_->addClause(lit0);
 addClause	minisat/sat.h	/^  void addClause(Lit lit0, Lit lit1) { solver_->addClause(lit0, lit1); }$/;"	f	class:SatSolver
 addClause	minisat/sat.h	/^  void addClause(Lit lit0, Lit lit1, Lit lit2) {$/;"	f	class:SatSolver
 addClause	minisat/sat.h	/^  void addClause(const vec<Lit>& clause) { solver_->addClause(clause); }$/;"	f	class:SatSolver
+addClause	sat/SolverV.h	/^    void    addClause (const vec<Lit>& ps )  { if (okay()) newClause(ps); }  \/\/ (used to be a difference between internal and external method...)$/;"	f	class:SolverV
+addClause	sat/sat.h	/^  		void addClause(const vec<Lit>& clause) { _solver->addClause(clause); }$/;"	f	class:SatSolverV
 addClause_	minisat/Solver.cpp	/^bool Solver::addClause_(vec<Lit>& ps)$/;"	f	class:Solver
 addEmptyClause	minisat/Solver.h	/^inline bool     Solver::addEmptyClause  ()                      { add_tmp.clear(); return addClause_(add_tmp); }$/;"	f	class:Minisat::Solver
 addEqCNF	minisat/sat.cpp	/^void SatSolver::addEqCNF(Var var0, Var var1, bool inv) {$/;"	f	class:SatSolver
+addEqCNF	sat/sat.cpp	/^void SatSolverV::addEqCNF(Var var0, Var var1, bool inv)$/;"	f	class:SatSolverV
+addErrorConstraint	cir/cirSat.cpp	/^CirMgr::addErrorConstraint(CirNet* n, bool val)$/;"	f	class:CirMgr
 addNeg	util/unate.h	/^  void addNeg() { val_ |= 2; }$/;"	f	class:Unateness
 addOrCNF	minisat/sat.cpp	/^void SatSolver::addOrCNF(Var out, Var in0, bool inv0, Var in1, bool inv1) {$/;"	f	class:SatSolver
+addOrCNF	sat/sat.cpp	/^void SatSolverV::addOrCNF(Var out, Var in0, bool inv0, Var in1, bool inv1)$/;"	f	class:SatSolverV
 addPos	util/unate.h	/^  void addPos() { val_ |= 1; }$/;"	f	class:Unateness
-addToSolver	cir/cirGate.cpp	/^CirAndGate::addToSolver(SatSolver* s) const$/;"	f	class:CirAndGate
-addToSolver	cir/cirGate.cpp	/^CirBufGate::addToSolver(SatSolver* s) const$/;"	f	class:CirBufGate
-addToSolver	cir/cirGate.cpp	/^CirConstGate::addToSolver(SatSolver* s) const$/;"	f	class:CirConstGate
-addToSolver	cir/cirGate.cpp	/^CirErrorGate::addToSolver(SatSolver* s) const$/;"	f	class:CirErrorGate
-addToSolver	cir/cirGate.cpp	/^CirInvGate::addToSolver(SatSolver* s) const$/;"	f	class:CirInvGate
-addToSolver	cir/cirGate.cpp	/^CirNandGate::addToSolver(SatSolver* s) const$/;"	f	class:CirNandGate
-addToSolver	cir/cirGate.cpp	/^CirNorGate::addToSolver(SatSolver* s) const$/;"	f	class:CirNorGate
-addToSolver	cir/cirGate.cpp	/^CirOrGate::addToSolver(SatSolver* s) const$/;"	f	class:CirOrGate
-addToSolver	cir/cirGate.cpp	/^CirPiGate::addToSolver(SatSolver* s) const$/;"	f	class:CirPiGate
-addToSolver	cir/cirGate.cpp	/^CirPoGate::addToSolver(SatSolver* s) const$/;"	f	class:CirPoGate
-addToSolver	cir/cirGate.cpp	/^CirXnorGate::addToSolver(SatSolver* s) const$/;"	f	class:CirXnorGate
-addToSolver	cir/cirGate.cpp	/^CirXorGate::addToSolver(SatSolver* s) const$/;"	f	class:CirXorGate
-addToSolver	cir/cirSat.cpp	/^CirNet::addToSolver(SatSolver* s) const$/;"	f	class:CirNet
+addRoot	sat/ProofV.cpp	/^ClauseId Proof::addRoot(vec<Lit>& cl)$/;"	f	class:Proof
+addTernary	sat/SolverV.h	/^    void    addTernary(Lit p, Lit q, Lit r) { addTernary_tmp[0] = p; addTernary_tmp[1] = q; addTernary_tmp[2] = r; addClause(addTernary_tmp); }$/;"	f	class:SolverV
+addTernary	sat/sat.h	/^  		void addTernary(Lit lit0, Lit lit1, Lit lit2) { _solver->addTernary(lit0, lit1, lit2); }$/;"	f	class:SatSolverV
+addTernary_tmp	sat/SolverV.h	/^    vec<Lit>            addTernary_tmp;$/;"	m	class:SolverV
+addToSolver	cir/cirGate.cpp	/^CirAndGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirAndGate
+addToSolver	cir/cirGate.cpp	/^CirBufGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirBufGate
+addToSolver	cir/cirGate.cpp	/^CirConstGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirConstGate
+addToSolver	cir/cirGate.cpp	/^CirErrorGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirErrorGate
+addToSolver	cir/cirGate.cpp	/^CirInvGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirInvGate
+addToSolver	cir/cirGate.cpp	/^CirNandGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirNandGate
+addToSolver	cir/cirGate.cpp	/^CirNorGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirNorGate
+addToSolver	cir/cirGate.cpp	/^CirOrGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirOrGate
+addToSolver	cir/cirGate.cpp	/^CirPiGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirPiGate
+addToSolver	cir/cirGate.cpp	/^CirPoGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirPoGate
+addToSolver	cir/cirGate.cpp	/^CirXnorGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirXnorGate
+addToSolver	cir/cirGate.cpp	/^CirXorGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirXorGate
+addToSolver	cir/cirMgr.h	/^	void addToSolver(CirNet* n) const { n -> addToSolver(_s); }$/;"	f	class:CirMgr
+addToSolver	cir/cirSat.cpp	/^CirNet::addToSolver(SatSolverV* s) const$/;"	f	class:CirNet
+addUnit	sat/SolverV.h	/^    void    addUnit   (Lit p)               { addUnit_tmp   [0] = p; addClause(addUnit_tmp); }$/;"	f	class:SolverV
+addUnit	sat/sat.h	/^  		void addUnit(Lit lit0) { _solver->addUnit(lit0); }$/;"	f	class:SatSolverV
 addUnitCNF	minisat/sat.cpp	/^void SatSolver::addUnitCNF(Var var, bool val) {$/;"	f	class:SatSolver
+addUnitCNF	sat/sat.cpp	/^void SatSolverV::addUnitCNF(Var var, bool val)$/;"	f	class:SatSolverV
+addUnit_tmp	sat/SolverV.h	/^    vec<Lit>            addUnit_tmp;$/;"	m	class:SolverV
+addWeight	cir/cirParse.cpp	/^CirMgr::addWeight(const string& fileName)$/;"	f	class:CirMgr
 addXnorCNF	minisat/sat.cpp	/^void SatSolver::addXnorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1) {$/;"	f	class:SatSolver
+addXnorCNF	sat/sat.cpp	/^void SatSolverV::addXnorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1)$/;"	f	class:SatSolverV
 addXorCNF	minisat/sat.cpp	/^void SatSolver::addXorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1) {$/;"	f	class:SatSolver
+addXorCNF	sat/sat.cpp	/^void SatSolverV::addXorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1)$/;"	f	class:SatSolverV
+addXorConstraint	cir/cirSat.cpp	/^CirMgr::addXorConstraint(CirNet* f, CirNet* g)$/;"	f	class:CirMgr
 add_tmp	minisat/Solver.h	/^    vec<Lit>            add_tmp;$/;"	m	class:Minisat::Solver
 ael	minisat/Alloc.h	/^    Ref      ael       (const T* t)  { assert((void*)t >= (void*)&memory[0] && (void*)t < (void*)&memory[sz-1]);$/;"	f	class:Minisat::RegionAllocator
 ael	minisat/SolverTypes.h	/^    CRef          ael       (const Clause* t){ return ra.ael((uint32_t*)t); }$/;"	f	class:Minisat::ClauseAllocator
@@ -245,11 +363,25 @@ alloc	minisat/Alloc.h	/^RegionAllocator<T>::alloc(int size)$/;"	f	class:Minisat:
 alloc	minisat/SolverTypes.h	/^    CRef alloc(const Clause& from)$/;"	f	class:Minisat::ClauseAllocator
 alloc	minisat/SolverTypes.h	/^    CRef alloc(const vec<Lit>& ps, bool learnt = false)$/;"	f	class:Minisat::ClauseAllocator
 analyze	minisat/Solver.cpp	/^void Solver::analyze(CRef confl, vec<Lit>& out_learnt, int& out_btlevel)$/;"	f	class:Solver
+analyze	sat/SolverV.cpp	/^void SolverV::analyze(Clause* confl, vec<Lit>& out_learnt, int& out_btlevel)$/;"	f	class:SolverV
 analyzeFinal	minisat/Solver.cpp	/^void Solver::analyzeFinal(Lit p, LSet& out_conflict)$/;"	f	class:Solver
+analyzeFinal	sat/SolverV.cpp	/^void SolverV::analyzeFinal(Clause* confl, bool skip_first)$/;"	f	class:SolverV
+analyze_removable	sat/SolverV.cpp	/^bool SolverV::analyze_removable(Lit p, uint min_level)$/;"	f	class:SolverV
+analyze_seen	sat/SolverV.h	/^    vec<char>           analyze_seen;$/;"	m	class:SolverV
 analyze_stack	minisat/Solver.h	/^    vec<ShrinkStackElem>analyze_stack;$/;"	m	class:Minisat::Solver
+analyze_stack	sat/SolverV.h	/^    vec<Lit>            analyze_stack;$/;"	m	class:SolverV
+analyze_tmpbin	sat/SolverV.h	/^    Clause*             analyze_tmpbin;$/;"	m	class:SolverV
 analyze_toclear	minisat/Solver.h	/^    vec<Lit>            analyze_toclear;$/;"	m	class:Minisat::Solver
+analyze_toclear	sat/SolverV.h	/^    vec<Lit>            analyze_toclear;$/;"	m	class:SolverV
 append	minisat/Alg.h	/^static inline void append(const vec<T>& from, vec<T>& to){ copy(from, to, true); }$/;"	f	namespace:Minisat
+assertProperty	sat/sat.cpp	/^void SatSolverV::assertProperty(const size_t& var, const bool& invert)$/;"	f	class:SatSolverV
 assigns	minisat/Solver.h	/^    VMap<lbool>         assigns;          \/\/ The current assignments.$/;"	m	class:Minisat::Solver
+assigns	sat/SolverV.h	/^    vec<char>           assigns;          \/\/ The current assignments (lbool:s stored as char:s).$/;"	m	class:SolverV
+assigns	sat/VarOrderV.h	/^    const vec<char>&    assigns;     \/\/ var->val. Pointer to external assignment table.$/;"	m	class:VarOrder
+assume	sat/SolverV.cpp	/^bool SolverV::assume(Lit p) {$/;"	f	class:SolverV
+assumeProperty	sat/sat.cpp	/^void SatSolverV::assumeProperty(const size_t& var, const bool& invert)$/;"	f	class:SatSolverV
+assumeRelease	sat/sat.cpp	/^void SatSolverV::assumeRelease() { _assump.clear(); }$/;"	f	class:SatSolverV
+assump_solve	sat/sat.cpp	/^const bool SatSolverV::assump_solve()$/;"	f	class:SatSolverV
 assumptions	minisat/Solver.h	/^    vec<Lit>            assumptions;      \/\/ Current set of assumptions provided to solve by the user.$/;"	m	class:Minisat::Solver
 assureLookahead	minisat/ParseUtils.h	/^    void assureLookahead() {$/;"	f	class:Minisat::StreamBuffer
 asynch_interrupt	minisat/Solver.h	/^    bool                asynch_interrupt;$/;"	m	class:Minisat::Solver
@@ -259,6 +391,7 @@ begin	minisat/IntMap.h	/^        const V* begin  () const { return &map[0]; }$/;
 begin	minisat/Options.h	/^    double begin;$/;"	m	struct:Minisat::DoubleRange
 begin	minisat/Options.h	/^    int begin;$/;"	m	struct:Minisat::IntRange
 begin	minisat/Options.h	/^    int64_t begin;$/;"	m	struct:Minisat::Int64Range
+beginChain	sat/ProofV.cpp	/^void Proof::beginChain(ClauseId start)$/;"	f	class:Proof
 begin_inclusive	minisat/Options.h	/^    bool  begin_inclusive;$/;"	m	struct:Minisat::DoubleRange
 blocker	minisat/Solver.h	/^        Lit  blocker;$/;"	m	struct:Minisat::Solver::Watcher
 bool_3v	util/bool3v.h	/^  bool_3v()                     : value(0) {}$/;"	f	class:bool_3v
@@ -272,6 +405,8 @@ bucket_count	minisat/SolverTypes.h	/^    int  bucket_count() const { return map.
 budgetOff	minisat/Solver.h	/^inline void     Solver::budgetOff(){ conflict_budget = propagation_budget = -1; }$/;"	f	class:Minisat::Solver
 buf	minisat/ParseUtils.h	/^    unsigned char* buf;$/;"	m	class:Minisat::StreamBuffer
 buf	minisat/Queue.h	/^    vec<T>  buf;$/;"	m	class:Minisat::Queue
+buf	sat/FileV.h	/^    uchar*      buf;        \/\/ Read or write buffer.$/;"	m	class:File
+buf	sat/reader.h	/^	unsigned char* 	buf;$/;"	m	class:Reader
 buffer_size	minisat/ParseUtils.h	/^    enum { buffer_size = 64*1024 };$/;"	e	enum:Minisat::StreamBuffer::__anon3
 build	minisat/Heap.h	/^    void build(const vec<K>& ns) {$/;"	f	class:Minisat::Heap
 buildTopoList	cir/cirNet.cpp	/^CirNet::buildTopoList() const$/;"	f	class:CirNet
@@ -282,14 +417,22 @@ ca	minisat/Solver.h	/^    ClauseAllocator     ca;$/;"	m	class:Minisat::Solver
 ca	minisat/SolverTypes.h	/^    const ClauseAllocator& ca;$/;"	m	class:Minisat::ClauseIterator
 calcAbstraction	minisat/SolverTypes.h	/^    void calcAbstraction() {$/;"	f	class:Minisat::Clause
 cancelUntil	minisat/Solver.cpp	/^void Solver::cancelUntil(int level) {$/;"	f	class:Solver
+cancelUntil	sat/SolverV.cpp	/^void SolverV::cancelUntil(int level) {$/;"	f	class:SolverV
 cap	minisat/Alloc.h	/^    uint32_t  cap;$/;"	m	class:Minisat::RegionAllocator
 cap	minisat/Map.h	/^    int        cap;$/;"	m	class:Minisat::Map
 cap	minisat/Vec.h	/^    Size cap;$/;"	m	class:Minisat::vec
+cap	sat/GlobalV.h	/^    int cap;$/;"	m	class:vec
 capacity	minisat/Alloc.h	/^void RegionAllocator<T>::capacity(uint32_t min_cap)$/;"	f	class:Minisat::RegionAllocator
 capacity	minisat/Vec.h	/^    int      capacity (void) const   { return cap; }$/;"	f	class:Minisat::vec
 capacity	minisat/Vec.h	/^void vec<T,_Size>::capacity(Size min_cap) {$/;"	f	class:Minisat::vec
+capacity	sat/GlobalV.h	/^    void     capacity (int size) { grow(size); }$/;"	f	class:vec
 category	minisat/Options.h	/^    const char* category;$/;"	m	class:Minisat::Option
+cchar	sat/GlobalV.h	/^typedef const char    cchar;$/;"	t
 ccmin_mode	minisat/Solver.h	/^    int       ccmin_mode;         \/\/ Controls conflict clause minimization (0=none, 1=basic, 2=deep).$/;"	m	class:Minisat::Solver
+chain	sat/ProofV.h	/^    virtual void chain  (const vec<ClauseId>& cs, const vec<Var>& xs) {}$/;"	f	struct:ProofTraverser
+chain_id	sat/ProofV.h	/^    vec<ClauseId>   chain_id;$/;"	m	class:Proof
+chain_var	sat/ProofV.h	/^    vec<Var>        chain_var;$/;"	m	class:Proof
+check	sat/SolverV.h	/^inline void check(bool expr) { assert(expr); }$/;"	f
 checkCap	minisat/Map.h	/^    bool    checkCap(int new_size) const { return new_size > cap; }$/;"	f	class:Minisat::Map
 checkGarbage	minisat/Solver.h	/^inline void Solver::checkGarbage(double gf){$/;"	f	class:Minisat::Solver
 checkGarbage	minisat/Solver.h	/^inline void Solver::checkGarbage(void){ return checkGarbage(garbage_frac); }$/;"	f	class:Minisat::Solver
@@ -297,14 +440,24 @@ checkMem	util/myUsage.h	/^   double checkMem() const {$/;"	f	class:MyUsage
 checkPo	cir/cirProof.cpp	/^CirMgr::checkPo()$/;"	f	class:CirMgr
 checkTick	util/myUsage.h	/^   double checkTick() const {$/;"	f	class:MyUsage
 claBumpActivity	minisat/Solver.h	/^inline void Solver::claBumpActivity (Clause& c) {$/;"	f	class:Minisat::Solver
+claBumpActivity	sat/SolverV.h	/^    void     claBumpActivity (Clause* c) { if ( (c->activity() += cla_inc) > 1e20 ) claRescaleActivity(); }$/;"	f	class:SolverV
 claDecayActivity	minisat/Solver.h	/^inline void Solver::claDecayActivity() { cla_inc *= (1 \/ clause_decay); }$/;"	f	class:Minisat::Solver
+claDecayActivity	sat/SolverV.h	/^    void     claDecayActivity  () { cla_inc *= cla_decay; }$/;"	f	class:SolverV
+claRescaleActivity	sat/SolverV.cpp	/^void SolverV::claRescaleActivity()$/;"	f	class:SolverV
+cla_decay	sat/SolverV.h	/^    double              cla_decay;        \/\/ INVERSE decay factor for clause activity: stores 1\/decay.$/;"	m	class:SolverV
 cla_inc	minisat/Solver.h	/^    double              cla_inc;          \/\/ Amount to bump next clause with.$/;"	m	class:Minisat::Solver
+cla_inc	sat/SolverV.h	/^    double              cla_inc;          \/\/ Amount to bump next clause with.$/;"	m	class:SolverV
+clause	sat/ProofV.h	/^    vec<Lit>        clause;$/;"	m	class:Proof
+clause	sat/SolverTypesV.h	/^    Clause*     clause   () const { return (Clause*)data; }$/;"	f	class:GClause
 clauseWord32Size	minisat/SolverTypes.h	/^    static uint32_t clauseWord32Size(int size, bool has_extra){$/;"	f	class:Minisat::ClauseAllocator
 clause_decay	minisat/Solver.h	/^    double    clause_decay;$/;"	m	class:Minisat::Solver
+clause_decay	sat/SolverV.h	/^    double  var_decay, clause_decay, random_var_freq;    \/\/ (reasonable values are: 0.95, 0.999, 0.02)    $/;"	m	struct:SearchParams
 clauses	minisat/Solver.h	/^    vec<CRef>           clauses;          \/\/ List of problem clauses.$/;"	m	class:Minisat::Solver
+clauses	sat/SolverV.h	/^    vec<Clause*>        clauses;          \/\/ List of problem clauses.$/;"	m	class:SolverV
 clausesBegin	minisat/Solver.h	/^inline ClauseIterator Solver::clausesBegin() const { return ClauseIterator(ca, &clauses[0]); }$/;"	f	class:Minisat::Solver
 clausesEnd	minisat/Solver.h	/^inline ClauseIterator Solver::clausesEnd  () const { return ClauseIterator(ca, &clauses[clauses.size()]); }$/;"	f	class:Minisat::Solver
 clauses_literals	minisat/Solver.h	/^    uint64_t dec_vars, num_clauses, num_learnts, clauses_literals, learnts_literals, max_literals, tot_literals;$/;"	m	class:Minisat::Solver
+clauses_literals	sat/SolverV.h	/^    int64   clauses_literals, learnts_literals, max_literals, tot_literals;$/;"	m	struct:SolverStats
 clean	minisat/SolverTypes.h	/^void OccLists<K,Vec,Deleted,MkIndex>::clean(const K& idx)$/;"	f	class:Minisat::OccLists
 cleanAll	minisat/SolverTypes.h	/^void OccLists<K,Vec,Deleted,MkIndex>::cleanAll()$/;"	f	class:Minisat::OccLists
 clear	minisat/Heap.h	/^    void clear(bool dispose = false) $/;"	f	class:Minisat::Heap
@@ -315,81 +468,137 @@ clear	minisat/Queue.h	/^    void clear (bool dealloc = false) { buf.clear(deallo
 clear	minisat/SolverTypes.h	/^    void     clear       ()                           { map.clear(); }$/;"	f	class:Minisat::CMap
 clear	minisat/SolverTypes.h	/^    void  clear(bool free = true){$/;"	f	class:Minisat::OccLists
 clear	minisat/Vec.h	/^void vec<T,_Size>::clear(bool dealloc) {$/;"	f	class:Minisat::vec
+clear	sat/GlobalV.h	/^void vec<T>::clear(bool dealloc) {$/;"	f	class:vec
 clearInterrupt	minisat/Solver.h	/^inline void     Solver::clearInterrupt(){ asynch_interrupt = false; }$/;"	f	class:Minisat::Solver
+close	sat/FileV.cpp	/^void File::close(void)$/;"	f	class:File
+close	sat/reader.cpp	/^void Reader::close(){$/;"	f	class:Reader
+comp	sat/HeapV.h	/^    C        comp;$/;"	m	class:Heap
+compress	sat/ProofV.cpp	/^void Proof::compress(Proof& dst, ClauseId goal)$/;"	f	class:Proof
 conflict	minisat/Solver.h	/^    LSet       conflict;          \/\/ If problem is unsatisfiable (possibly under assumptions),$/;"	m	class:Minisat::Solver
+conflict	sat/SolverV.h	/^    vec<Lit>    conflict;           \/\/ If problem is unsatisfiable under assumptions, this vector represent the conflict clause expressed in the assumptions.$/;"	m	class:SolverV
 conflict_budget	minisat/Solver.h	/^    int64_t             conflict_budget;    \/\/ -1 means no budget.$/;"	m	class:Minisat::Solver
+conflict_id	sat/SolverV.h	/^    ClauseId    conflict_id;        \/\/ (In proof logging mode only.) ID for the clause 'conflict' (for proof traverseral). NOTE! The empty clause is always the last clause derived, but for conflicts under assumption, this is not necessarly true.$/;"	m	class:SolverV
 conflicts	minisat/Solver.h	/^    uint64_t solves, starts, decisions, rnd_decisions, propagations, conflicts;$/;"	m	class:Minisat::Solver
+conflicts	sat/SolverV.h	/^    int64   starts, decisions, propagations, conflicts;$/;"	m	struct:SolverStats
 connect	cir/cirParse.cpp	/^CirNet::connect(const vector<string>& tokens, const GateType& t)$/;"	f	class:CirNet
 connectXor	cir/cirDup.cpp	/^CirMgr::connectXor(CirNet* f, CirNet* g)$/;"	f	class:CirMgr
 copy	minisat/Alg.h	/^static inline void copy(const T& from, T& to)$/;"	f	namespace:Minisat
 copy	minisat/Alg.h	/^static inline void copy(const vec<T>& from, vec<T>& to, bool append = false)$/;"	f	namespace:Minisat
 copyTo	minisat/IntMap.h	/^        void     copyTo (IntMap& to) const     { map.copyTo(to.map); to.index = index; }$/;"	f	class:Minisat::IntMap
 copyTo	minisat/Vec.h	/^    void copyTo(vec<T>& copy) const { copy.clear(); copy.growTo(sz); for (Size i = 0; i < sz; i++) copy[i] = data[i]; }$/;"	f	class:Minisat::vec
+copyTo	sat/GlobalV.h	/^    void copyTo(vec<T>& copy) const { copy.clear(); copy.growTo(sz); for (int i = 0; i < sz; i++) new (&copy[i]) T(data[i]); }$/;"	f	class:vec
 cpuTime	minisat/System.h	/^static inline double Minisat::cpuTime(void) { return (double)clock() \/ CLOCKS_PER_SEC; }$/;"	f	class:Minisat
-createConst	cir/cirNet.cpp	/^CirNet::createConst(bool is0)$/;"	f	class:CirNet
+cpuTime	sat/GlobalV.h	/^static inline double cpuTime(void) {$/;"	f
+createConst	cir/cirNet.cpp	/^CirNet::createConst(bool val)$/;"	f	class:CirNet
 createGate	cir/cirNet.cpp	/^CirNet::createGate(const GateType& t, const string& name, unsigned id)$/;"	f	class:CirNet
 createGateRec	cir/cirParse.cpp	/^CirNet::createGateRec(const vector<string>& tokens, const GateType& t, unsigned i)$/;"	f	class:CirNet
+createVar	cir/cirMgr.h	/^	void createVar(CirNet* n) const { n -> createVar(_s); }$/;"	f	class:CirMgr
+createVar	cir/cirSat.cpp	/^CirNet::createVar(SatSolverV* s) const$/;"	f	class:CirNet
 cref	minisat/Solver.h	/^        CRef cref;$/;"	m	struct:Minisat::Solver::Watcher
 crefs	minisat/SolverTypes.h	/^    const CRef*            crefs;$/;"	m	class:Minisat::ClauseIterator
 data	minisat/Map.h	/^    struct Pair { K key; D data; };$/;"	m	struct:Minisat::Map::Pair
 data	minisat/SolverTypes.h	/^    union { Lit lit; float act; uint32_t abs; CRef rel; } data[0];$/;"	m	class:Minisat::Clause	typeref:union:Minisat::Clause::__anon5
 data	minisat/Vec.h	/^    T*   data;$/;"	m	class:Minisat::vec
+data	sat/GlobalV.h	/^    T*  data;$/;"	m	class:vec
+data	sat/SolverTypesV.h	/^    Lit     data[1];$/;"	m	class:Clause
+data	sat/SolverTypesV.h	/^    void*   data;$/;"	m	class:GClause
 debug	minisat/SolverTypes.h	/^    void debug(){$/;"	f	class:Minisat::CMap
 dec_vars	minisat/Solver.h	/^    uint64_t dec_vars, num_clauses, num_learnts, clauses_literals, learnts_literals, max_literals, tot_literals;$/;"	m	class:Minisat::Solver
 decision	minisat/Solver.h	/^    VMap<char>          decision;         \/\/ Declares if a variable is eligible for selection in the decision heuristic.$/;"	m	class:Minisat::Solver
 decisionLevel	minisat/Solver.h	/^inline int      Solver::decisionLevel ()      const   { return trail_lim.size(); }$/;"	f	class:Minisat::Solver
+decisionLevel	sat/SolverV.h	/^    int      decisionLevel() const { return trail_lim.size(); }$/;"	f	class:SolverV
 decisions	minisat/Solver.h	/^    uint64_t solves, starts, decisions, rnd_decisions, propagations, conflicts;$/;"	m	class:Minisat::Solver
+decisions	sat/SolverV.h	/^    int64   starts, decisions, propagations, conflicts;$/;"	m	struct:SolverStats
+decode64	sat/FileV.h	/^static inline int64  decode64(uint64 val)           { return ((val & 1) == 0) ? (int64)(val >> 1) : ~(int64)(val >> 1); }$/;"	f
 decrease	minisat/Heap.h	/^    void decrease  (K k) { assert(inHeap(k)); percolateUp  (indices[k]); }$/;"	f	class:Minisat::Heap
+default_params	sat/SolverV.h	/^    SearchParams    default_params;     \/\/ Restart frequency etc.$/;"	m	class:SolverV
 deleted	minisat/SolverTypes.h	/^    Deleted                  deleted;$/;"	m	class:Minisat::OccLists
+deleted	sat/ProofV.cpp	/^void Proof::deleted(ClauseId gone)$/;"	f	class:Proof
+deleted	sat/ProofV.h	/^    virtual void deleted(ClauseId c) {}$/;"	f	struct:ProofTraverser
 description	minisat/Options.h	/^    const char* description;$/;"	m	class:Minisat::Option
 detachClause	minisat/Solver.cpp	/^void Solver::detachClause(CRef cr, bool strict){$/;"	f	class:Solver
 dirties	minisat/SolverTypes.h	/^    vec<K>                   dirties;$/;"	m	class:Minisat::OccLists
 dirty	minisat/SolverTypes.h	/^    IntMap<K, char, MkIndex> dirty;$/;"	m	class:Minisat::OccLists
+done	sat/ProofV.h	/^    virtual void done   () {}$/;"	f	struct:ProofTraverser
 drand	minisat/Rnd.h	/^static inline double drand(double& seed)$/;"	f	namespace:Minisat
 drand	minisat/Solver.h	/^    static inline double drand(double& seed) {$/;"	f	class:Minisat::Solver
+drand	sat/GlobalV.h	/^static inline double drand(double& seed) {$/;"	f
 dupNet	cir/cirDup.cpp	/^CirMgr::dupNet(CirNet* n) const$/;"	f	class:CirMgr
 eagerMatch	minisat/ParseUtils.h	/^static bool eagerMatch(B& in, const char* str) {$/;"	f	namespace:Minisat
 elems	minisat/Map.h	/^    int  elems() const { return size; }$/;"	f	class:Minisat::Map
 empty	minisat/Heap.h	/^    bool empty     ()          const { return heap.size() == 0; }$/;"	f	class:Minisat::Heap
+empty	sat/HeapV.h	/^    bool empty     ()         { return heap.size() == 1; }$/;"	f	class:Heap
+encode64	sat/FileV.h	/^static inline uint64 encode64(int64  val)           { return (val >= 0) ? (uint64)val << 1 : (((uint64)(~val) << 1) | 1); }$/;"	f
 end	minisat/IntMap.h	/^        V*       end    ()       { return &map[map.size()]; }$/;"	f	class:Minisat::IntMap
 end	minisat/IntMap.h	/^        const V* end    () const { return &map[map.size()]; }$/;"	f	class:Minisat::IntMap
 end	minisat/Options.h	/^    double end;$/;"	m	struct:Minisat::DoubleRange
 end	minisat/Options.h	/^    int end;$/;"	m	struct:Minisat::IntRange
 end	minisat/Options.h	/^    int64_t end;$/;"	m	struct:Minisat::Int64Range
 end	minisat/Queue.h	/^    int     end;$/;"	m	class:Minisat::Queue
+endChain	sat/ProofV.cpp	/^ClauseId Proof::endChain()$/;"	f	class:Proof
 end_inclusive	minisat/Options.h	/^    bool  end_inclusive;$/;"	m	struct:Minisat::DoubleRange
 enqueue	minisat/Solver.h	/^inline bool     Solver::enqueue         (Lit p, CRef from)      { return value(p) != l_Undef ? value(p) != l_False : (uncheckedEnqueue(p, from), true); }$/;"	f	class:Minisat::Solver
+enqueue	sat/SolverV.cpp	/^bool SolverV::enqueue(Lit p, Clause* from)$/;"	f	class:SolverV
+eof	sat/FileV.h	/^    bool eof(void) {$/;"	f	class:File
+eof	sat/reader.cpp	/^bool Reader::eof() {$/;"	f	class:Reader
 equals	minisat/Map.h	/^    E          equals;$/;"	m	class:Minisat::Map
+expensive_ccmin	sat/SolverV.h	/^    bool            expensive_ccmin;    \/\/ Controls conflict clause minimization. TRUE by default.$/;"	m	class:SolverV
 extra_clause_field	minisat/SolverTypes.h	/^    bool extra_clause_field;$/;"	m	class:Minisat::ClauseAllocator
+fd	sat/FileV.h	/^    int         fd;         \/\/ Underlying file descriptor.$/;"	m	class:File
+fd	sat/reader.h	/^	int 			fd;$/;"	m	class:Reader
+files	sat/ProofV.cpp	/^    vec<cchar*> files;      \/\/ For clean-up purposed on abnormal exit.$/;"	m	class:TempFiles	file:
 find	minisat/Alg.h	/^static inline bool find(V& ts, const T& t)$/;"	f	namespace:Minisat
 first	minisat/Queue.h	/^    int     first;$/;"	m	class:Minisat::Queue
+flipInv	cir/cirGate.h	/^	void flipInv() 				{ _gateV ^= (size_t)INV_MASK; }$/;"	f	class:CirGateV
+flush	sat/FileV.h	/^    void flush(void) {$/;"	f	class:File
+fp	sat/ProofV.h	/^    File            fp;$/;"	m	class:Proof
+fp_name	sat/ProofV.h	/^    cchar*          fp_name;$/;"	m	class:Proof
 free	minisat/Alloc.h	/^    void     free      (int size)    { wasted_ += size; }$/;"	f	class:Minisat::RegionAllocator
 free	minisat/SolverTypes.h	/^    void free(CRef cid)$/;"	f	class:Minisat::ClauseAllocator
 free_vars	minisat/Solver.h	/^    vec<Var>            free_vars;$/;"	m	class:Minisat::Solver
 garbageCollect	minisat/Solver.cpp	/^void Solver::garbageCollect()$/;"	f	class:Solver
 garbage_frac	minisat/Solver.h	/^    double    garbage_frac;       \/\/ The fraction of wasted memory allowed before a garbage collection is triggered.$/;"	m	class:Minisat::Solver
-genProofModel	cir/cirProof.cpp	/^CirMgr::genProofModel(SatSolver& solver)$/;"	f	class:CirMgr
-getConstGate	cir/cirNet.h	/^    CirGate* getConstGate(bool inv)                         { if(inv) return _const0; else return _const1; }$/;"	f	class:CirNet
-getF	cir/cirMgr.h	/^	CirNet* getF() 					{ return _F; }$/;"	f	class:CirMgr
-getFanin	cir/cirGate.h	/^	CirGate* getFanin(unsigned idx) const			{ return _in[idx].getGate(); }$/;"	f
-getFaninId	cir/cirGate.h	/^	unsigned getFaninId(unsigned idx) const			{ return _in[idx].getGate() -> _id; }$/;"	f
-getFaninSize	cir/cirGate.h	/^	unsigned getFaninSize() const					{ return _in.size(); }$/;"	f
-getFaninVar	cir/cirGate.h	/^	Var getFaninVar(unsigned idx) const				{ return _in[idx].getGate() -> _var; }$/;"	f
-getFanout	cir/cirGate.h	/^	CirGate* getFanout(unsigned idx) const			{ return _out[idx].getGate(); }$/;"	f
-getFanoutSize	cir/cirGate.h	/^	unsigned getFanoutSize() const					{ return _out.size(); }$/;"	f
-getG	cir/cirMgr.h	/^	CirNet* getG() 					{ return _G; }$/;"	f	class:CirMgr
-getGate	cir/cirNet.h	/^    CirGate* getGate(unsigned id)                           { return _gateList[id]; }$/;"	f	class:CirNet
-getGateByName	cir/cirNet.h	/^	CirGate* getGateByName(const string& n) 				{ return _name2GateMap[n]; }$/;"	f	class:CirNet
-getGateNum	cir/cirNet.h	/^    unsigned getGateNum()                                   { return _gateList.size(); }$/;"	f	class:CirNet
+genProofModel	cir/cirProof.cpp	/^CirMgr::genProofModel(SatSolverV& solver)$/;"	f	class:CirMgr
+get64	sat/reader.cpp	/^unsigned long long Reader::get64(){$/;"	f	class:Reader
+getChar	sat/FileV.h	/^    int getChar(void) {$/;"	f	class:File
+getChar	sat/reader.cpp	/^unsigned int Reader::getChar(){$/;"	f	class:Reader
+getCharQ	sat/FileV.h	/^    int getCharQ(void) {            \/\/ Quick version with minimal overhead -- don't call this in the wrong mode!$/;"	f	class:File
+getConst	cir/cirNet.h	/^    CirGate* getConst(bool val) 					{ if(val) return _const1; else return _const0; }$/;"	f	class:CirNet
+getDataValue	sat/sat.cpp	/^const bool SatSolverV::getDataValue(const size_t& var) const $/;"	f	class:SatSolverV
+getError	cir/cirNet.h	/^	CirGate* getError(unsigned idx)					{ return _errorList[idx]; }$/;"	f	class:CirNet
+getErrorNum	cir/cirNet.h	/^	unsigned getErrorNum() const					{ return _errorList.size(); }$/;"	f	class:CirNet
+getF	cir/cirMgr.h	/^	CirNet* getF() 						{ return _F; }$/;"	f	class:CirMgr
+getFanin	cir/cirGate.h	/^	CirGate* getFanin(unsigned idx) const			{ return _in[idx].getGate(); }$/;"	f	class:CirGate
+getFaninId	cir/cirGate.h	/^	unsigned getFaninId(unsigned idx) const			{ return _in[idx].getGate() -> _id; }$/;"	f	class:CirGate
+getFaninSize	cir/cirGate.h	/^	unsigned getFaninSize() const					{ return _in.size(); }$/;"	f	class:CirGate
+getFaninVar	cir/cirGate.h	/^	Var getFaninVar(unsigned idx) const				{ return _in[idx].getGate() -> _var; }$/;"	f	class:CirGate
+getFanout	cir/cirGate.h	/^	CirGate* getFanout(unsigned idx) const			{ return _out[idx].getGate(); }$/;"	f	class:CirGate
+getFanoutSize	cir/cirGate.h	/^	unsigned getFanoutSize() const					{ return _out.size(); }$/;"	f	class:CirGate
+getG	cir/cirMgr.h	/^	CirNet* getG() 						{ return _G; }$/;"	f	class:CirMgr
+getGate	cir/cirGate.h	/^	CirGate* getGate() const 	{ return (CirGate*)(_gateV & PTR_MASK); }$/;"	f	class:CirGateV
+getGate	cir/cirNet.h	/^    CirGate* getGate(unsigned id) 					{ return _gateList[id]; }$/;"	f	class:CirNet
+getGateByName	cir/cirNet.h	/^	CirGate* getGateByName(const string& n) 		{ return _name2GateMap[n]; }$/;"	f	class:CirNet
+getGateNum	cir/cirNet.h	/^    unsigned getGateNum() const						{ return _gateList.size(); }$/;"	f	class:CirNet
 getHelpPrefixString	minisat/Options.h	/^    static const char*&  getHelpPrefixString() { static const char* help_prefix_str = ""; return help_prefix_str; }$/;"	f	class:Minisat::Option
+getId	cir/cirGate.h	/^	unsigned getId() 				{ return _id; }$/;"	f	class:CirGate
+getInt	sat/FileV.h	/^static inline uint64 getInt  (File& in)             { return decode64(getUInt(in)); }$/;"	f
 getLineSafe	util/parse.h	/^std::string getLineSafe(std::ifstream& ifs) {$/;"	f
+getMode	sat/FileV.h	/^    FileMode getMode(void) {$/;"	f	class:File
 getName	cir/cirGate.h	/^	const string& getName() 		{ return _name; }$/;"	f	class:CirGate
-getName	cir/cirNet.h	/^	const string& getName() 								{ return _name; }$/;"	f	class:CirNet
+getName	cir/cirNet.h	/^	const string& getName() const					{ return _name; }$/;"	f	class:CirNet
+getNegFormula	sat/sat.h	/^      inline const size_t getNegFormula(const size_t& v) const { return (v ^ 1ul); }$/;"	f	class:SatSolverV
+getNegVar	sat/sat.h	/^      inline const size_t getNegVar(const Var& v) const { return ((getPosVar(v)) | 1ul); }$/;"	f	class:SatSolverV
+getNumClauses	cir/cirMgr.h	/^	unsigned getNumClauses() const 	{ return _s -> getNumClauses(); }$/;"	f	class:CirMgr
+getNumClauses	sat/sat.h	/^      int getNumClauses() const { return _solver->nRootCla(); }$/;"	f	class:SatSolverV
+getNumVars	cir/cirMgr.h	/^	unsigned getNumVars() const		{ return _s -> nVars(); }$/;"	f	class:CirMgr
 getOptionList	minisat/Options.h	/^    static vec<Option*>& getOptionList () { static vec<Option*> options; return options; }$/;"	f	class:Minisat::Option
-getPath	cir/cirMgr.h	/^	CirNet* getPath() 				{ return _patch; }$/;"	f	class:CirMgr
-getPiNum	cir/cirNet.h	/^    unsigned getPiNum()                                     { return _piList.size(); }$/;"	f	class:CirNet
-getPo	cir/cirNet.h	/^	CirGate* getPo(unsigned idx)							{ return _poList[idx]; }$/;"	f	class:CirNet
-getPoNum	cir/cirNet.h	/^    unsigned getPoNum()                                     { return _poList.size(); }$/;"	f	class:CirNet
+getOriVar	sat/sat.h	/^      inline const Var getOriVar(const size_t& v) const { return (Var)(v >> 1ul); }$/;"	f	class:SatSolverV
+getPath	cir/cirMgr.h	/^	CirNet* getPath() 					{ return _patch; }$/;"	f	class:CirMgr
+getPi	cir/cirNet.h	/^	CirGate* getPi(unsigned idx) 					{ return _piList[idx]; }$/;"	f	class:CirNet
+getPiNum	cir/cirNet.h	/^    unsigned getPiNum() const						{ return _piList.size(); }$/;"	f	class:CirNet
+getPo	cir/cirNet.h	/^	CirGate* getPo(unsigned idx) 					{ return _poList[idx]; }$/;"	f	class:CirNet
+getPoNum	cir/cirNet.h	/^    unsigned getPoNum() const						{ return _poList.size(); }$/;"	f	class:CirNet
+getPosVar	sat/sat.h	/^      inline const size_t getPosVar(const Var& v) const { return (((size_t)v) << 1ul); }$/;"	f	class:SatSolverV
 getType	cir/cirGate.cpp	/^CirAndGate::getType() const$/;"	f	class:CirAndGate
 getType	cir/cirGate.cpp	/^CirBufGate::getType() const$/;"	f	class:CirBufGate
 getType	cir/cirGate.cpp	/^CirConstGate::getType() const$/;"	f	class:CirConstGate
@@ -402,12 +611,18 @@ getType	cir/cirGate.cpp	/^CirPiGate::getType() const$/;"	f	class:CirPiGate
 getType	cir/cirGate.cpp	/^CirPoGate::getType() const$/;"	f	class:CirPoGate
 getType	cir/cirGate.cpp	/^CirXnorGate::getType() const$/;"	f	class:CirXnorGate
 getType	cir/cirGate.cpp	/^CirXorGate::getType() const$/;"	f	class:CirXorGate
+getUInt	sat/FileV.cpp	/^uint64 getUInt(File& in)$/;"	f
 getUsageString	minisat/Options.h	/^    static const char*&  getUsageString() { static const char* usage_str; return usage_str; }$/;"	f	class:Minisat::Option
 getVal	minisat/sat.h	/^  unsigned getVal(Var var) const {$/;"	f	class:SatSolver
 getVal	util/unate.h	/^  unsigned getVal() const { return val_; }$/;"	f	class:Unateness
+getVar	cir/cirGate.h	/^	Var getVar()					{ return _var; }$/;"	f	class:CirGate
+getmin	sat/HeapV.h	/^    int  getmin() {$/;"	f	class:Heap
+grow	sat/GlobalV.h	/^void vec<T>::grow(int min_cap) {$/;"	f	class:vec
 growTo	minisat/SolverTypes.h	/^    void     growTo      (CRef cr, const T& t){ map.insert(cr, t); } \/\/ NOTE: for compatibility$/;"	f	class:Minisat::CMap
 growTo	minisat/Vec.h	/^void vec<T,_Size>::growTo(Size size) {$/;"	f	class:Minisat::vec
 growTo	minisat/Vec.h	/^void vec<T,_Size>::growTo(Size size, const T& pad) {$/;"	f	class:Minisat::vec
+growTo	sat/GlobalV.h	/^void vec<T>::growTo(int size) {$/;"	f	class:vec
+growTo	sat/GlobalV.h	/^void vec<T>::growTo(int size, const T& pad) {$/;"	f	class:vec
 has	minisat/IntMap.h	/^        bool     has         (K k) { in_set.reserve(k, 0); return in_set[k]; }$/;"	f	class:Minisat::IntSet
 has	minisat/IntMap.h	/^        bool     has       (K k) const { return index(k) < map.size(); }$/;"	f	class:Minisat::IntMap
 has	minisat/Map.h	/^    bool has   (const K& k) const {$/;"	f	class:Minisat::Map
@@ -419,22 +634,35 @@ hash	minisat/Map.h	/^static inline uint32_t hash(int32_t x) { return (uint32_t)x
 hash	minisat/Map.h	/^static inline uint32_t hash(int64_t x) { return (uint32_t)x; }$/;"	f	namespace:Minisat
 hash	minisat/Map.h	/^static inline uint32_t hash(uint32_t x){ return x; }$/;"	f	namespace:Minisat
 hash	minisat/Map.h	/^static inline uint32_t hash(uint64_t x){ return (uint32_t)x; }$/;"	f	namespace:Minisat
+hash	sat/SolverTypesV.h	/^    inline uint hash() const { return (uint)x; }$/;"	f	class:Lit
 header	minisat/SolverTypes.h	/^        unsigned size      : 27; }                        header;$/;"	m	class:Minisat::Clause	typeref:struct:Minisat::Clause::__anon4
 heap	minisat/Heap.h	/^    vec<K>                heap;     \/\/ Heap of Keys$/;"	m	class:Minisat::Heap
+heap	sat/HeapV.h	/^    vec<int> heap;     \/\/ heap of ints$/;"	m	class:Heap
+heap	sat/VarOrderV.h	/^    Heap<VarOrder_lt>   heap;$/;"	m	class:VarOrder
+heapProperty	sat/HeapV.h	/^    bool heapProperty() {$/;"	f	class:Heap
+heapProperty	sat/HeapV.h	/^    bool heapProperty(int i) {$/;"	f	class:Heap
 help	minisat/Options.h	/^    virtual void help (bool verbose = false){$/;"	f	class:Minisat::BoolOption
 help	minisat/Options.h	/^    virtual void help (bool verbose = false){$/;"	f	class:Minisat::DoubleOption
 help	minisat/Options.h	/^    virtual void help (bool verbose = false){$/;"	f	class:Minisat::Int64Option
 help	minisat/Options.h	/^    virtual void help (bool verbose = false){$/;"	f	class:Minisat::IntOption
 help	minisat/Options.h	/^    virtual void help (bool verbose = false){$/;"	f	class:Minisat::StringOption
 i	minisat/Solver.h	/^        uint32_t i;$/;"	m	struct:Minisat::Solver::ShrinkStackElem
+id	sat/SolverTypesV.h	/^    ClauseId& id          ()      const { return *((ClauseId*)&data[size() + (int)learnt()]); }$/;"	f	class:Clause
+id	sat/SolverTypesV.h	/^inline Lit  id    (Lit p, bool sgn) { Lit q; q.x = p.x ^ (int)sgn; return q; }$/;"	f
+id_counter	sat/ProofV.h	/^    ClauseId        id_counter;$/;"	m	class:Proof
 implies	minisat/Solver.cpp	/^bool Solver::implies(const vec<Lit>& assumps, vec<Lit>& out)$/;"	f	class:Solver
 in	minisat/ParseUtils.h	/^    gzFile         in;$/;"	m	class:Minisat::StreamBuffer
 inHeap	minisat/Heap.h	/^    bool inHeap    (K k)       const { return indices.has(k) && indices[k] >= 0; }$/;"	f	class:Minisat::Heap
+inHeap	sat/HeapV.h	/^    bool inHeap    (int n)    { assert(ok(n)); return indices[n] != 0; }$/;"	f	class:Heap
 in_set	minisat/IntMap.h	/^        IntMap<K, char, MkIndex> in_set;$/;"	m	class:Minisat::IntSet
+incRef	cir/cirGate.h	/^	static void incRef() 	        { ++_globalRef; }$/;"	f	class:CirGate
 increase	minisat/Heap.h	/^    void increase  (K k) { assert(inHeap(k)); percolateDown(indices[k]); }$/;"	f	class:Minisat::Heap
+increase	sat/HeapV.h	/^    void increase  (int n)    { assert(ok(n)); assert(inHeap(n)); percolateUp(indices[n]); }$/;"	f	class:Heap
 index	minisat/IntMap.h	/^        MkIndex  index;$/;"	m	class:Minisat::IntMap
 index	minisat/Map.h	/^    int32_t index  (const K& k) const { return hash(k) % cap; }$/;"	f	class:Minisat::Map
+index	sat/SolverTypesV.h	/^inline int  index (Lit p) { return p.x; }                \/\/ A "toInt" method that guarantees small, positive integers suitable for array indexing.$/;"	f
 indices	minisat/Heap.h	/^    IntMap<K,int,MkIndex> indices;  \/\/ Each Key's position (index) in the Heap$/;"	m	class:Minisat::Heap
+indices	sat/HeapV.h	/^    vec<int> indices;  \/\/ int -> index in heap$/;"	m	class:Heap
 init	cir/cirNet.cpp	/^CirNet::init()$/;"	f	class:CirNet
 init	minisat/SolverTypes.h	/^    void  init      (const K& idx){ occs.reserve(idx); occs[idx].clear(); dirty.reserve(idx, 0); }$/;"	f	class:Minisat::OccLists
 init	minisat/sat.h	/^  void init() {$/;"	f	class:SatSolver
@@ -445,39 +673,64 @@ insert	minisat/IntMap.h	/^        void     insert (K key, V val, V pad){ reserve
 insert	minisat/Map.h	/^    void insert (const K& k, const D& d) { if (checkCap(size+1)) rehash(); _insert(k, d); size++; }$/;"	f	class:Minisat::Map
 insert	minisat/Queue.h	/^    void insert(T elem) {   \/\/ INVARIANT: buf[end] is always unused$/;"	f	class:Minisat::Queue
 insert	minisat/SolverTypes.h	/^    void     insert      (CRef cr, const T& t){ map.insert(cr, t); }$/;"	f	class:Minisat::CMap
+insert	sat/HeapV.h	/^    void insert(int n) {$/;"	f	class:Heap
 insertVarOrder	minisat/Solver.h	/^inline void Solver::insertVarOrder(Var x) {$/;"	f	class:Minisat::Solver
+int64	sat/GlobalV.h	/^typedef INT64              int64;$/;"	t
+int64	sat/GlobalV.h	/^typedef long long          int64;$/;"	t
 interrupt	minisat/Solver.h	/^inline void     Solver::interrupt(){ asynch_interrupt = true; }$/;"	f	class:Minisat::Solver
+intp	sat/GlobalV.h	/^typedef INT_PTR            intp;$/;"	t
+intp	sat/GlobalV.h	/^typedef __PTRDIFF_TYPE__   intp;$/;"	t
 irand	minisat/Rnd.h	/^static inline int irand(double& seed, int size) { return (int)(drand(seed) * size); }$/;"	f	namespace:Minisat
 irand	minisat/Solver.h	/^    static inline int irand(double& seed, int size) {$/;"	f	class:Minisat::Solver
+irand	sat/GlobalV.h	/^static inline int irand(double& seed, int size) {$/;"	f
 isBinate	util/unate.h	/^  bool isBinate() const { return val_ == 3; }$/;"	f	class:Unateness
 isEof	minisat/ParseUtils.h	/^static inline bool isEof(StreamBuffer& in) { return *in == EOF;  }$/;"	f	namespace:Minisat
 isEof	minisat/ParseUtils.h	/^static inline bool isEof(const char*   in) { return *in == '\\0'; }$/;"	f	namespace:Minisat
-isFaninInv	cir/cirGate.h	/^	bool isFaninInv(unsigned idx) const				{ return _in[idx].isInv(); }$/;"	f
+isFaninInv	cir/cirGate.h	/^	bool isFaninInv(unsigned idx) const				{ return _in[idx].isInv(); }$/;"	f	class:CirGate
+isInv	cir/cirGate.h	/^	bool isInv() const 			{ return _gateV & (size_t)INV_MASK; }$/;"	f	class:CirGateV
+isLit	sat/SolverTypesV.h	/^    bool        isLit    () const { return ((uintp)data & 1) == 1; }$/;"	f	class:GClause
 isNeg	util/unate.h	/^  bool isNeg()    const { return val_ == 2; }$/;"	f	class:Unateness
+isNegFormula	sat/sat.h	/^      inline const bool isNegFormula(const size_t& v) const { return (v & 1ul); }$/;"	f	class:SatSolverV
 isNull	util/unate.h	/^  bool isNull()   const { return val_ == 0; }$/;"	f	class:Unateness
 isPos	util/unate.h	/^  bool isPos()    const { return val_ == 1; }$/;"	f	class:Unateness
+isRef	cir/cirGate.h	/^	bool isRef() 					{ return _ref == _globalRef; }$/;"	f	class:CirGate
 isRemoved	minisat/Solver.h	/^inline bool     Solver::isRemoved       (CRef cr)         const { return ca[cr].mark() == 1; }$/;"	f	class:Minisat::Solver
 isUnate	util/unate.h	/^  bool isUnate()  const { return isPos() || isNeg(); }$/;"	f	class:Unateness
 key	minisat/Map.h	/^    struct Pair { K key; D data; };$/;"	m	struct:Minisat::Map::Pair
 l	minisat/Solver.h	/^        Lit      l;$/;"	m	struct:Minisat::Solver::ShrinkStackElem
 l_False	minisat/SolverTypes.h	126;"	d
+l_False	sat/GlobalV.h	/^const lbool l_False = toLbool(-1);$/;"	v
 l_True	minisat/SolverTypes.h	125;"	d
+l_True	sat/GlobalV.h	/^const lbool l_True  = toLbool( 1);$/;"	v
 l_Undef	minisat/SolverTypes.h	127;"	d
+l_Undef	sat/GlobalV.h	/^const lbool l_Undef = toLbool( 0);$/;"	v
 last	minisat/SolverTypes.h	/^    const Lit&   last        ()      const   { return data[header.size-1].lit; }$/;"	f	class:Minisat::Clause
 last	minisat/Vec.h	/^    T&       last  (void)              { return data[sz-1]; }$/;"	f	class:Minisat::vec
 last	minisat/Vec.h	/^    const T& last  (void) const        { return data[sz-1]; }$/;"	f	class:Minisat::vec
+last	sat/GlobalV.h	/^    T&       last  (void)              { return data[sz-1]; }$/;"	f	class:vec
+last	sat/GlobalV.h	/^    const T& last  (void) const        { return data[sz-1]; }$/;"	f	class:vec
+last	sat/ProofV.h	/^    ClauseId last      () { assert(id_counter != ClauseId_NULL); return id_counter - 1; }$/;"	f	class:Proof
+lastToFirst_lt	sat/SolverV.cpp	/^    lastToFirst_lt(const vec<int>& t) : trail_pos(t) {}$/;"	f	class:lastToFirst_lt
+lastToFirst_lt	sat/SolverV.cpp	/^class lastToFirst_lt {  \/\/ Helper class to 'analyze' -- order literals from last to first occurance in 'trail[]'.$/;"	c	file:
 lbool	minisat/SolverTypes.h	/^    explicit lbool(bool x) : value(!x) { }$/;"	f	class:Minisat::lbool
 lbool	minisat/SolverTypes.h	/^    explicit lbool(uint8_t v) : value(v) { }$/;"	f	class:Minisat::lbool
 lbool	minisat/SolverTypes.h	/^    lbool()       : value(0) { }$/;"	f	class:Minisat::lbool
 lbool	minisat/SolverTypes.h	/^class lbool {$/;"	c	namespace:Minisat
+lbool	sat/GlobalV.h	/^    explicit lbool(int v) : value(v) { }$/;"	f	class:lbool
+lbool	sat/GlobalV.h	/^    lbool()       : value(0) { }$/;"	f	class:lbool
+lbool	sat/GlobalV.h	/^    lbool(bool x) : value((int)x*2-1) { }$/;"	f	class:lbool
+lbool	sat/GlobalV.h	/^class lbool {$/;"	c
 lea	minisat/Alloc.h	/^    T*       lea       (Ref r)       { assert(r < sz); return &memory[r]; }$/;"	f	class:Minisat::RegionAllocator
 lea	minisat/Alloc.h	/^    const T* lea       (Ref r) const { assert(r < sz); return &memory[r]; }$/;"	f	class:Minisat::RegionAllocator
 lea	minisat/SolverTypes.h	/^    Clause*       lea       (CRef r)         { return (Clause*)ra.lea(r); }$/;"	f	class:Minisat::ClauseAllocator
 lea	minisat/SolverTypes.h	/^    const Clause* lea       (CRef r) const   { return (Clause*)ra.lea(r);; }$/;"	f	class:Minisat::ClauseAllocator
 learnt	minisat/SolverTypes.h	/^        unsigned learnt    : 1;$/;"	m	struct:Minisat::Clause::__anon4
 learnt	minisat/SolverTypes.h	/^    bool         learnt      ()      const   { return header.learnt; }$/;"	f	class:Minisat::Clause
+learnt	sat/SolverTypesV.h	/^    bool      learnt      ()      const { return size_learnt & 1; }$/;"	f	class:Clause
 learnts	minisat/Solver.h	/^    vec<CRef>           learnts;          \/\/ List of learnt clauses.$/;"	m	class:Minisat::Solver
+learnts	sat/SolverV.h	/^    vec<Clause*>        learnts;          \/\/ List of learnt clauses.$/;"	m	class:SolverV
 learnts_literals	minisat/Solver.h	/^    uint64_t dec_vars, num_clauses, num_learnts, clauses_literals, learnts_literals, max_literals, tot_literals;$/;"	m	class:Minisat::Solver
+learnts_literals	sat/SolverV.h	/^    int64   clauses_literals, learnts_literals, max_literals, tot_literals;$/;"	m	struct:SolverStats
 learntsize_adjust_cnt	minisat/Solver.h	/^    int                 learntsize_adjust_cnt;$/;"	m	class:Minisat::Solver
 learntsize_adjust_confl	minisat/Solver.h	/^    double              learntsize_adjust_confl;$/;"	m	class:Minisat::Solver
 learntsize_adjust_inc	minisat/Solver.h	/^    double    learntsize_adjust_inc;$/;"	m	class:Minisat::Solver
@@ -485,19 +738,24 @@ learntsize_adjust_start_confl	minisat/Solver.h	/^    int       learntsize_adjust
 learntsize_factor	minisat/Solver.h	/^    double    learntsize_factor;  \/\/ The intitial limit for learnt clauses is a factor of the original clauses.                (default 1 \/ 3)$/;"	m	class:Minisat::Solver
 learntsize_inc	minisat/Solver.h	/^    double    learntsize_inc;     \/\/ The limit for learnt clauses is multiplied with this factor each restart.                 (default 1.1)$/;"	m	class:Minisat::Solver
 left	minisat/Heap.h	/^    static inline int left  (int i) { return i*2+1; }$/;"	f	class:Minisat::Heap
+left	sat/HeapV.h	/^static inline int left  (int i) { return i+i; }$/;"	f
 level	minisat/Solver.h	/^    struct VarData { CRef reason; int level; };$/;"	m	struct:Minisat::Solver::VarData
 level	minisat/Solver.h	/^inline int  Solver::level (Var x) const { return vardata[x].level; }$/;"	f	class:Minisat::Solver
+level	sat/SolverV.h	/^    vec<int>            level;            \/\/ 'level[var]' is the decision level at which assignment was made.$/;"	m	class:SolverV
 limitMemory	minisat/System.cpp	/^void Minisat::limitMemory(uint64_t \/*max_mem_mb*\/)$/;"	f	class:Minisat
 limitMemory	minisat/System.cpp	/^void Minisat::limitMemory(uint64_t max_mem_mb)$/;"	f	class:Minisat
 limitTime	minisat/System.cpp	/^void Minisat::limitTime(uint32_t \/*max_cpu_time*\/)$/;"	f	class:Minisat
 limitTime	minisat/System.cpp	/^void Minisat::limitTime(uint32_t max_cpu_time)$/;"	f	class:Minisat
 lit	minisat/SolverTypes.h	/^    union { Lit lit; float act; uint32_t abs; CRef rel; } data[0];$/;"	m	union:Minisat::Clause::__anon5
+lit	sat/SolverTypesV.h	/^    Lit         lit      () const { return toLit(((intp)data) >> 1); }$/;"	f	class:GClause
 litRedundant	minisat/Solver.cpp	/^bool Solver::litRedundant(Lit p)$/;"	f	class:Solver
 lit_Error	minisat/SolverTypes.h	/^const Lit lit_Error = { -1 };  \/\/ }$/;"	m	namespace:Minisat
 lit_Undef	minisat/SolverTypes.h	/^const Lit lit_Undef = { -2 };  \/\/ }- Useful special constants.$/;"	m	namespace:Minisat
 lits	minisat/SolverTypes.h	/^    const Lit* lits;$/;"	m	class:Minisat::TrailIterator
 locked	minisat/Solver.h	/^inline bool     Solver::locked          (const Clause& c) const { return value(c[0]) == l_True && reason(var(c[0])) != CRef_Undef && ca.lea(reason(var(c[0]))) == &c; }$/;"	f	class:Minisat::Solver
+locked	sat/SolverV.h	/^    bool     locked          (const Clause* c) const { return reason[var((*c)[0])] == c; }$/;"	f	class:SolverV
 lookup	minisat/SolverTypes.h	/^    Vec&  lookup    (const K& idx){ if (dirty[idx]) clean(idx); return occs[idx]; }$/;"	f	class:Minisat::OccLists
+lseek64	sat/FileV.h	13;"	d
 lt	minisat/Heap.h	/^    Comp                  lt;       \/\/ The heap is a minimum-heap with respect to this comparator$/;"	m	class:Minisat::Heap
 luby	minisat/Solver.cpp	/^static double luby(double y, int x){$/;"	f	file:
 luby_restart	minisat/Solver.h	/^    bool      luby_restart;$/;"	m	class:Minisat::Solver
@@ -508,24 +766,34 @@ mapVar	minisat/Solver.cpp	/^static Var mapVar(Var x, vec<Var>& map, Var& max)$/;
 mark	minisat/SolverTypes.h	/^        unsigned mark      : 2;$/;"	m	struct:Minisat::Clause::__anon4
 mark	minisat/SolverTypes.h	/^    uint32_t     mark        ()      const   { return header.mark; }$/;"	f	class:Minisat::Clause
 mark	minisat/SolverTypes.h	/^    void         mark        (uint32_t m)    { header.mark = m; }$/;"	f	class:Minisat::Clause
+markOffsetClause	cir/cirSat.cpp	/^CirMgr::markOffsetClause(const ClauseId& cid)$/;"	f	class:CirMgr
+markOnsetClause	cir/cirSat.cpp	/^CirMgr::markOnsetClause(const ClauseId& cid)$/;"	f	class:CirMgr
 match	minisat/ParseUtils.h	/^static bool match(B& in, const char* str) {$/;"	f	namespace:Minisat
 max	minisat/Vec.h	/^    static inline Size max(Size x, Size y){ return (x > y) ? x : y; }$/;"	f	class:Minisat::vec
+max	sat/GlobalV.h	/^template<class T> static inline T max(T x, T y) { return (x > y) ? x : y; }$/;"	f
 max_learnts	minisat/Solver.h	/^    double              max_learnts;$/;"	m	class:Minisat::Solver
 max_literals	minisat/Solver.h	/^    uint64_t dec_vars, num_clauses, num_learnts, clauses_literals, learnts_literals, max_literals, tot_literals;$/;"	m	class:Minisat::Solver
+max_literals	sat/SolverV.h	/^    int64   clauses_literals, learnts_literals, max_literals, tot_literals;$/;"	m	struct:SolverStats
 memReadPeak	minisat/System.cpp	/^static inline int memReadPeak(void)$/;"	f	file:
 memReadStat	minisat/System.cpp	/^static inline int memReadStat(int field)$/;"	f	file:
+memReadStat	sat/GlobalV.h	/^static inline int memReadStat(int field)$/;"	f
 memUsed	minisat/System.cpp	/^double Minisat::memUsed()     { return 0; }$/;"	f	class:Minisat
 memUsed	minisat/System.cpp	/^double Minisat::memUsed() { return (double)memReadStat(0) * (double)getpagesize() \/ (1024*1024); }$/;"	f	class:Minisat
 memUsed	minisat/System.cpp	/^double Minisat::memUsed() {$/;"	f	class:Minisat
+memUsed	sat/GlobalV.h	/^static inline int64 memUsed() { return (int64)memReadStat(0) * (int64)getpagesize(); }$/;"	f
+memUsed	sat/GlobalV.h	/^static inline int64 memUsed() {$/;"	f
 memUsedPeak	minisat/System.cpp	/^double Minisat::memUsedPeak() { return 0; }$/;"	f	class:Minisat
 memUsedPeak	minisat/System.cpp	/^double Minisat::memUsedPeak() { return memUsed(); }$/;"	f	class:Minisat
 memUsedPeak	minisat/System.cpp	/^double Minisat::memUsedPeak(bool strictlyPeak) { $/;"	f	class:Minisat
 memory	minisat/Alloc.h	/^    T*        memory;$/;"	m	class:Minisat::RegionAllocator
+min	sat/GlobalV.h	/^template<class T> static inline T min(T x, T y) { return (x < y) ? x : y; }$/;"	f
 min_learnts_lim	minisat/Solver.h	/^    int       min_learnts_lim;    \/\/ Minimum number to set the learnts limit to.$/;"	m	class:Minisat::Solver
-miterCkt	cir/cirMgr.h	/^        CirNet* miterCkt(CirNet* f, CirNet* g) { return _out;} \/\/ FIXME$/;"	f	class:CirMgr
 mkLit	minisat/SolverTypes.h	/^inline  Lit  mkLit     (Var var, bool sign) { Lit p; p.x = var + var + (int)sign; return p; }$/;"	f	namespace:Minisat
+mkLit	sat/SolverTypesV.h	/^inline  Lit  mkLit     (Var var, bool sign) { Lit p; p.x = var + var + (int)sign; return p; }$/;"	f
 mkVarData	minisat/Solver.h	/^    static inline VarData mkVarData(CRef cr, int l){ VarData d = {cr, l}; return d; }$/;"	f	class:Minisat::Solver
+mode	sat/FileV.h	/^    FileMode    mode;       \/\/ Reading or writing.$/;"	m	class:File
 model	minisat/Solver.h	/^    vec<lbool> model;             \/\/ If problem is satisfiable, this vector contains the model (if any).$/;"	m	class:Minisat::Solver
+model	sat/SolverV.h	/^    vec<lbool>  model;              \/\/ If problem is satisfiable, this vector contains the model (if any).$/;"	m	class:SolverV
 modelValue	minisat/Solver.h	/^inline lbool    Solver::modelValue    (Lit p) const   { return model[var(p)] ^ sign(p); }$/;"	f	class:Minisat::Solver
 modelValue	minisat/Solver.h	/^inline lbool    Solver::modelValue    (Var x) const   { return model[x]; }$/;"	f	class:Minisat::Solver
 moveTo	minisat/Alloc.h	/^    void     moveTo(RegionAllocator& to) {$/;"	f	class:Minisat::RegionAllocator
@@ -534,25 +802,49 @@ moveTo	minisat/Map.h	/^    void moveTo(Map& other){$/;"	f	class:Minisat::Map
 moveTo	minisat/SolverTypes.h	/^    void moveTo(CMap& other){ map.moveTo(other.map); }$/;"	f	class:Minisat::CMap
 moveTo	minisat/SolverTypes.h	/^    void moveTo(ClauseAllocator& to){$/;"	f	class:Minisat::ClauseAllocator
 moveTo	minisat/Vec.h	/^    void moveTo(vec<T>& dest) { dest.clear(true); dest.data = data; dest.sz = sz; dest.cap = cap; data = NULL; sz = 0; cap = 0; }$/;"	f	class:Minisat::vec
+moveTo	sat/GlobalV.h	/^    void moveTo(vec<T>& dest) { dest.clear(true); dest.data = data; dest.sz = sz; dest.cap = cap; data = NULL; sz = 0; cap = 0; }$/;"	f	class:vec
+mySolve	sat/SolverV.cpp	/^bool SolverV::mySolve(const vec<Lit>& assumps, int conflictThreshold, bool& result)$/;"	f	class:SolverV
 mySplit	util/myString.h	/^std::vector<std::string> mySplit(const std::string& str) {$/;"	f
 myToString	util/parse.h	/^std::string myToString(unsigned n) {$/;"	f
 nAssigns	minisat/Solver.h	/^inline int      Solver::nAssigns      ()      const   { return trail.size(); }$/;"	f	class:Minisat::Solver
+nAssigns	sat/SolverV.h	/^    int     nAssigns() { return trail.size(); }$/;"	f	class:SolverV
 nClauses	minisat/Solver.h	/^inline int      Solver::nClauses      ()      const   { return num_clauses; }$/;"	f	class:Minisat::Solver
+nClauses	sat/SolverV.h	/^    int     nClauses() { return clauses.size(); }$/;"	f	class:SolverV
 nFreeVars	minisat/Solver.h	/^inline int      Solver::nFreeVars     ()      const   { return (int)dec_vars - (trail_lim.size() == 0 ? trail.size() : trail_lim[0]); }$/;"	f	class:Minisat::Solver
 nLearnts	minisat/Solver.h	/^inline int      Solver::nLearnts      ()      const   { return num_learnts; }$/;"	f	class:Minisat::Solver
+nLearnts	sat/SolverV.h	/^    int     nLearnts() { return learnts.size(); }$/;"	f	class:SolverV
+nRootCla	sat/SolverV.h	/^    int     nRootCla() { return root_cla_count; } \/\/ MODIFICATION FOR SoCV$/;"	f	class:SolverV
 nVars	minisat/Solver.h	/^inline int      Solver::nVars         ()      const   { return next_var; }$/;"	f	class:Minisat::Solver
 nVars	minisat/sat.h	/^  int nVars() const { return solver_->nVars(); }$/;"	f	class:SatSolver
+nVars	sat/SolverV.h	/^    int     nVars     ()                    { return assigns.size(); }$/;"	f	class:SolverV
+nVars	sat/sat.h	/^		int nVars() const { return _solver -> nVars(); }$/;"	f	class:SatSolverV
 name	minisat/Options.h	/^    const char* name;$/;"	m	class:Minisat::Option
+neg	sat/SolverTypesV.h	/^	inline void neg() { x ^= 0x1; }$/;"	f	class:Lit
+newClause	sat/SolverV.cpp	/^void SolverV::newClause(const vec<Lit>& ps_, bool learnt, ClauseId id )$/;"	f	class:SolverV
 newDecisionLevel	minisat/Solver.h	/^inline void     Solver::newDecisionLevel()                      { trail_lim.push(trail.size()); }$/;"	f	class:Minisat::Solver
 newVar	minisat/Solver.cpp	/^Var Solver::newVar(lbool upol, bool dvar)$/;"	f	class:Solver
 newVar	minisat/sat.h	/^  Var newVar() { return solver_->newVar(); }$/;"	f	class:SatSolver
+newVar	sat/SolverV.cpp	/^Var SolverV::newVar() {$/;"	f	class:SolverV
+newVar	sat/VarOrderV.h	/^void VarOrder::newVar(void)$/;"	f	class:VarOrder
+newVar	sat/sat.cpp	/^Var SatSolverV::newVar() {$/;"	f	class:SatSolverV
 next_var	minisat/Solver.h	/^    Var                 next_var;         \/\/ Next variable to be created.$/;"	m	class:Minisat::Solver
 nprimes	minisat/Map.h	/^static const int nprimes          = 25;$/;"	m	namespace:Minisat
+null	sat/FileV.h	/^    bool null(void) {               \/\/ TRUE if no file is opened.$/;"	f	class:File
+null	sat/reader.h	/^	bool null()					{ return fd == -1; }$/;"	f	class:Reader
 num_clauses	minisat/Solver.h	/^    uint64_t dec_vars, num_clauses, num_learnts, clauses_literals, learnts_literals, max_literals, tot_literals;$/;"	m	class:Minisat::Solver
 num_learnts	minisat/Solver.h	/^    uint64_t dec_vars, num_clauses, num_learnts, clauses_literals, learnts_literals, max_literals, tot_literals;$/;"	m	class:Minisat::Solver
 occs	minisat/SolverTypes.h	/^    IntMap<K, Vec,  MkIndex> occs;$/;"	m	class:Minisat::OccLists
 ok	minisat/Solver.h	/^    bool                ok;               \/\/ If FALSE, the constraints are already unsatisfiable. No part of the solver state may be used!$/;"	m	class:Minisat::Solver
+ok	sat/HeapV.h	/^    bool ok(int n) { return n >= 0 && n < (int)indices.size(); }$/;"	f	class:Heap
+ok	sat/SolverV.h	/^    bool                ok;               \/\/ If FALSE, the constraints are already unsatisfiable. No part of the solver state may be used!$/;"	m	class:SolverV
 okay	minisat/Solver.h	/^inline bool     Solver::okay          ()      const   { return ok; }$/;"	f	class:Minisat::Solver
+okay	sat/SolverV.h	/^    bool    okay() { return ok; }       \/\/ FALSE means solver is in an conflicting state (must never be used again!)$/;"	f	class:SolverV
+open	sat/FileV.cpp	/^void File::open(cchar* name, cchar* mode_)$/;"	f	class:File
+open	sat/FileV.cpp	/^void File::open(int file_descr, FileMode m, bool own)$/;"	f	class:File
+open	sat/ProofV.cpp	/^    char* open(File& fp)$/;"	f	class:TempFiles
+open	sat/reader.cpp	/^void Reader::open( const char* file_name ){$/;"	f	class:Reader
+open	sat/reader.cpp	/^void Reader::open(int filedesc)$/;"	f	class:Reader
+open64	sat/FileV.h	14;"	d
 operator !	minisat/SolverTypes.h	/^    lbool operator !  ()        const { return lbool((uint8_t)(value^(uint8_t)1)); } \/\/ added by music960633$/;"	f	class:Minisat::lbool
 operator !	util/bool3v.h	/^  bool_3v operator !() const {$/;"	f	class:bool_3v
 operator !=	minisat/Solver.h	/^        bool operator!=(const Watcher& w) const { return cref != w.cref; }$/;"	f	struct:Minisat::Solver::Watcher
@@ -560,6 +852,9 @@ operator !=	minisat/SolverTypes.h	/^    bool  operator != (lbool b) const { retu
 operator !=	minisat/SolverTypes.h	/^    bool operator != (Lit p) const { return x != p.x; }$/;"	f	struct:Minisat::Lit
 operator !=	minisat/SolverTypes.h	/^    bool operator!=(const ClauseIterator& ci) const { return crefs != ci.crefs; }$/;"	f	class:Minisat::ClauseIterator
 operator !=	minisat/SolverTypes.h	/^    bool operator!=(const TrailIterator& ti) const { return lits != ti.lits; }$/;"	f	class:Minisat::TrailIterator
+operator !=	sat/GlobalV.h	/^    bool  operator != (const lbool& other) const { return value != other.value; }$/;"	f	class:lbool
+operator !=	sat/GlobalV.h	/^template <class T> static inline bool operator != (const T& x, const T& y) { return !(x == y); }$/;"	f
+operator !=	sat/SolverTypesV.h	/^    bool        operator != (GClause c) const { return data != c.data; }$/;"	f	class:GClause
 operator !=	util/bool3v.h	/^  bool operator != (bool_3v b) const { return !(*this == b); }$/;"	f	class:bool_3v
 operator !=	util/unate.h	/^  bool operator != (const Unateness& u) const { return val_ != u.val_; }$/;"	f	class:Unateness
 operator &&	minisat/SolverTypes.h	/^    lbool operator && (lbool b) const { $/;"	f	class:Minisat::lbool
@@ -576,6 +871,10 @@ operator ()	minisat/Solver.h	/^        bool operator()(const Watcher& w) const {
 operator ()	minisat/SolverTypes.h	/^        uint32_t operator()(CRef cr) const { return (uint32_t)cr; } };$/;"	f	struct:Minisat::CMap::CRefHash
 operator ()	minisat/SolverTypes.h	/^struct MkIndexLit { vec<Lit>::Size operator()(Lit l) const { return vec<Lit>::Size(l.x); } };$/;"	f	struct:Minisat::MkIndexLit
 operator ()	minisat/Sort.h	/^    bool operator () (T x, T y) { return x < y; }$/;"	f	struct:Minisat::LessThan_default
+operator ()	sat/SolverV.cpp	/^    bool operator () (Lit p, Lit q) { return trail_pos[var(p)] > trail_pos[var(q)]; }$/;"	f	class:lastToFirst_lt
+operator ()	sat/SolverV.cpp	/^struct reduceDB_lt { bool operator () (Clause* x, Clause* y) { return x->size() > 2 && (y->size() == 2 || x->activity() < y->activity()); } };$/;"	f	struct:reduceDB_lt
+operator ()	sat/SortV.h	/^    bool operator () (T x, T y) { return x < y; }$/;"	f	struct:LessThan_default
+operator ()	sat/VarOrderV.h	/^    bool operator () (Var x, Var y) { return activity[x] > activity[y]; }$/;"	f	struct:VarOrder_lt
 operator *	minisat/ParseUtils.h	/^    int  operator *  () const { return (pos >= size) ? EOF : buf[pos]; }$/;"	f	class:Minisat::StreamBuffer
 operator *	minisat/SolverTypes.h	/^    Lit  operator*() const { return *lits; }$/;"	f	class:Minisat::TrailIterator
 operator *	minisat/SolverTypes.h	/^    const Clause& operator*() const { return ca[*crefs]; }$/;"	f	class:Minisat::ClauseIterator
@@ -583,20 +882,30 @@ operator ++	minisat/ParseUtils.h	/^    void operator ++ ()       { pos++; assure
 operator ++	minisat/SolverTypes.h	/^    void operator++()   { lits++; }$/;"	f	class:Minisat::TrailIterator
 operator ++	minisat/SolverTypes.h	/^    void operator++(){ crefs++; }$/;"	f	class:Minisat::ClauseIterator
 operator <	minisat/SolverTypes.h	/^    bool operator <  (Lit p) const { return x < p.x;  } \/\/ '<' makes p, ~p adjacent in the ordering.$/;"	f	struct:Minisat::Lit
+operator <	sat/SolverTypesV.h	/^inline bool operator <  (Lit p, Lit q) { return index(p)  < index(q); }  \/\/ '<' guarantees that p, ~p are adjacent in the ordering.$/;"	f
+operator <=	sat/GlobalV.h	/^template <class T> static inline bool operator <= (const T& x, const T& y) { return !(y < x);  }$/;"	f
 operator =	minisat/Options.h	/^    BoolOption& operator=(bool b)     { value = b; return *this; }$/;"	f	class:Minisat::BoolOption
 operator =	minisat/Options.h	/^    DoubleOption& operator=(double x)   { value = x; return *this; }$/;"	f	class:Minisat::DoubleOption
 operator =	minisat/Options.h	/^    Int64Option& operator= (int64_t x)  { value = x; return *this; }$/;"	f	class:Minisat::Int64Option
 operator =	minisat/Options.h	/^    IntOption& operator= (int32_t x)  { value = x; return *this; }$/;"	f	class:Minisat::IntOption
 operator =	minisat/Options.h	/^    StringOption& operator=    (const char* x)  { value = x; return *this; }$/;"	f	class:Minisat::StringOption
+operator =	sat/GlobalV.h	/^vec<T>& vec<T>::operator = (const vec<T>& other){$/;"	f	class:vec
+operator =	sat/SolverTypesV.h	/^	inline void operator = (int n) { x = n; }$/;"	f	class:Lit
 operator =	util/unate.h	/^  Unateness& operator = (const Unateness& u) { val_ = u.val_; return (*this); }$/;"	f	class:Unateness
 operator ==	minisat/Solver.h	/^        bool operator==(const Watcher& w) const { return cref == w.cref; }$/;"	f	struct:Minisat::Solver::Watcher
 operator ==	minisat/SolverTypes.h	/^    bool  operator == (lbool b) const { return ((b.value&2) & (value&2)) | (!(b.value&2)&(value == b.value)); }$/;"	f	class:Minisat::lbool
 operator ==	minisat/SolverTypes.h	/^    bool operator == (Lit p) const { return x == p.x; }$/;"	f	struct:Minisat::Lit
 operator ==	minisat/SolverTypes.h	/^    bool operator==(const ClauseIterator& ci) const { return crefs == ci.crefs; }$/;"	f	class:Minisat::ClauseIterator
 operator ==	minisat/SolverTypes.h	/^    bool operator==(const TrailIterator& ti) const { return lits == ti.lits; }$/;"	f	class:Minisat::TrailIterator
+operator ==	sat/GlobalV.h	/^    bool  operator == (const lbool& other) const { return value == other.value; }$/;"	f	class:lbool
+operator ==	sat/SolverTypesV.h	/^    bool        operator == (GClause c) const { return data == c.data; }$/;"	f	class:GClause
+operator ==	sat/SolverTypesV.h	/^inline bool operator == (Lit p, Lit q) { return index(p) == index(q); }$/;"	f
 operator ==	util/bool3v.h	/^  bool operator == (bool_3v b) const {$/;"	f	class:bool_3v
 operator ==	util/unate.h	/^  bool operator == (const Unateness& u) const { return val_ == u.val_; }$/;"	f	class:Unateness
+operator >	sat/GlobalV.h	/^template <class T> static inline bool operator >  (const T& x, const T& y) { return y < x;     }$/;"	f
+operator >=	sat/GlobalV.h	/^template <class T> static inline bool operator >= (const T& x, const T& y) { return !(x < y);  }$/;"	f
 operator T*	minisat/Vec.h	/^    operator T*       (void)           { return data; }$/;"	f	class:Minisat::vec
+operator T*	sat/GlobalV.h	/^    operator T*       (void)           { return data; }     \/\/ (unsafe but convenient)$/;"	f	class:vec
 operator []	minisat/Alloc.h	/^    T&       operator[](Ref r)       { assert(r < sz); return memory[r]; }$/;"	f	class:Minisat::RegionAllocator
 operator []	minisat/Alloc.h	/^    const T& operator[](Ref r) const { assert(r < sz); return memory[r]; }$/;"	f	class:Minisat::RegionAllocator
 operator []	minisat/Heap.h	/^    int  operator[](int index) const { assert(index < heap.size()); return heap[index]; }$/;"	f	class:Minisat::Heap
@@ -616,12 +925,17 @@ operator []	minisat/SolverTypes.h	/^    const Clause& operator[](CRef r) const  
 operator []	minisat/SolverTypes.h	/^    const T& operator [] (CRef cr) const      { return map[cr]; }$/;"	f	class:Minisat::CMap
 operator []	minisat/Vec.h	/^    T&       operator [] (Size index)       { return data[index]; }$/;"	f	class:Minisat::vec
 operator []	minisat/Vec.h	/^    const T& operator [] (Size index) const { return data[index]; }$/;"	f	class:Minisat::vec
+operator []	sat/GlobalV.h	/^    T&       operator [] (int index)        { return data[index]; }$/;"	f	class:vec
+operator []	sat/GlobalV.h	/^    const T& operator [] (int index) const  { return data[index]; }$/;"	f	class:vec
+operator []	sat/SolverTypesV.h	/^    Lit       operator [] (int i) const { return data[i]; }$/;"	f	class:Clause
+operator []	sat/SolverTypesV.h	/^    Lit&      operator [] (int i)       { return data[i]; }$/;"	f	class:Clause
 operator ^	minisat/SolverTypes.h	/^    lbool operator ^  (bool  b) const { return lbool((uint8_t)(value^(uint8_t)b)); }$/;"	f	class:Minisat::lbool
 operator ^	minisat/SolverTypes.h	/^inline  Lit  operator ^(Lit p, bool b)      { Lit q; q.x = p.x ^ (unsigned int)b; return q; }$/;"	f	namespace:Minisat
 operator ^	util/bool3v.h	/^  bool_3v operator ^ (bool_3v b) const {$/;"	f	class:bool_3v
 operator bool	minisat/Options.h	/^    operator    bool     (void) const { return value; }$/;"	f	class:Minisat::BoolOption
 operator bool&	minisat/Options.h	/^    operator    bool&    (void)       { return value; }$/;"	f	class:Minisat::BoolOption
 operator const Lit*	minisat/SolverTypes.h	/^    operator const Lit* (void) const         { return (Lit*)data; }$/;"	f	class:Minisat::Clause
+operator const T*	sat/GlobalV.h	/^    operator const T* (void) const     { return data; }$/;"	f	class:vec
 operator const char*	minisat/Options.h	/^    operator      const char*  (void) const     { return value; }$/;"	f	class:Minisat::StringOption
 operator const char*&	minisat/Options.h	/^    operator      const char*& (void)           { return value; }$/;"	f	class:Minisat::StringOption
 operator double	minisat/Options.h	/^    operator      double   (void) const { return value; }$/;"	f	class:Minisat::DoubleOption
@@ -634,9 +948,15 @@ operator |	util/unate.h	/^  Unateness operator | (Unateness u) { return Unatenes
 operator ||	minisat/SolverTypes.h	/^    lbool operator || (lbool b) const {$/;"	f	class:Minisat::lbool
 operator ||	util/bool3v.h	/^  bool_3v operator || (bool_3v b) const {$/;"	f	class:bool_3v
 operator ~	minisat/SolverTypes.h	/^inline  Lit  operator ~(Lit p)              { Lit q; q.x = p.x ^ 1; return q; }$/;"	f	namespace:Minisat
+operator ~	sat/GlobalV.h	/^    lbool operator ~  (void)               const { return lbool(-value); }$/;"	f	class:lbool
+operator ~	sat/SolverTypesV.h	/^inline Lit operator ~ (Lit p) { Lit q; q.x = p.x ^ 1; return q; }$/;"	f
 operator ~	util/unate.h	/^  Unateness operator ~() { return Unateness((0xd8 >> (val_ << 1)) & 3); }$/;"	f	class:Unateness
+order	sat/SolverV.h	/^    VarOrder            order;            \/\/ Keeps track of the decision variable order.$/;"	m	class:SolverV
 order_heap	minisat/Solver.h	/^    Heap<Var,VarOrderLt>order_heap;       \/\/ A priority queue of variables ordered with respect to the variable activity.$/;"	m	class:Minisat::Solver
+overall_pos	sat/reader.h	/^	unsigned int	overall_pos;$/;"	m	class:Reader
+own_fd	sat/FileV.h	/^    bool        own_fd;     \/\/ Do we own the file descriptor? If so, will close file in destructor.$/;"	m	class:File
 parent	minisat/Heap.h	/^    static inline int parent(int i) { return (i-1) >> 1; }$/;"	f	class:Minisat::Heap
+parent	sat/HeapV.h	/^static inline int parent(int i) { return i >> 1; }$/;"	f
 parse	cir/cirParse.cpp	/^bool CirNet::parse(const std::string& filename) {$/;"	f	class:CirNet
 parse	minisat/Options.h	/^    virtual bool parse(const char* str){$/;"	f	class:Minisat::BoolOption
 parse	minisat/Options.h	/^    virtual bool parse(const char* str){$/;"	f	class:Minisat::DoubleOption
@@ -648,34 +968,55 @@ parseOptions	minisat/Options.cpp	/^void Minisat::parseOptions(int& argc, char** 
 peek	minisat/Map.h	/^    bool peek   (const K& k, D& d) const {$/;"	f	class:Minisat::Map
 peek	minisat/Queue.h	/^    T    peek  () const { assert(first != end); return buf[first]; }$/;"	f	class:Minisat::Queue
 percolateDown	minisat/Heap.h	/^    void percolateDown(int i)$/;"	f	class:Minisat::Heap
+percolateDown	sat/HeapV.h	/^    inline void percolateDown(int i)$/;"	f	class:Heap
 percolateUp	minisat/Heap.h	/^    void percolateUp(int i)$/;"	f	class:Minisat::Heap
+percolateUp	sat/HeapV.h	/^    inline void percolateUp(int i)$/;"	f	class:Heap
 phase_saving	minisat/Solver.h	/^    int       phase_saving;       \/\/ Controls the level of phase saving (0=none, 1=limited, 2=full).$/;"	m	class:Minisat::Solver
 pickBranchLit	minisat/Solver.cpp	/^Lit Solver::pickBranchLit()$/;"	f	class:Solver
 polarity	minisat/Solver.h	/^    VMap<char>          polarity;         \/\/ The preferred polarity of each variable.$/;"	m	class:Minisat::Solver
 pop	minisat/Queue.h	/^    void pop   () { assert(first != end); first++; if (first == buf.size()) first = 0; }$/;"	f	class:Minisat::Queue
 pop	minisat/SolverTypes.h	/^    void         pop         ()              { shrink(1); }$/;"	f	class:Minisat::Clause
 pop	minisat/Vec.h	/^    void     pop   (void)              { assert(sz > 0); sz--, data[sz].~T(); }$/;"	f	class:Minisat::vec
+pop	sat/GlobalV.h	/^    void     pop    (void)             { sz--, data[sz].~T(); }$/;"	f	class:vec
 pos	minisat/ParseUtils.h	/^    int            pos;$/;"	m	class:Minisat::StreamBuffer
+pos	sat/FileV.h	/^    int         pos;        \/\/ Current position in buffer$/;"	m	class:File
+pos	sat/reader.h	/^	unsigned int	pos;$/;"	m	class:Reader
 position	minisat/ParseUtils.h	/^    int  position    () const { return pos; }$/;"	f	class:Minisat::StreamBuffer
 primes	minisat/Map.h	/^static const int primes [nprimes] = { 31, 73, 151, 313, 643, 1291, 2593, 5233, 10501, 21013, 42073, 84181, 168451, 337219, 674701, 1349473, 2699299, 5398891, 10798093, 21596719, 43193641, 86387383, 172775299, 345550609, 691101253 };$/;"	m	namespace:Minisat
 printStats	minisat/Solver.cpp	/^void Solver::printStats() const$/;"	f	class:Solver
 printUsageAndExit	minisat/Options.cpp	/^void Minisat::printUsageAndExit (int \/*argc*\/, char** argv, bool verbose)$/;"	f	class:Minisat
 progressEstimate	minisat/Solver.cpp	/^double Solver::progressEstimate() const$/;"	f	class:Solver
+progressEstimate	sat/SolverV.cpp	/^double SolverV::progressEstimate()$/;"	f	class:SolverV
 progress_estimate	minisat/Solver.h	/^    double              progress_estimate;\/\/ Set by 'search()'.$/;"	m	class:Minisat::Solver
+progress_estimate	sat/SolverV.h	/^    double      progress_estimate;  \/\/ Set by 'search()'.$/;"	m	class:SolverV
+proof	sat/SolverV.h	/^    Proof*          proof;              \/\/ Set this directly after constructing 'Solver' to enable proof logging. Initialized to NULL.$/;"	m	class:SolverV
+proof_logged	sat/SolverV.h	/^    bool    proof_logged() { return false; }$/;"	f	class:SolverV
 propagate	minisat/Solver.cpp	/^CRef Solver::propagate()$/;"	f	class:Solver
+propagate	sat/SolverV.cpp	/^Clause* SolverV::propagate()$/;"	f	class:SolverV
+propagate_tmpbin	sat/SolverV.h	/^    Clause*             propagate_tmpbin;$/;"	m	class:SolverV
 propagation_budget	minisat/Solver.h	/^    int64_t             propagation_budget; \/\/ -1 means no budget.$/;"	m	class:Minisat::Solver
 propagations	minisat/Solver.h	/^    uint64_t solves, starts, decisions, rnd_decisions, propagations, conflicts;$/;"	m	class:Minisat::Solver
+propagations	sat/SolverV.h	/^    int64   starts, decisions, propagations, conflicts;$/;"	m	struct:SolverStats
 push	minisat/Vec.h	/^    void     push  (const T& elem)     { if (sz == cap) capacity(sz+1); new (&data[sz++]) T(elem); }$/;"	f	class:Minisat::vec
 push	minisat/Vec.h	/^    void     push  (void)              { if (sz == cap) capacity(sz+1); new (&data[sz]) T(); sz++; }$/;"	f	class:Minisat::vec
-pushBackFanin	cir/cirGate.h	/^	void pushBackFanin(CirGateV gateV) 				{ _in.push_back(gateV); }$/;"	f
-pushBackFanout	cir/cirGate.h	/^	void pushBackFanout(CirGateV gateV) 			{ _out.push_back(gateV); }$/;"	f
+push	sat/GlobalV.h	/^    void     push  (const T& elem)     { if (sz == cap) grow(sz+1); new (&data[sz]) T(elem); sz++; }$/;"	f	class:vec
+push	sat/GlobalV.h	/^    void     push  (void)              { if (sz == cap) grow(sz+1); new (&data[sz]) T()    ; sz++; }$/;"	f	class:vec
+pushBackFanin	cir/cirGate.h	/^	void pushBackFanin(CirGateV gateV) 				{ _in.push_back(gateV); }$/;"	f	class:CirGate
+pushBackFanout	cir/cirGate.h	/^	void pushBackFanout(CirGateV gateV) 			{ _out.push_back(gateV); }$/;"	f	class:CirGate
 push_	minisat/Vec.h	/^    void     push_ (const T& elem)     { assert(sz < cap); data[sz++] = elem; }$/;"	f	class:Minisat::vec
+putChar	sat/FileV.h	/^    int putChar(int chr) {$/;"	f	class:File
+putCharQ	sat/FileV.h	/^    int putCharQ(int chr) {         \/\/ Quick version with minimal overhead -- don't call this in the wrong mode!$/;"	f	class:File
+putInt	sat/FileV.h	/^static inline void   putInt  (File& out, int64 val) { putUInt(out, encode64(val)); }$/;"	f
+putUInt	sat/FileV.cpp	/^void putUInt(File& out, uint64 val)$/;"	f
 qhead	minisat/Solver.h	/^    int                 qhead;            \/\/ Head of queue (as index into the trail -- no more explicit propagation queue in MiniSat).$/;"	m	class:Minisat::Solver
+qhead	sat/SolverV.h	/^    int                 qhead;            \/\/ Head of queue (as index into the trail -- no more explicit propagation queue in MiniSat).$/;"	m	class:SolverV
 ra	minisat/SolverTypes.h	/^    RegionAllocator<uint32_t> ra;$/;"	m	class:Minisat::ClauseAllocator
 randomShuffle	minisat/Rnd.h	/^static void randomShuffle(double& seed, vec<T>& xs)$/;"	f	namespace:Minisat
 randomShuffle	minisat/Rnd.h	/^static void randomShuffle(double& seed, vec<vec<T> >& xs)$/;"	f	namespace:Minisat
 random_seed	minisat/Solver.h	/^    double    random_seed;$/;"	m	class:Minisat::Solver
+random_seed	sat/VarOrderV.h	/^    double              random_seed; \/\/ For the internal random number generator$/;"	m	class:VarOrder
 random_var_freq	minisat/Solver.h	/^    double    random_var_freq;$/;"	m	class:Minisat::Solver
+random_var_freq	sat/SolverV.h	/^    double  var_decay, clause_decay, random_var_freq;    \/\/ (reasonable values are: 0.95, 0.999, 0.02)    $/;"	m	struct:SearchParams
 range	minisat/Options.h	/^    DoubleRange range;$/;"	m	class:Minisat::DoubleOption
 range	minisat/Options.h	/^    Int64Range range;$/;"	m	class:Minisat::Int64Option
 range	minisat/Options.h	/^    IntRange range;$/;"	m	class:Minisat::IntOption
@@ -683,12 +1024,17 @@ readUntil	util/parse.h	/^std::string readUntil(std::ifstream& ifs, char end) {$/
 readVerilog	cir/cirParse.cpp	/^CirMgr::readVerilog(const string& filename, bool isF)$/;"	f	class:CirMgr
 reason	minisat/Solver.h	/^    struct VarData { CRef reason; int level; };$/;"	m	struct:Minisat::Solver::VarData
 reason	minisat/Solver.h	/^inline CRef Solver::reason(Var x) const { return vardata[x].reason; }$/;"	f	class:Minisat::Solver
+reason	sat/SolverV.h	/^    vec<Clause*>        reason;           \/\/ 'reason[var]' is the clause that implied the variables current value, or 'NULL' if none.$/;"	m	class:SolverV
 rebuildOrderHeap	minisat/Solver.cpp	/^void Solver::rebuildOrderHeap()$/;"	f	class:Solver
 reduceDB	minisat/Solver.cpp	/^void Solver::reduceDB()$/;"	f	class:Solver
+reduceDB	sat/SolverV.cpp	/^void SolverV::reduceDB()$/;"	f	class:SolverV
 reduceDB_lt	minisat/Solver.cpp	/^    reduceDB_lt(ClauseAllocator& ca_) : ca(ca_) {}$/;"	f	struct:reduceDB_lt
 reduceDB_lt	minisat/Solver.cpp	/^struct reduceDB_lt { $/;"	s	file:
+reduceDB_lt	sat/SolverV.cpp	/^struct reduceDB_lt { bool operator () (Clause* x, Clause* y) { return x->size() > 2 && (y->size() == 2 || x->activity() < y->activity()); } };$/;"	s	file:
 rehash	minisat/Map.h	/^    void    rehash () {$/;"	f	class:Minisat::Map
 rel	minisat/SolverTypes.h	/^    union { Lit lit; float act; uint32_t abs; CRef rel; } data[0];$/;"	m	union:Minisat::Clause::__anon5
+release	sat/GlobalV.h	/^    T*       release  (void)           { T* ret = data; data = NULL; sz = 0; cap = 0; return ret; }$/;"	f	class:vec
+releaseDescriptor	sat/FileV.h	/^    int releaseDescriptor(void) {   \/\/ Don't run UNIX function 'close()' on descriptor in 'File's 'close()'.$/;"	f	class:File
 releaseVar	minisat/Solver.cpp	/^void Solver::releaseVar(Lit l)$/;"	f	class:Solver
 released_vars	minisat/Solver.h	/^    vec<Var>            released_vars;$/;"	m	class:Minisat::Solver
 reloc	minisat/SolverTypes.h	/^    void reloc(CRef& cr, ClauseAllocator& to)$/;"	f	class:Minisat::ClauseAllocator
@@ -701,10 +1047,12 @@ remove	minisat/Alg.h	/^static inline void remove(V& ts, const T& t)$/;"	f	namesp
 remove	minisat/Heap.h	/^    void remove(K k)$/;"	f	class:Minisat::Heap
 remove	minisat/Map.h	/^    void remove(const K& k) {$/;"	f	class:Minisat::Map
 remove	minisat/SolverTypes.h	/^    void     remove      (CRef cr)            { map.remove(cr); }$/;"	f	class:Minisat::CMap
+remove	sat/SolverV.cpp	/^void SolverV::remove(Clause* c, bool just_dealloc)$/;"	f	class:SolverV
 removeClause	minisat/Solver.cpp	/^void Solver::removeClause(CRef cr) {$/;"	f	class:Solver
 removeComment	cir/cirParse.cpp	/^bool CirMgr::removeComment(const std::string& inFilename,$/;"	f	class:CirMgr
 removeMin	minisat/Heap.h	/^    K removeMin()$/;"	f	class:Minisat::Heap
 removeSatisfied	minisat/Solver.cpp	/^void Solver::removeSatisfied(vec<CRef>& cs)$/;"	f	class:Solver
+removeWatch	sat/SolverV.cpp	/^void removeWatch(vec<Clause*>& ws, Clause* elem)$/;"	f
 remove_satisfied	minisat/Solver.h	/^    bool                remove_satisfied; \/\/ Indicates whether possibly inefficient linear scan for satisfied clauses should be performed in 'simplify'.$/;"	m	class:Minisat::Solver
 report	cir/cirGate.cpp	/^CirAndGate::report() const$/;"	f	class:CirAndGate
 report	cir/cirGate.cpp	/^CirBufGate::report() const$/;"	f	class:CirBufGate
@@ -719,49 +1067,79 @@ report	cir/cirGate.cpp	/^CirPoGate::report() const$/;"	f	class:CirPoGate
 report	cir/cirGate.cpp	/^CirXnorGate::report() const$/;"	f	class:CirXnorGate
 report	cir/cirGate.cpp	/^CirXorGate::report() const$/;"	f	class:CirXorGate
 report	util/myUsage.h	/^   void report(bool repTime, bool repMem) {$/;"	f	class:MyUsage
+reportCandList	cir/cirReport.cpp	/^CirMgr::reportCandList() const$/;"	f	class:CirMgr
 reportGateAll	cir/cirReport.cpp	/^CirNet::reportGateAll() const$/;"	f	class:CirNet
 reportNetList	cir/cirReport.cpp	/^CirNet::reportNetList() const$/;"	f	class:CirNet
 reportNetListRec	cir/cirReport.cpp	/^CirNet::reportNetListRec(CirGate* g, unsigned level) const$/;"	f	class:CirNet
 reportTopoList	cir/cirReport.cpp	/^CirNet::reportTopoList() const$/;"	f	class:CirNet
+reportf	sat/SolverV.h	28;"	d
 reserve	minisat/IntMap.h	/^        void     reserve(K key)              { map.growTo(index(key)+1); }$/;"	f	class:Minisat::IntMap
 reserve	minisat/IntMap.h	/^        void     reserve(K key, V pad)       { map.growTo(index(key)+1, pad); }$/;"	f	class:Minisat::IntMap
+reserveFormula	sat/sat.h	/^      inline const size_t reserveFormula() { return getPosVar(newVar()); }$/;"	f	class:SatSolverV
+reset	sat/sat.cpp	/^void SatSolverV::reset()$/;"	f	class:SatSolverV
 reset	util/myUsage.h	/^   void reset() {$/;"	f	class:MyUsage
+resolve	sat/ProofV.cpp	/^void Proof::resolve(ClauseId next, Var x)$/;"	f	class:Proof
 restart_first	minisat/Solver.h	/^    int       restart_first;      \/\/ The initial restart limit.                                                                (default 100)$/;"	m	class:Minisat::Solver
 restart_inc	minisat/Solver.h	/^    double    restart_inc;        \/\/ The factor with which the restart limit is multiplied in each restart.                    (default 1.5)$/;"	m	class:Minisat::Solver
 right	minisat/Heap.h	/^    static inline int right (int i) { return (i+1)*2; }$/;"	f	class:Minisat::Heap
+right	sat/HeapV.h	/^static inline int right (int i) { return i+i + 1; }$/;"	f
 rnd_decisions	minisat/Solver.h	/^    uint64_t solves, starts, decisions, rnd_decisions, propagations, conflicts;$/;"	m	class:Minisat::Solver
 rnd_init_act	minisat/Solver.h	/^    bool      rnd_init_act;       \/\/ Initialize variable activities with a small random value.$/;"	m	class:Minisat::Solver
 rnd_pol	minisat/Solver.h	/^    bool      rnd_pol;            \/\/ Use random polarities for branching heuristics.$/;"	m	class:Minisat::Solver
+root	sat/ProofV.h	/^    virtual void root   (const vec<Lit>& c) {}$/;"	f	struct:ProofTraverser
+root_cla_count	sat/SolverV.h	/^   int      root_cla_count;$/;"	m	class:SolverV
+root_level	sat/SolverV.h	/^    int                 root_level;       \/\/ Level of first proper decision.$/;"	m	class:SolverV
 satisfied	minisat/Solver.cpp	/^bool Solver::satisfied(const Clause& c) const {$/;"	f	class:Solver
+save	sat/ProofV.cpp	/^bool Proof::save(cchar* filename)$/;"	f	class:Proof
 search	minisat/Solver.cpp	/^lbool Solver::search(int nof_conflicts)$/;"	f	class:Solver
+search	sat/SolverV.cpp	/^lbool SolverV::search(int nof_conflicts, int nof_learnts, const SearchParams& params)$/;"	f	class:SolverV
+seek	sat/FileV.cpp	/^void File::seek(int64 file_pos, int whence)$/;"	f	class:File
+seek	sat/reader.cpp	/^void Reader::seek( const unsigned int to ){$/;"	f	class:Reader
 seen	minisat/Solver.h	/^    VMap<char>          seen;$/;"	m	class:Minisat::Solver
+select	sat/VarOrderV.h	/^Var VarOrder::select(double random_var_freq)$/;"	f	class:VarOrder
 selectionSort	minisat/Sort.h	/^template <class T> static inline void selectionSort(T* array, int size) {$/;"	f	namespace:Minisat
 selectionSort	minisat/Sort.h	/^void selectionSort(T* array, int size, LessThan lt)$/;"	f	namespace:Minisat
+selectionSort	sat/SortV.h	/^template <class T> static inline void selectionSort(T* array, int size) {$/;"	f
+selectionSort	sat/SortV.h	/^void selectionSort(T* array, int size, LessThan lt)$/;"	f
+setBounds	sat/HeapV.h	/^    void setBounds (int size) { assert(size >= 0); indices.growTo(size,0); }$/;"	f	class:Heap
 setConfBudget	minisat/Solver.h	/^inline void     Solver::setConfBudget(int64_t x){ conflict_budget    = conflicts    + x; }$/;"	f	class:Minisat::Solver
 setDecisionVar	minisat/Solver.h	/^inline void     Solver::setDecisionVar(Var v, bool b) $/;"	f	class:Minisat::Solver
-setFanout	cir/cirGate.h	/^	void setFanout(CirGateV gateV, unsigned idx) 	{ if(idx >= _out.size()) _out.resize(idx+1);$/;"	f
-setFanoutSize	cir/cirGate.h	/^	void setFanoutSize(unsigned s) 					{ _out.resize(s); }$/;"	f
+setFanin	cir/cirGate.h	/^	void setFanin(CirGateV gateV, unsigned idx) 	{ if(idx >= _in.size()) _in.resize(idx+1);$/;"	f	class:CirGate
+setFaninSize	cir/cirGate.h	/^	void setFaninSize(unsigned s) 					{ _in.resize(s); }$/;"	f	class:CirGate
+setFanout	cir/cirGate.h	/^	void setFanout(CirGateV gateV, unsigned idx) 	{ if(idx >= _out.size()) _out.resize(idx+1);$/;"	f	class:CirGate
+setFanoutSize	cir/cirGate.h	/^	void setFanoutSize(unsigned s) 					{ _out.resize(s); }$/;"	f	class:CirGate
 setHelpPrefixStr	minisat/Options.cpp	/^void Minisat::setHelpPrefixStr  (const char* str){ Option::getHelpPrefixString() = str; }$/;"	f	class:Minisat
 setId	cir/cirGate.h	/^	void setId(unsigned i) 			{ _id = i; }$/;"	f	class:CirGate
+setInv	cir/cirGate.h	/^	void setInv() 				{ _gateV |= (size_t)INV_MASK; }$/;"	f	class:CirGateV
 setMemUsage	util/myUsage.h	/^   void setMemUsage() { _currentMem = checkMem() - _initMem; }$/;"	f	class:MyUsage
+setMode	sat/FileV.h	/^    void setMode(FileMode m) {$/;"	f	class:File
 setName	cir/cirMgr.h	/^	void setName(const string& n ) 	{ _name = n; }$/;"	f	class:CirMgr
-setName	cir/cirNet.h	/^	void setName(const string& n ) 					        { _name = n; }$/;"	f	class:CirNet
+setName	cir/cirNet.h	/^	void setName(const string& n )					{ _name = n; }$/;"	f	class:CirNet
 setPolarity	minisat/Solver.h	/^inline void     Solver::setPolarity   (Var v, lbool b){ user_pol[v] = b; }$/;"	f	class:Minisat::Solver
 setPropBudget	minisat/Solver.h	/^inline void     Solver::setPropBudget(int64_t x){ propagation_budget = propagations + x; }$/;"	f	class:Minisat::Solver
 setRndFreq	minisat/sat.h	/^  void setRndFreq(double freq) { solver_->random_var_freq = freq; }$/;"	f	class:SatSolver
 setTimeUsage	util/myUsage.h	/^   void setTimeUsage() {$/;"	f	class:MyUsage
+setToRef	cir/cirGate.h	/^	void setToRef() 				{ _ref = _globalRef; }$/;"	f	class:CirGate
 setUsageHelp	minisat/Options.cpp	/^void Minisat::setUsageHelp      (const char* str){ Option::getUsageString() = str; }$/;"	f	class:Minisat
-setWeight	cir/cirGate.h	/^        void setWeight(unsigned w)              { _weight = w; }$/;"	f	class:CirGate
+setVar	cir/cirGate.h	/^	void setVar(Var v)				{ _var = v; }$/;"	f	class:CirGate
+setWeight	cir/cirGate.h	/^    void setWeight(unsigned w)      { _weight = w; }$/;"	f	class:CirGate
 setX86FPUPrecision	minisat/System.cpp	/^void Minisat::setX86FPUPrecision()$/;"	f	class:Minisat
 shrink	minisat/SolverTypes.h	/^    void         shrink      (int i)         { assert(i <= size()); if (header.has_extra) data[header.size-i] = data[header.size]; header.size -= i; }$/;"	f	class:Minisat::Clause
 shrink	minisat/Vec.h	/^    void     shrink   (Size nelems)  { assert(nelems <= sz); for (Size i = 0; i < nelems; i++) sz--, data[sz].~T(); }$/;"	f	class:Minisat::vec
+shrink	sat/GlobalV.h	/^    void     shrink (int nelems)       { assert(nelems <= sz); for (int i = 0; i < nelems; i++) sz--, data[sz].~T(); }$/;"	f	class:vec
 shrink_	minisat/Vec.h	/^    void     shrink_  (Size nelems)  { assert(nelems <= sz); sz -= nelems; }$/;"	f	class:Minisat::vec
 sigTerm	minisat/System.cpp	/^void Minisat::sigTerm(void handler(int))$/;"	f	class:Minisat
 sign	minisat/SolverTypes.h	/^inline  bool sign      (Lit p)              { return p.x & 1; }$/;"	f	namespace:Minisat
+sign	sat/SolverTypesV.h	/^inline bool sign  (Lit p) { return p.x & 1; }$/;"	f
 simpDB_assigns	minisat/Solver.h	/^    int                 simpDB_assigns;   \/\/ Number of top-level assignments since last execution of 'simplify()'.$/;"	m	class:Minisat::Solver
+simpDB_assigns	sat/SolverV.h	/^    int                 simpDB_assigns;   \/\/ Number of top-level assignments since last execution of 'simplifyDB()'.$/;"	m	class:SolverV
 simpDB_props	minisat/Solver.h	/^    int64_t             simpDB_props;     \/\/ Remaining number of propagations that must be made before next execution of 'simplify()'.$/;"	m	class:Minisat::Solver
+simpDB_props	sat/SolverV.h	/^    int64               simpDB_props;     \/\/ Remaining number of propagations that must be made before next execution of 'simplifyDB()'.$/;"	m	class:SolverV
 simplify	minisat/Solver.cpp	/^bool Solver::simplify()$/;"	f	class:Solver
 simplify	minisat/sat.h	/^  void simplify() { solver_->simplify(); }$/;"	f	class:SatSolver
+simplify	sat/SolverV.cpp	/^bool SolverV::simplify(Clause* c) const$/;"	f	class:SolverV
+simplify	sat/sat.cpp	/^const bool SatSolverV::simplify() { return _solver->simplifyDB(); }$/;"	f	class:SatSolverV
+simplifyDB	sat/SolverV.cpp	/^bool SolverV::simplifyDB()$/;"	f	class:SolverV
 size	minisat/Alloc.h	/^    uint32_t size      () const      { return sz; }$/;"	f	class:Minisat::RegionAllocator
 size	minisat/Heap.h	/^    int  size      ()          const { return heap.size(); }$/;"	f	class:Minisat::Heap
 size	minisat/IntMap.h	/^        int      size        (void)      const  { return xs.size(); }$/;"	f	class:Minisat::IntSet
@@ -773,9 +1151,15 @@ size	minisat/SolverTypes.h	/^    int          size        ()      const   { retu
 size	minisat/SolverTypes.h	/^    int      size        ()                const      { return map.elems(); }$/;"	f	class:Minisat::CMap
 size	minisat/SolverTypes.h	/^    uint32_t size      () const      { return ra.size(); }$/;"	f	class:Minisat::ClauseAllocator
 size	minisat/Vec.h	/^    Size     size     (void) const   { return sz; }$/;"	f	class:Minisat::vec
+size	sat/FileV.h	/^    int         size;       \/\/ Size of buffer (at end of file, less than 'File_BufSize').$/;"	m	class:File
+size	sat/GlobalV.h	/^    int      size   (void) const       { return sz; }$/;"	f	class:vec
+size	sat/SolverTypesV.h	/^    int       size        ()      const { return size_learnt >> 1; }$/;"	f	class:Clause
+size	sat/reader.h	/^	unsigned int 	size;$/;"	m	class:Reader
+size_learnt	sat/SolverTypesV.h	/^    uint    size_learnt;$/;"	m	class:Clause
 skipLine	minisat/ParseUtils.h	/^static void skipLine(B& in) {$/;"	f	namespace:Minisat
 skipWhitespace	minisat/ParseUtils.h	/^static void skipWhitespace(B& in) {$/;"	f	namespace:Minisat
 smudge	minisat/SolverTypes.h	/^    void  smudge    (const K& idx){$/;"	f	class:Minisat::OccLists
+solve	cir/cirMgr.h	/^	bool solve() { return _s -> solve(); }$/;"	f	class:CirMgr
 solve	minisat/Solver.h	/^inline bool     Solver::solve         ()                    { budgetOff(); assumptions.clear(); return solve_() == l_True; }$/;"	f	class:Minisat::Solver
 solve	minisat/Solver.h	/^inline bool     Solver::solve         (Lit p)               { budgetOff(); assumptions.clear(); assumptions.push(p); return solve_() == l_True; }$/;"	f	class:Minisat::Solver
 solve	minisat/Solver.h	/^inline bool     Solver::solve         (Lit p, Lit q)        { budgetOff(); assumptions.clear(); assumptions.push(p); assumptions.push(q); return solve_() == l_True; }$/;"	f	class:Minisat::Solver
@@ -784,10 +1168,15 @@ solve	minisat/Solver.h	/^inline bool     Solver::solve         (const vec<Lit>& 
 solve	minisat/sat.h	/^  bool solve() { return solver_->solve(); }$/;"	f	class:SatSolver
 solve	minisat/sat.h	/^  bool solve(Var var, bool val) { return solver_->solve(mkLit(var, !val)); }$/;"	f	class:SatSolver
 solve	minisat/sat.h	/^  bool solve(const vec<Lit>& assump) {$/;"	f	class:SatSolver
+solve	sat/SolverV.cpp	/^bool SolverV::solve(const vec<Lit>& assumps)$/;"	f	class:SolverV
+solve	sat/SolverV.h	/^    bool    solve() { vec<Lit> tmp; return solve(tmp); }$/;"	f	class:SolverV
+solve	sat/sat.cpp	/^const bool SatSolverV::solve()$/;"	f	class:SatSolverV
 solveLimited	minisat/Solver.h	/^inline lbool    Solver::solveLimited  (const vec<Lit>& assumps){ assumps.copyTo(assumptions); return solve_(); }$/;"	f	class:Minisat::Solver
 solveLimited	minisat/sat.h	/^  lbool solveLimited(Var var, bool val, int64_t budget) {$/;"	f	class:SatSolver
 solveLimited	minisat/sat.h	/^  lbool solveLimited(const vec<Lit>& assump, int64_t budget) {$/;"	f	class:SatSolver
 solveLimited	minisat/sat.h	/^  lbool solveLimited(int64_t budget) {$/;"	f	class:SatSolver
+solveLimited	sat/SolverV.cpp	/^lbool SolverV::solveLimited(const vec<Lit>& assumps, int64_t nConflicts)$/;"	f	class:SolverV
+solveLimited	sat/SolverV.h	/^    lbool   solveLimited(int64_t nConflicts) { vec<Lit> tmp; return solveLimited(nConflicts); }$/;"	f	class:SolverV
 solve_	minisat/Solver.cpp	/^lbool Solver::solve_()$/;"	f	class:Solver
 solver_	minisat/sat.h	/^  Solver* solver_;$/;"	m	class:SatSolver
 solves	minisat/Solver.h	/^    uint64_t solves, starts, decisions, rnd_decisions, propagations, conflicts;$/;"	m	class:Minisat::Solver
@@ -795,15 +1184,33 @@ sort	minisat/Sort.h	/^template <class T, class LessThan> void sort(vec<T>& v, Le
 sort	minisat/Sort.h	/^template <class T> static inline void sort(T* array, int size) {$/;"	f	namespace:Minisat
 sort	minisat/Sort.h	/^template <class T> void sort(vec<T>& v) {$/;"	f	namespace:Minisat
 sort	minisat/Sort.h	/^void sort(T* array, int size, LessThan lt)$/;"	f	namespace:Minisat
+sort	sat/SortV.h	/^template <class T, class LessThan> void sort(T* array, int size, LessThan lt) {$/;"	f
+sort	sat/SortV.h	/^template <class T, class LessThan> void sort(vec<T>& v, LessThan lt) {$/;"	f
+sort	sat/SortV.h	/^template <class T> static inline void sort(T* array, int size) {$/;"	f
+sort	sat/SortV.h	/^template <class T> void sort(vec<T>& v) {$/;"	f
+sort	sat/SortV.h	/^void sort(T* array, int size, LessThan lt, double& seed)$/;"	f
+sortUnique	sat/SortV.h	/^template <class T, class LessThan> void sortUnique(vec<T>& v, LessThan lt) {$/;"	f
+sortUnique	sat/SortV.h	/^template <class T> static inline void sortUnique(T* array, int& size) {$/;"	f
+sortUnique	sat/SortV.h	/^template <class T> void sortUnique(vec<T>& v) {$/;"	f
+sortUnique	sat/SortV.h	/^void sortUnique(T* array, int& size, LessThan lt)$/;"	f
 split	util/parse.h	/^std::vector<std::string> split(const std::string& str, const std::string& sep) {$/;"	f
+start_proof_logging	sat/SolverV.h	/^    bool    start_proof_logging() { return false; }$/;"	f	class:SolverV
 starts	minisat/Solver.h	/^    uint64_t solves, starts, decisions, rnd_decisions, propagations, conflicts;$/;"	m	class:Minisat::Solver
+starts	sat/SolverV.h	/^    int64   starts, decisions, propagations, conflicts;$/;"	m	struct:SolverStats
+stats	sat/SolverV.h	/^    SolverStats     stats;$/;"	m	class:SolverV
 str2Int	util/parse.h	/^bool str2Int(const std::string& str, int& num) {$/;"	f
 strengthen	minisat/SolverTypes.h	/^inline void Clause::strengthen(Lit p)$/;"	f	class:Minisat::Clause
 subsumes	minisat/SolverTypes.h	/^inline Lit Clause::subsumes(const Clause& other) const$/;"	f	class:Minisat::Clause
 sweep	cir/cirNet.cpp	/^CirNet::sweep()$/;"	f	class:CirNet
 sz	minisat/Alloc.h	/^    uint32_t  sz;$/;"	m	class:Minisat::RegionAllocator
 sz	minisat/Vec.h	/^    Size sz;$/;"	m	class:Minisat::vec
+sz	sat/GlobalV.h	/^    int sz;$/;"	m	class:vec
 table	minisat/Map.h	/^    vec<Pair>* table;$/;"	m	class:Minisat::Map
+tell	sat/FileV.cpp	/^int64 File::tell(void)$/;"	f	class:File
+temp_files	sat/ProofV.cpp	/^static TempFiles temp_files;       \/\/ (should be singleton)$/;"	v	file:
+test	cir/cirMgr.cpp	/^CirMgr::test()$/;"	f	class:CirMgr
+tieGate	cir/cirSat.cpp	/^CirMgr::tieGate(CirGate* g1, CirGate* g2)$/;"	f	class:CirMgr
+tiePi	cir/cirSat.cpp	/^CirMgr::tiePi(CirNet* f, CirNet* g)$/;"	f	class:CirMgr
 toDimacs	minisat/Solver.cpp	/^void Solver::toDimacs(FILE* f, Clause& c, vec<Var>& map, Var& max)$/;"	f	class:Solver
 toDimacs	minisat/Solver.cpp	/^void Solver::toDimacs(FILE* f, const vec<Lit>& assumps)$/;"	f	class:Solver
 toDimacs	minisat/Solver.cpp	/^void Solver::toDimacs(const char *file, const vec<Lit>& assumps)$/;"	f	class:Solver
@@ -811,20 +1218,41 @@ toDimacs	minisat/Solver.h	/^inline void     Solver::toDimacs     (const char* fi
 toDimacs	minisat/Solver.h	/^inline void     Solver::toDimacs     (const char* file, Lit p){ vec<Lit> as; as.push(p); toDimacs(file, as); }$/;"	f	class:Minisat::Solver
 toDimacs	minisat/Solver.h	/^inline void     Solver::toDimacs     (const char* file, Lit p, Lit q){ vec<Lit> as; as.push(p); as.push(q); toDimacs(file, as); }$/;"	f	class:Minisat::Solver
 toDimacs	minisat/Solver.h	/^inline void     Solver::toDimacs     (const char* file, Lit p, Lit q, Lit r){ vec<Lit> as; as.push(p); as.push(q); as.push(r); toDimacs(file, as); }$/;"	f	class:Minisat::Solver
+toDimacs	sat/SolverTypesV.h	/^inline int toDimacs(Lit p) { return sign(p) ? -var(p) - 1 : var(p) + 1; }$/;"	f
 toInt	minisat/SolverTypes.h	/^inline  int  toInt     (Lit p)              { return p.x; } $/;"	f	namespace:Minisat
 toInt	minisat/SolverTypes.h	/^inline  int  toInt     (Var v)              { return v; } $/;"	f	namespace:Minisat
 toInt	minisat/SolverTypes.h	/^inline int   toInt  (lbool l) { return l.value; }$/;"	f	namespace:Minisat
+toInt	sat/GlobalV.h	/^    int toInt(void) const { return value; }$/;"	f	class:lbool
+toInt	sat/GlobalV.h	/^inline int   toInt  (lbool l) { return l.toInt(); }$/;"	f
 toLbool	minisat/SolverTypes.h	/^inline lbool toLbool(int   v) { return lbool((uint8_t)v);  }$/;"	f	namespace:Minisat
+toLbool	sat/GlobalV.h	/^inline lbool toLbool(int   v) { return lbool(v);  }$/;"	f
 toLit	minisat/SolverTypes.h	/^inline  Lit  toLit     (int i)              { Lit p; p.x = i; return p; } $/;"	f	namespace:Minisat
+toLit	sat/SolverTypesV.h	/^inline Lit  toLit (int i) { Lit p; p.x = i; return p; }  \/\/ Inverse of 'index()'.$/;"	f
 toVec	minisat/IntMap.h	/^                 toVec       ()          const  { return xs; }$/;"	f	class:Minisat::IntSet
 tot_literals	minisat/Solver.h	/^    uint64_t dec_vars, num_clauses, num_learnts, clauses_literals, learnts_literals, max_literals, tot_literals;$/;"	m	class:Minisat::Solver
+tot_literals	sat/SolverV.h	/^    int64   clauses_literals, learnts_literals, max_literals, tot_literals;$/;"	m	struct:SolverStats
 trail	minisat/Solver.h	/^    vec<Lit>            trail;            \/\/ Assignment stack; stores all assigments made in the order they were made.$/;"	m	class:Minisat::Solver
+trail	sat/SolverV.h	/^    vec<Lit>            trail;            \/\/ Assignment stack; stores all assigments made in the order they were made.$/;"	m	class:SolverV
 trailBegin	minisat/Solver.h	/^inline TrailIterator  Solver::trailBegin  () const { return TrailIterator(&trail[0]); }$/;"	f	class:Minisat::Solver
 trailEnd	minisat/Solver.h	/^inline TrailIterator  Solver::trailEnd    () const { $/;"	f	class:Minisat::Solver
 trail_lim	minisat/Solver.h	/^    vec<int>            trail_lim;        \/\/ Separator indices for different decision levels in 'trail'.$/;"	m	class:Minisat::Solver
+trail_lim	sat/SolverV.h	/^    vec<int>            trail_lim;        \/\/ Separator indices for different decision levels in 'trail[]'.$/;"	m	class:SolverV
+trail_pos	sat/SolverV.cpp	/^    const vec<int>& trail_pos;$/;"	m	class:lastToFirst_lt	file:
+trail_pos	sat/SolverV.h	/^    vec<int>            trail_pos;        \/\/ 'trail_pos[var]' is the variable's position in 'trail[]'. This supersedes 'level[]' in some sense, and 'level[]' will probably be removed in future releases.$/;"	m	class:SolverV
+trav	sat/ProofV.h	/^    ProofTraverser* trav;$/;"	m	class:Proof
+traverse	sat/ProofV.cpp	/^void Proof::traverse(ProofTraverser& trav, ClauseId goal)$/;"	f	class:Proof
 type_name	minisat/Options.h	/^    const char* type_name;$/;"	m	class:Minisat::Option
+uchar	sat/GlobalV.h	/^typedef unsigned char uchar;$/;"	t
+uint64	sat/GlobalV.h	/^typedef UINT64             uint64;$/;"	t
+uint64	sat/GlobalV.h	/^typedef unsigned long long uint64;$/;"	t
+uintp	sat/GlobalV.h	/^typedef UINT_PTR           uintp;$/;"	t
+uintp	sat/GlobalV.h	/^typedef unsigned __PTRDIFF_TYPE__ uintp;$/;"	t
 uncheckedEnqueue	minisat/Solver.cpp	/^void Solver::uncheckedEnqueue(Lit p, CRef from)$/;"	f	class:Solver
+undo	sat/VarOrderV.h	/^void VarOrder::undo(Var x)$/;"	f	class:VarOrder
+unit_id	sat/SolverV.h	/^    vec<ClauseId>       unit_id;          \/\/ 'unit_id[var]' is the clause ID for the unit literal 'var' or '~var' (if set at toplevel).$/;"	m	class:SolverV
+unsign	sat/SolverTypesV.h	/^inline Lit  unsign(Lit p) { Lit q; q.x = p.x & ~1; return q; }$/;"	f
 update	minisat/Heap.h	/^    void update(K k)$/;"	f	class:Minisat::Heap
+update	sat/VarOrderV.h	/^void VarOrder::update(Var x)$/;"	f	class:VarOrder
 user_pol	minisat/Solver.h	/^    VMap<lbool>         user_pol;         \/\/ The users preferred polarity of each variable.$/;"	m	class:Minisat::Solver
 val_	util/unate.h	/^  unsigned val_;$/;"	m	class:Unateness
 value	minisat/Options.h	/^    bool value;$/;"	m	class:Minisat::BoolOption
@@ -835,41 +1263,72 @@ value	minisat/Options.h	/^    int64_t  value;$/;"	m	class:Minisat::Int64Option
 value	minisat/Solver.h	/^inline lbool    Solver::value         (Lit p) const   { return assigns[var(p)] ^ sign(p); }$/;"	f	class:Minisat::Solver
 value	minisat/Solver.h	/^inline lbool    Solver::value         (Var x) const   { return assigns[x]; }$/;"	f	class:Minisat::Solver
 value	minisat/SolverTypes.h	/^    uint8_t value;$/;"	m	class:Minisat::lbool
+value	sat/GlobalV.h	/^    int     value;$/;"	m	class:lbool
+value	sat/SolverV.h	/^    lbool   value(Lit p) const { return sign(p) ? ~toLbool(assigns[var(p)]) : toLbool(assigns[var(p)]); }$/;"	f	class:SolverV
+value	sat/SolverV.h	/^    lbool   value(Var x) const { return toLbool(assigns[x]); }$/;"	f	class:SolverV
 value	util/bool3v.h	/^  unsigned value;$/;"	m	class:bool_3v
 var	minisat/SolverTypes.h	/^inline  int  var       (Lit p)              { return p.x >> 1; }$/;"	f	namespace:Minisat
+var	sat/SolverTypesV.h	/^inline int  var   (Lit p) { return p.x >> 1; }$/;"	f
 varBumpActivity	minisat/Solver.h	/^inline void Solver::varBumpActivity(Var v) { varBumpActivity(v, var_inc); }$/;"	f	class:Minisat::Solver
 varBumpActivity	minisat/Solver.h	/^inline void Solver::varBumpActivity(Var v, double inc) {$/;"	f	class:Minisat::Solver
+varBumpActivity	sat/SolverV.h	/^    void     varBumpActivity(Lit p) {$/;"	f	class:SolverV
 varDecayActivity	minisat/Solver.h	/^inline void Solver::varDecayActivity() { var_inc *= (1 \/ var_decay); }$/;"	f	class:Minisat::Solver
+varDecayActivity	sat/SolverV.h	/^    void     varDecayActivity  () { if (var_decay >= 0) var_inc *= var_decay; }$/;"	f	class:SolverV
 varI1G	cir/cirProof.cpp	/^VarMap varI1G;$/;"	v
 varI2F	cir/cirProof.cpp	/^VarMap varI2F;$/;"	v
 varI2G	cir/cirProof.cpp	/^VarMap varI2G;$/;"	v
+varRescaleActivity	sat/SolverV.cpp	/^void SolverV::varRescaleActivity()$/;"	f	class:SolverV
 var_Undef	minisat/SolverTypes.h	/^  const Var var_Undef = -1;$/;"	m	namespace:Minisat
 var_Undef	minisat/SolverTypes.h	45;"	d
+var_Undef	sat/SolverTypesV.h	37;"	d
 var_decay	minisat/Solver.h	/^    double    var_decay;$/;"	m	class:Minisat::Solver
+var_decay	sat/SolverV.h	/^    double              var_decay;        \/\/ INVERSE decay factor for variable activity: stores 1\/decay. Use negative value for static variable order.$/;"	m	class:SolverV
+var_decay	sat/SolverV.h	/^    double  var_decay, clause_decay, random_var_freq;    \/\/ (reasonable values are: 0.95, 0.999, 0.02)    $/;"	m	struct:SearchParams
 var_inc	minisat/Solver.h	/^    double              var_inc;          \/\/ Amount to bump next variable with.$/;"	m	class:Minisat::Solver
+var_inc	sat/SolverV.h	/^    double              var_inc;          \/\/ Amount to bump next variable with.$/;"	m	class:SolverV
 vardata	minisat/Solver.h	/^    VMap<VarData>       vardata;          \/\/ Stores reason and level for each variable.$/;"	m	class:Minisat::Solver
 vec	minisat/Vec.h	/^    explicit vec(Size size)      : data(NULL), sz(0), cap(0)    { growTo(size); }$/;"	f	class:Minisat::vec
 vec	minisat/Vec.h	/^    vec()                        : data(NULL), sz(0), cap(0)    { }$/;"	f	class:Minisat::vec
 vec	minisat/Vec.h	/^    vec(Size size, const T& pad) : data(NULL), sz(0), cap(0)    { growTo(size, pad); }$/;"	f	class:Minisat::vec
 vec	minisat/Vec.h	/^class vec {$/;"	c	namespace:Minisat
+vec	sat/GlobalV.h	/^             vec        (vec<T>& other) { TEMPLATE_FAIL; }$/;"	f	class:vec
+vec	sat/GlobalV.h	/^    vec(T* array, int size)     : data(array), sz(size), cap(size) { }      \/\/ (takes ownership of array -- will be deallocated with 'xfree()')$/;"	f	class:vec
+vec	sat/GlobalV.h	/^    vec(int size)               : data(NULL) , sz(0)   , cap(0)    { growTo(size); }$/;"	f	class:vec
+vec	sat/GlobalV.h	/^    vec(int size, const T& pad) : data(NULL) , sz(0)   , cap(0)    { growTo(size, pad); }$/;"	f	class:vec
+vec	sat/GlobalV.h	/^    vec(void)                   : data(NULL) , sz(0)   , cap(0)    { }$/;"	f	class:vec
+vec	sat/GlobalV.h	/^class vec {$/;"	c
 verbosity	minisat/Solver.h	/^    int       verbosity;$/;"	m	class:Minisat::Solver
+verbosity	sat/SolverV.h	/^    int             verbosity;          \/\/ Verbosity level. 0=silent, 1=some progress report, 2=everything$/;"	m	class:SolverV
+version_info	sat/SolverV.h	/^    inline const char* version_info() const { return "MINISAT Ver. 2.2"; }$/;"	f	class:SolverV
 wasted	minisat/Alloc.h	/^    uint32_t wasted    () const      { return wasted_; }$/;"	f	class:Minisat::RegionAllocator
 wasted	minisat/SolverTypes.h	/^    uint32_t wasted    () const      { return ra.wasted(); }$/;"	f	class:Minisat::ClauseAllocator
 wasted_	minisat/Alloc.h	/^    uint32_t  wasted_;$/;"	m	class:Minisat::RegionAllocator
 watches	minisat/Solver.h	/^                        watches;          \/\/ 'watches[lit]' is a list of constraints watching 'lit' (will go there if literal becomes true).$/;"	m	class:Minisat::Solver
+watches	sat/SolverV.h	/^    vec<vec<Clause*> >  watches;          \/\/ 'watches[lit]' is a list of constraints watching 'lit' (will go there if literal becomes true).$/;"	m	class:SolverV
 withinBudget	minisat/Solver.h	/^inline bool     Solver::withinBudget() const {$/;"	f	class:Minisat::Solver
 x	minisat/SolverTypes.h	/^    int     x;$/;"	m	struct:Minisat::Lit
+x	sat/SolverTypesV.h	/^    int     x;$/;"	m	class:Lit
+xfree	sat/GlobalV.h	/^template<class T> static inline void xfree(T *ptr) {$/;"	f
+xmalloc	sat/GlobalV.h	/^template<class T> static inline T* xmalloc(size_t size) {$/;"	f
 xrealloc	minisat/XAlloc.h	/^static inline void* xrealloc(void *ptr, size_t size)$/;"	f	namespace:Minisat
+xrealloc	sat/GlobalV.h	/^template<class T> static inline T* xrealloc(T* ptr, size_t size) {$/;"	f
 xs	minisat/IntMap.h	/^        vec<K>                   xs;$/;"	m	class:Minisat::IntSet
 ~CirGate	cir/cirGate.h	/^	virtual ~CirGate() {}$/;"	f	class:CirGate
 ~CirGateV	cir/cirGate.h	/^	~CirGateV() {}$/;"	f	class:CirGateV
 ~CirMgr	cir/cirMgr.h	/^	~CirMgr() {}\/\/{ delete _F; delete _G; delete _patch; }$/;"	f	class:CirMgr
 ~CirNet	cir/cirNet.cpp	/^CirNet::~CirNet()$/;"	f	class:CirNet
+~File	sat/FileV.h	/^   ~File(void) {$/;"	f	class:File
 ~Map	minisat/Map.h	/^    ~Map () { delete [] table; }$/;"	f	class:Minisat::Map
 ~Option	minisat/Options.h	/^    virtual ~Option() {}$/;"	f	class:Minisat::Option
+~ProofTraverser	sat/ProofV.h	/^    virtual ~ProofTraverser() {}$/;"	f	struct:ProofTraverser
+~Reader	sat/reader.cpp	/^Reader::~Reader(){$/;"	f	class:Reader
 ~RegionAllocator	minisat/Alloc.h	/^    ~RegionAllocator()$/;"	f	class:Minisat::RegionAllocator
 ~SatSolver	minisat/sat.h	/^  ~SatSolver() {$/;"	f	class:SatSolver
+~SatSolverV	sat/sat.cpp	/^SatSolverV::~SatSolverV() $/;"	f	class:SatSolverV
 ~Solver	minisat/Solver.cpp	/^Solver::~Solver()$/;"	f	class:Solver
+~SolverV	sat/SolverV.h	/^   ~SolverV() {$/;"	f	class:SolverV
 ~StreamBuffer	minisat/ParseUtils.h	/^    ~StreamBuffer() { free(buf); }$/;"	f	class:Minisat::StreamBuffer
+~TempFiles	sat/ProofV.cpp	/^   ~TempFiles()$/;"	f	class:TempFiles
 ~Unateness	util/unate.h	/^  ~Unateness() {}$/;"	f	class:Unateness
 ~vec	minisat/Vec.h	/^   ~vec()                                                       { clear(true); }$/;"	f	class:Minisat::vec
+~vec	sat/GlobalV.h	/^   ~vec(void)                                                      { clear(true); }$/;"	f	class:vec

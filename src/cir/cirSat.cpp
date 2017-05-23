@@ -67,3 +67,25 @@ CirMgr::addErrorConstraint(CirNet* n, bool val)
 	CirGate* g = n -> getError(0);
 	_s -> addUnitCNF(g -> getVar(), val);
 }
+
+void
+CirMgr::markOnsetClause(const ClauseId& cid)
+{
+  unsigned cSize = getNumClauses();
+  assert(cid < (int)cSize);
+  if(_isClauseOn.size() < cSize) {
+    _isClauseOn.resize(cSize, false);
+  }
+  _isClauseOn[cid] = true;
+}
+
+void
+CirMgr::markOffsetClause(const ClauseId& cid)
+{
+  unsigned cSize = getNumClauses();
+  assert(cid < (int)cSize);
+  if(_isClauseOn.size() < cSize) {
+    _isClauseOn.resize(cSize, false);
+  }
+  _isClauseOn[cid] = false;
+}
