@@ -32,7 +32,9 @@ CirMgr::test()
 	//tiePi(_F, _dupG);
 
 	addToSolver(_F);
+        buildVarMap(_F);
 	addToSolver(_G);
+        buildVarMap(_G);
 	addXorConstraint(_F, _G);
 	addErrorConstraint(_F, 1);
 	/********************/
@@ -42,7 +44,9 @@ CirMgr::test()
 	markOnsetClause(numClauses);
 
 	addToSolver(_dupF);
+        buildVarMap(_dupF);
 	addToSolver(_dupG);
+        buildVarMap(_dupG);
 	addXorConstraint(_dupF, _dupG);
 	addErrorConstraint(_dupF, 0);
 	/********************/

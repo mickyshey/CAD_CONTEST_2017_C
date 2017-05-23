@@ -5,14 +5,24 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <cstring>
 
 #include "cir/cirNet.h"
 //#include "minisat/Solver.h"
 #include "sat/sat.h"
+#include "reader.h"
 
 using namespace std;
 
-typedef map<CirGate*, Var> VarMap;
+typedef map<Var, CirGate*> VarMap;
+
+enum VAR_GROUP
+{
+    LOCAL_ON,
+    LOCAL_OFF,
+    COMMON,
+    NONE
+};
 
 class CirMgr
 {
@@ -53,6 +63,11 @@ public:
 	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
 	void markOnsetClause(const ClauseId& cid);
 	void markOffsetClause(const ClauseId& cid);
+        void buildVarMap(const CirNet* ntk);
+        CirNet* getItp();
+        CirNet* buildItp(const string& fileName);
+        void retrieveProof(Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId>& usedClause);
+
 
 //      in cirProof.cpp
         void checkPo();
@@ -70,6 +85,9 @@ private:
 	vector<string>						_candNameList;
 
 	vector<bool>						_isClauseOn;
+	vector<bool>						_isClauseOnDup;
+        vector<VAR_GROUP>                                       _varGroup;
+        VarMap                                                  _var2Gate;
 };
 
 #endif
