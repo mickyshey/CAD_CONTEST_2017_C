@@ -6,7 +6,8 @@
 #include <vector>
 #include <string>
 
-#include "minisat/sat.h"
+//#include "minisat/sat.h"
+#include "sat/sat.h"
 
 using namespace std;
 
@@ -65,7 +66,7 @@ public:
 		_ref	(0)	{}
 	virtual ~CirGate() {}
 
-	virtual void addToSolver(SatSolver* s) const = 0;
+	virtual void addToSolver(SatSolverV* s) const = 0;
 
 //	gate info
 	void setId(unsigned i) 			{ _id = i; }
@@ -119,7 +120,7 @@ public: \
 	~T() {} \
 	const GateType getType() const;\
 	void report() const;\
-	void addToSolver(SatSolver* s) const;\
+	void addToSolver(SatSolverV* s) const;\
 };
 
 CirGateType(CirConstGate);

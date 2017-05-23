@@ -26,7 +26,7 @@ CirConstGate::report() const
 }
 
 void
-CirConstGate::addToSolver(SatSolver* s) const
+CirConstGate::addToSolver(SatSolverV* s) const
 {
 	if( _name == "1'b0" ) s -> addUnitCNF(_var, false);
 	else s -> addUnitCNF(_var, true);
@@ -47,7 +47,7 @@ CirPiGate::report() const
 }
 
 void
-CirPiGate::addToSolver(SatSolver* s) const
+CirPiGate::addToSolver(SatSolverV* s) const
 {}
 /*************************
 		CirPoGate
@@ -65,7 +65,7 @@ CirPoGate::report() const
 }
 
 void
-CirPoGate::addToSolver(SatSolver* s) const
+CirPoGate::addToSolver(SatSolverV* s) const
 {
 	assert(_in.size() == 1);
 	s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));	
@@ -86,7 +86,7 @@ CirBufGate::report() const
 }
 
 void
-CirBufGate::addToSolver(SatSolver* s) const
+CirBufGate::addToSolver(SatSolverV* s) const
 {
 	assert(_in.size() == 1);
 	s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));
@@ -107,7 +107,7 @@ CirInvGate::report() const
 }
 
 void
-CirInvGate::addToSolver(SatSolver* s) const
+CirInvGate::addToSolver(SatSolverV* s) const
 {
 	assert(_in.size() == 1);
 	s -> addEqCNF(_var, getFaninVar(0), !isFaninInv(0));
@@ -128,7 +128,7 @@ CirAndGate::report() const
 }
 
 void
-CirAndGate::addToSolver(SatSolver* s) const
+CirAndGate::addToSolver(SatSolverV* s) const
 {
 /*	Lit outLit = mkLit(_id, false);
 	vec<Lit> c;
@@ -161,7 +161,7 @@ CirOrGate::report() const
 }
 
 void
-CirOrGate::addToSolver(SatSolver* s) const
+CirOrGate::addToSolver(SatSolverV* s) const
 {
 /*
 	Lit outLit = mkLit(_id, false);
@@ -195,7 +195,7 @@ CirNandGate::report() const
 }
 
 void
-CirNandGate::addToSolver(SatSolver* s) const
+CirNandGate::addToSolver(SatSolverV* s) const
 {
 	assert(_in.size() == 2);
 	s -> addOrCNF(_var, getFaninVar(0), !isFaninInv(0), getFaninVar(1), !isFaninInv(1));
@@ -216,7 +216,7 @@ CirNorGate::report() const
 }
 
 void
-CirNorGate::addToSolver(SatSolver* s) const
+CirNorGate::addToSolver(SatSolverV* s) const
 {
 	assert(_in.size() == 2);
 	s -> addAndCNF(_var, getFaninVar(0), !isFaninInv(0), getFaninVar(1), !isFaninInv(1));
@@ -237,7 +237,7 @@ CirXorGate::report() const
 }
 
 void
-CirXorGate::addToSolver(SatSolver* s) const
+CirXorGate::addToSolver(SatSolverV* s) const
 {
 	assert(_in.size() == 2);
 	s -> addXorCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));
@@ -258,7 +258,7 @@ CirXnorGate::report() const
 }
 
 void
-CirXnorGate::addToSolver(SatSolver* s) const
+CirXnorGate::addToSolver(SatSolverV* s) const
 {
 	assert(_in.size() == 2);
 	s -> addXnorCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));
@@ -279,5 +279,5 @@ CirErrorGate::report() const
 }
 
 void
-CirErrorGate::addToSolver(SatSolver* s) const
+CirErrorGate::addToSolver(SatSolverV* s) const
 {}

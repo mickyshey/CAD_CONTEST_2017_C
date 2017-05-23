@@ -7,7 +7,8 @@
 #include <map>
 
 #include "cir/cirNet.h"
-#include "minisat/Solver.h"
+//#include "minisat/Solver.h"
+#include "sat/sat.h"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ typedef map<CirGate*, Var> VarMap;
 class CirMgr
 {
 public:
-	explicit CirMgr(const string& name = ""): _name(name), _F(NULL), _G(NULL), _patch(NULL) { _s = new SatSolver; _s -> init(); }
+	explicit CirMgr(const string& name = ""): _name(name), _F(NULL), _G(NULL), _patch(NULL) { _s = new SatSolverV; }//_s -> init(); }
 	~CirMgr() {}//{ delete _F; delete _G; delete _patch; }
 
 //	info
@@ -52,7 +53,7 @@ public:
 
 //      in cirProof.cpp
         void checkPo();
-        void genProofModel(SatSolver& solver);
+        void genProofModel(SatSolverV& solver);
 
 private:
 	string 								_name;
@@ -61,7 +62,7 @@ private:
 	CirNet*								_dupF;
 	CirNet*								_dupG;
 	CirNet*								_patch;
-	SatSolver*							_s;
+	SatSolverV*							_s;
         CirNet*                                                         _out;
 	vector<string>						_candNameList;
 };

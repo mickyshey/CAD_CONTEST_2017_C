@@ -12,14 +12,13 @@ VarMap varI2G;
 void
 CirMgr::checkPo()
 {
-    SatSolver solver;
+    SatSolverV solver;
     
-    solver.init();
     genProofModel(solver);
 }
 
 void
-CirMgr::genProofModel(SatSolver& solver)
+CirMgr::genProofModel(SatSolverV& solver)
 {
     varI1F.clear();
     varI1G.clear();

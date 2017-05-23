@@ -5,7 +5,7 @@
 using namespace std;
 
 void
-CirNet::createVar(SatSolver* s) const
+CirNet::createVar(SatSolverV* s) const
 {
 	buildTopoList();
 	for( unsigned i = 0; i < _topoList.size(); ++i ) {
@@ -15,7 +15,7 @@ CirNet::createVar(SatSolver* s) const
 }
 
 void
-CirNet::addToSolver(SatSolver* s) const
+CirNet::addToSolver(SatSolverV* s) const
 {
 	buildTopoList();
 	for( unsigned i = 0; i < _topoList.size(); ++i ) {

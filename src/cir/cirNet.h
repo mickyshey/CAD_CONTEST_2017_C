@@ -8,7 +8,8 @@
 #include <map>
 
 #include "cir/cirGate.h"
-#include "minisat/sat.h"
+//#include "minisat/sat.h"
+#include "sat/sat.h"
 
 using namespace std;
 
@@ -58,8 +59,8 @@ public:
 
 //	in cirSat.cpp
 	//void reassignId() const;
-	void createVar(SatSolver* s) const;
-	void addToSolver(SatSolver* s) const;
+	void createVar(SatSolverV* s) const;
+	void addToSolver(SatSolverV* s) const;
 
 private:
 	string								_name;
