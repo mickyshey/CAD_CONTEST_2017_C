@@ -28,6 +28,7 @@ enum GateType
 	Gate_Xor,
 	Gate_Xnor,
 	Gate_Error,
+	Gate_Mux,
 
 	Gate_UNDEF
 };
@@ -135,5 +136,6 @@ CirGateType(CirNorGate);
 CirGateType(CirXorGate);
 CirGateType(CirXnorGate);
 CirGateType(CirErrorGate);
+CirGateType(CirMuxGate);
 
 #endif

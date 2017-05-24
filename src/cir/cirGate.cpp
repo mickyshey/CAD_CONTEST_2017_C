@@ -281,3 +281,23 @@ CirErrorGate::report() const
 void
 CirErrorGate::addToSolver(SatSolverV* s) const
 {}
+/*************************
+		CirMuxGate
+*************************/
+const GateType
+CirMuxGate::getType() const
+{
+	return Gate_Mux;
+}
+
+void
+CirMuxGate::report() const
+{
+	cout << "[Mux]: " << _name;
+}
+
+void
+CirMuxGate::addToSolver(SatSolverV* s) const
+{
+	// TODO
+}

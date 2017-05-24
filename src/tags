@@ -21,12 +21,13 @@ CirConstGate	cir/cirGate.h	/^CirGateType(CirConstGate);$/;"	v
 CirErrorGate	cir/cirGate.h	/^CirGateType(CirErrorGate);$/;"	v
 CirGate	cir/cirGate.h	/^	CirGate(const string& name = "", unsigned id = 0): $/;"	f	class:CirGate
 CirGate	cir/cirGate.h	/^class CirGate$/;"	c
-CirGateType	cir/cirGate.h	116;"	d
+CirGateType	cir/cirGate.h	117;"	d
 CirGateV	cir/cirGate.h	/^	explicit CirGateV(CirGate* g = 0, bool inv = false): _gateV(reinterpret_cast<size_t>(g)) {$/;"	f	class:CirGateV
 CirGateV	cir/cirGate.h	/^class CirGateV$/;"	c
 CirInvGate	cir/cirGate.h	/^CirGateType(CirInvGate);$/;"	v
-CirMgr	cir/cirMgr.h	/^	explicit CirMgr(const string& name = ""): _name(name), _F(NULL), _G(NULL), _patch(NULL) { _s = new SatSolverV; }\/\/_s -> init(); }$/;"	f	class:CirMgr
+CirMgr	cir/cirMgr.h	/^	explicit CirMgr(const string& name = ""): $/;"	f	class:CirMgr
 CirMgr	cir/cirMgr.h	/^class CirMgr$/;"	c
+CirMuxGate	cir/cirGate.h	/^CirGateType(CirMuxGate);$/;"	v
 CirNandGate	cir/cirGate.h	/^CirGateType(CirNandGate);$/;"	v
 CirNet	cir/cirNet.h	/^	explicit CirNet(const string& name = "", unsigned id = 0): $/;"	f	class:CirNet
 CirNet	cir/cirNet.h	/^class CirNet$/;"	c
@@ -82,6 +83,7 @@ Gate_Buf	cir/cirGate.h	/^	Gate_Buf,$/;"	e	enum:GateType
 Gate_Const	cir/cirGate.h	/^	Gate_Const,$/;"	e	enum:GateType
 Gate_Error	cir/cirGate.h	/^	Gate_Error,$/;"	e	enum:GateType
 Gate_Inv	cir/cirGate.h	/^	Gate_Inv,$/;"	e	enum:GateType
+Gate_Mux	cir/cirGate.h	/^	Gate_Mux,$/;"	e	enum:GateType
 Gate_Nand	cir/cirGate.h	/^	Gate_Nand,$/;"	e	enum:GateType
 Gate_Nor	cir/cirGate.h	/^	Gate_Nor,$/;"	e	enum:GateType
 Gate_Or	cir/cirGate.h	/^	Gate_Or,$/;"	e	enum:GateType
@@ -336,6 +338,7 @@ addToSolver	cir/cirGate.cpp	/^CirBufGate::addToSolver(SatSolverV* s) const$/;"	f
 addToSolver	cir/cirGate.cpp	/^CirConstGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirConstGate
 addToSolver	cir/cirGate.cpp	/^CirErrorGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirErrorGate
 addToSolver	cir/cirGate.cpp	/^CirInvGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirInvGate
+addToSolver	cir/cirGate.cpp	/^CirMuxGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirMuxGate
 addToSolver	cir/cirGate.cpp	/^CirNandGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirNandGate
 addToSolver	cir/cirGate.cpp	/^CirNorGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirNorGate
 addToSolver	cir/cirGate.cpp	/^CirOrGate::addToSolver(SatSolverV* s) const$/;"	f	class:CirOrGate
@@ -492,6 +495,7 @@ cpuTime	sat/GlobalV.h	/^static inline double cpuTime(void) {$/;"	f
 createConst	cir/cirNet.cpp	/^CirNet::createConst(bool val)$/;"	f	class:CirNet
 createGate	cir/cirNet.cpp	/^CirNet::createGate(const GateType& t, const string& name, unsigned id)$/;"	f	class:CirNet
 createGateRec	cir/cirParse.cpp	/^CirNet::createGateRec(const vector<string>& tokens, const GateType& t, unsigned i)$/;"	f	class:CirNet
+createMux4Candidates	cir/cirMgr.cpp	/^CirMgr::createMux4Candidates()$/;"	f	class:CirMgr
 createVar	cir/cirMgr.h	/^	void createVar(CirNet* n) const { n -> createVar(_s); }$/;"	f	class:CirMgr
 createVar	cir/cirSat.cpp	/^CirNet::createVar(SatSolverV* s) const$/;"	f	class:CirNet
 cref	minisat/Solver.h	/^        CRef cref;$/;"	m	struct:Minisat::Solver::Watcher
@@ -604,6 +608,7 @@ getType	cir/cirGate.cpp	/^CirBufGate::getType() const$/;"	f	class:CirBufGate
 getType	cir/cirGate.cpp	/^CirConstGate::getType() const$/;"	f	class:CirConstGate
 getType	cir/cirGate.cpp	/^CirErrorGate::getType() const$/;"	f	class:CirErrorGate
 getType	cir/cirGate.cpp	/^CirInvGate::getType() const$/;"	f	class:CirInvGate
+getType	cir/cirGate.cpp	/^CirMuxGate::getType() const$/;"	f	class:CirMuxGate
 getType	cir/cirGate.cpp	/^CirNandGate::getType() const$/;"	f	class:CirNandGate
 getType	cir/cirGate.cpp	/^CirNorGate::getType() const$/;"	f	class:CirNorGate
 getType	cir/cirGate.cpp	/^CirOrGate::getType() const$/;"	f	class:CirOrGate
@@ -1059,6 +1064,7 @@ report	cir/cirGate.cpp	/^CirBufGate::report() const$/;"	f	class:CirBufGate
 report	cir/cirGate.cpp	/^CirConstGate::report() const$/;"	f	class:CirConstGate
 report	cir/cirGate.cpp	/^CirErrorGate::report() const$/;"	f	class:CirErrorGate
 report	cir/cirGate.cpp	/^CirInvGate::report() const$/;"	f	class:CirInvGate
+report	cir/cirGate.cpp	/^CirMuxGate::report() const$/;"	f	class:CirMuxGate
 report	cir/cirGate.cpp	/^CirNandGate::report() const$/;"	f	class:CirNandGate
 report	cir/cirGate.cpp	/^CirNorGate::report() const$/;"	f	class:CirNorGate
 report	cir/cirGate.cpp	/^CirOrGate::report() const$/;"	f	class:CirOrGate

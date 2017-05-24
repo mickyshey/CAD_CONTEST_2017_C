@@ -31,6 +31,7 @@ CirMgr::test()
 	//tiePi(_F, _dupF);
 	//tiePi(_F, _dupG);
 
+	numClauses = getNumClauses();
 	addToSolver(_F);
 	addToSolver(_G);
 	addXorConstraint(_F, _G);
@@ -38,9 +39,9 @@ CirMgr::test()
 	/********************/
 	// mark onset clause 
 	/*******************/
-	numClauses = getNumClauses();
-	markOnsetClause(numClauses);
+	for( unsigned i = numClauses; i < getNumClauses(); ++i ) markOnsetClause(i);
 
+	numClauses = getNumClauses();
 	addToSolver(_dupF);
 	addToSolver(_dupG);
 	addXorConstraint(_dupF, _dupG);
@@ -48,8 +49,7 @@ CirMgr::test()
 	/********************/
 	// mark onset clause 
 	/*******************/
-	numClauses = getNumClauses();
-	markOffsetClause(numClauses);
+	for( unsigned i = numClauses; i < getNumClauses(); ++i) markOffsetClause(i);
 
 	bool isSat = solve();
 	cout << (isSat ? "SAT" : "UNSAT") << endl;
@@ -57,6 +57,12 @@ CirMgr::test()
 	//_dupG -> reportGateAll();
 	//_F -> reportNetList();
 	//_F -> addToSolver(_s);
+}
+
+void
+CirMgr::createMux4Candidates()
+{
+	assert(_F && _G && _dupF && _dupG && _candNameList.size());
 }
 
 //CirNet* out = 0;
