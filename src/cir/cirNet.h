@@ -13,6 +13,8 @@
 
 using namespace std;
 
+typedef unordered_map<string, CirGate*> name2GateMap;
+
 class CirNet
 {
 public:
@@ -45,6 +47,7 @@ public:
 	void buildTopoListRec(CirGate* g) const;
 	//CirNet* constructNet();
     void sweep();
+	CirGate* createMux(CirGate* g_F, CirGate* g_dupF);
 
 //	in cirParse.cpp
 	bool parse(const string& filename);
@@ -70,7 +73,7 @@ private:
 	GateList							_gateList;			
 	GateList							_piList, _poList;
 	GateList							_errorList;
-	unordered_map<string, CirGate*>		_name2GateMap;	
+	name2GateMap					_name2GateMap;	
 	mutable GateList					_topoList;
 };
 

@@ -71,29 +71,32 @@ public:
 
 //	gate info
 	void setId(unsigned i) 			{ _id = i; }
-	unsigned getId() 				{ return _id; }
+	unsigned getId() 					{ return _id; }
 	void setVar(Var v)				{ _var = v; }
-	Var getVar()					{ return _var; }
+	Var getVar()						{ return _var; }
 	const string& getName() 		{ return _name; }
-    void setWeight(unsigned w)      { _weight = w; }
+    void setWeight(unsigned w)	{ _weight = w; }
 	virtual const GateType getType() const = 0;
 
 //	gate io
 	void setFaninSize(unsigned s) 					{ _in.resize(s); }
-	void setFanin(CirGateV gateV, unsigned idx) 	{ if(idx >= _in.size()) _in.resize(idx+1);
-													  	_in[idx] = gateV; }
+	//void setFanin(CirGateV gateV, unsigned idx) 	{ if(idx >= _in.size()) _in.resize(idx+1); _in[idx] = gateV; }
+
+	//we should always setFaninSize first to ensure idx is within size
+	void setFanin(CirGateV gateV, unsigned idx) 	{ assert(idx < _in.size()); _in[idx] = gateV; }
 	void pushBackFanin(CirGateV gateV) 				{ _in.push_back(gateV); }
-	unsigned getFaninSize() const					{ return _in.size(); }
-	CirGate* getFanin(unsigned idx) const			{ return _in[idx].getGate(); }
-	unsigned getFaninId(unsigned idx) const			{ return _in[idx].getGate() -> _id; }
-	Var getFaninVar(unsigned idx) const				{ return _in[idx].getGate() -> _var; }
-	bool isFaninInv(unsigned idx) const				{ return _in[idx].isInv(); }
+	unsigned getFaninSize() const						{ return _in.size(); }
+	CirGate* getFanin(unsigned idx) const			{ assert(idx < _in.size()); return _in[idx].getGate(); }
+	unsigned getFaninId(unsigned idx) const		{ assert(idx < _in.size()); return _in[idx].getGate() -> _id; }
+	Var getFaninVar(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].getGate() -> _var; }
+	bool isFaninInv(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].isInv(); }
 	void setFanoutSize(unsigned s) 					{ _out.resize(s); }
-	void setFanout(CirGateV gateV, unsigned idx) 	{ if(idx >= _out.size()) _out.resize(idx+1);
-													  	_out[idx] = gateV; }
+	//void setFanout(CirGateV gateV, unsigned idx) 	{ if(idx >= _out.size()) _out.resize(idx+1);	_out[idx] = gateV; }
+	void clearFanout()									{ _out.clear(); }
+	void setFanout(CirGateV gateV, unsigned idx) { assert(idx < _out.size()); _out[idx] = gateV; }
 	void pushBackFanout(CirGateV gateV) 			{ _out.push_back(gateV); }
 	unsigned getFanoutSize() const					{ return _out.size(); }
-	CirGate* getFanout(unsigned idx) const			{ return _out[idx].getGate(); }
+	CirGate* getFanout(unsigned idx) const			{ assert(idx < _out.size()); return _out[idx].getGate(); }
 
 //	dfs traversal
 	static void incRef() 	        { ++_globalRef; }
