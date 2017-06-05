@@ -29,7 +29,7 @@ CirNet::addToSolver(SatSolverV* s) const
 }
 
 void
-CirMgr::buildVarMap(const CirNet* ntk) {
+CirMgr::buildVarMap(CirNet* ntk) {
     // map PI var
     for(int i = 0; i < ntk->getPiNum(); i++) {
         CirGate* g = ntk->getPi(i);

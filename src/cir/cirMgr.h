@@ -63,7 +63,7 @@ public:
 	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
 	void markOnsetClause(const ClauseId& cid);
 	void markOffsetClause(const ClauseId& cid);
-        void buildVarMap(const CirNet* ntk);
+        void buildVarMap(CirNet* ntk);
         CirNet* getItp();
         CirNet* buildItp(const string& fileName);
         void retrieveProof(Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId>& usedClause);
