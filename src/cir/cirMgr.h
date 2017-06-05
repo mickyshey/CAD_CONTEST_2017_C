@@ -27,7 +27,16 @@ enum VAR_GROUP
 class CirMgr
 {
 public:
-	explicit CirMgr(const string& name = ""): _name(name), _F(NULL), _G(NULL), _patch(NULL) { _s = new SatSolverV; }//_s -> init(); }
+	explicit CirMgr(const string& name = ""): 
+			_name(name),
+			_F(NULL),
+			_G(NULL),
+			_dupF(NULL),
+			_dupG(NULL),
+			_patch(NULL) {
+			_candNameList.clear();
+			_isClauseOn.clear();
+			_s = new SatSolverV; }//_s -> init(); }
 	~CirMgr() {}//{ delete _F; delete _G; delete _patch; }
 
 //	info
@@ -47,8 +56,9 @@ public:
 	CirNet* dupNet(CirNet* n) const;
 	CirNet* connectXor(CirNet* f, CirNet* g);	// we shouldn't create the whole XOR net, instead, we simply add the XOR cnf constraint to the solver
 
-//  test
+// in cirMgr.cpp
 	void test();
+	void createMux4Candidates();
 
 //	in cirReport.cpp
 	void reportCandList() const;

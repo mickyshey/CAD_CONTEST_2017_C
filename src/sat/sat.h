@@ -16,12 +16,12 @@
 
 using namespace std;
 
-class SATMgr;
+class CirMgr;
 
 /********** MiniSAT_Solver **********/
 class SatSolverV
 {
-    friend class SATMgr;
+    friend class CirMgr;
    public : 
       //SatSolverV(const V3Ntk* const);
 		SatSolverV();

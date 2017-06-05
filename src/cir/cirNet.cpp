@@ -114,6 +114,13 @@ CirNet::createGate(const GateType& t, const string& name, unsigned id)
 		_name2GateMap[name] = g;
 		return g;
 	}
+	if( t == Gate_Mux ) {
+		CirMuxGate* g = new CirMuxGate(name, id);
+		// where should the MUX gate be placed ?
+		_gateList.push_back(g);
+		_name2GateMap[name] = g;
+		return g;
+	}
 	assert(0);
 	return NULL;
 }
@@ -168,4 +175,48 @@ CirNet::sweep()
             }
         }
     */
+}
+
+CirGate*
+CirNet::createMux(CirGate* g_F, CirGate* g_dupF)
+{
+	assert(g_F && g_dupF);
+	CirGate* mux = createGate(Gate_Mux, g_F -> getName() + "_mux");
+	CirGate* sel = createGate(Gate_Pi, g_F -> getName() + "_sel");
+	mux -> setFaninSize(3);
+	mux -> setFanin(CirGateV(g_F, false), 0);
+	// create a XNOR gate connecting g_F & g_dupF
+	CirGate* xnor = createGate(Gate_Xnor, g_F -> getName() + "_xnor");
+	xnor -> setFaninSize(2);
+	xnor -> setFanin(CirGateV(g_F, false), 0); 
+	xnor -> setFanin(CirGateV(g_dupF, false), 1); 
+	assert(xnor -> getFaninSize() == 2);
+	mux -> setFanin(CirGateV(xnor, false), 1);
+	mux -> setFanin(CirGateV(sel, false), 2);
+	for( unsigned i = 0; i < g_F -> getFanoutSize(); ++i ) {
+		CirGate* out = g_F -> getFanout(i);
+		cout << "fanout type: " << out -> getType() << endl;
+		mux -> pushBackFanout(CirGateV(out, false));
+		// Po, Buf, Inv
+		if( out -> getFaninSize() == 1 ) {
+			assert(out -> getFanin(0) == g_F);
+			out -> setFanin(CirGateV(mux, false), 0);
+		}
+		else {
+			assert(out -> getFaninSize() == 2 );
+			if(out -> getFanin(0) == g_F) out -> setFanin(CirGateV(mux, false), 0);
+			else out -> setFanin(CirGateV(mux, false), 1);
+		}
+	}
+	g_F -> clearFanout();
+	g_F -> pushBackFanout(CirGateV(mux, false));
+	g_F -> pushBackFanout(CirGateV(xnor, false));
+	unsigned numFanout = g_dupF -> getFanoutSize();
+	g_dupF -> pushBackFanout(CirGateV(xnor, false));
+	assert(g_dupF -> getFanoutSize() == numFanout + 1);
+	xnor -> pushBackFanout(CirGateV(mux, false));
+	sel -> pushBackFanout(CirGateV(mux, false));
+	assert(g_F -> getFanoutSize() == 2);
+	
+	return mux;
 }

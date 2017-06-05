@@ -118,7 +118,7 @@ CirNet*
 CirMgr::getItp()
 {
     string proofName = "itp.tmp";
-    _s->proof->save(proofName.c_str());
+    _s->_solver->proof->save(proofName.c_str());
     
     CirNet* itp = buildItp(proofName);
     
