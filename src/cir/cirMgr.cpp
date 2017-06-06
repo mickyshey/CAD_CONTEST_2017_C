@@ -67,6 +67,7 @@ CirMgr::test()
 
 	bool isSat = solve();
 	cout << (isSat ? "SAT" : "UNSAT") << endl;
+        CirNet* patch = getItp();
 	//_G -> reportGateAll();
 	//_dupG -> reportGateAll();
 	//_F -> reportNetList();
