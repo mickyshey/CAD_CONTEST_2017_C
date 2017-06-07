@@ -126,6 +126,23 @@ void SatSolverV::addXnorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1)
   // clause (~in0 + ~in1 + out)
   _solver->addTernary(~in0Lit, ~in1Lit,  outLit);
 }
+
+void SatSolverV::addMuxCNF(Var out, Var in0, bool inv0, Var in1, bool inv1, Var sel, bool invSel)
+{
+	Lit outLit = mkLit(out, false);
+	Lit in0Lit = mkLit(in0, inv0);
+	Lit in1Lit = mkLit(in1, inv1);
+	Lit selLit = mkLit(sel, invSel);
+	// out = (s ? in1 : in0);
+	// clause (s + ~in0 + out)
+	_solver -> addTernary( selLit, ~in0Lit,  outLit);
+	// clause (s + in0 + ~out)
+	_solver -> addTernary( selLit,  in0Lit, ~outLit);
+	// clause (~s + in1 + ~out)
+	_solver -> addTernary(~selLit,  in1Lit, ~outLit);
+	// clause (~s + ~in1 + out)
+	_solver -> addTernary(~selLit, ~in1Lit,  outLit);
+}
 /*
 void SatSolverV::assumeProperty(const V3NetId& id, const bool& invert, const uint32_t& depth)
 {

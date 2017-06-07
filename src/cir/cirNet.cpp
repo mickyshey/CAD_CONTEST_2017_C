@@ -195,7 +195,7 @@ CirNet::createMux(CirGate* g_F, CirGate* g_dupF)
 	mux -> setFanin(CirGateV(sel, false), 2);
 	for( unsigned i = 0; i < g_F -> getFanoutSize(); ++i ) {
 		CirGate* out = g_F -> getFanout(i);
-		cout << "fanout type: " << out -> getType() << endl;
+		//cout << "fanout type: " << out -> getType() << endl;
 		mux -> pushBackFanout(CirGateV(out, false));
 		// Po, Buf, Inv
 		if( out -> getFaninSize() == 1 ) {

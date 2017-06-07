@@ -52,6 +52,7 @@ class SatSolverV
   		void addOrCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
   		void addXorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
   		void addXnorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
+		void addMuxCNF(Var out, Var in0, bool inv0, Var in1, bool inv1, Var sel, bool invSel);
 
       // Network to Solver Functions
       //const size_t getFormula(const V3NetId&, const uint32_t&);

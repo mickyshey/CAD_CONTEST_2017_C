@@ -30,9 +30,11 @@ CirMgr::test()
 	// tie variables
 	/*******************/
 /*
+	assert(_F -> getPiNum() == _G -> getPiNum() + _candNameList.size());
 	tiePi(_F, _G);
 	tieGate(_F -> getGateByName("g1"), _dupF -> getGateByName("g1"));
 	tieGate(_F -> getGateByName("g2"), _dupF -> getGateByName("g2"));
+	assert(_dupF -> getPiNum() == _dupG -> getPiNum());
 	tiePi(_dupF, _dupG);
 	//tiePi(_F, _dupF);
 	//tiePi(_F, _dupG);

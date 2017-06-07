@@ -35,8 +35,9 @@ CirMgr::tieGate(CirGate* g1, CirGate* g2)
 void
 CirMgr::tiePi(CirNet* f, CirNet* g)
 {
-	assert(f -> getPiNum() == g -> getPiNum());
-	for( unsigned i = 0; i < f -> getPiNum(); ++i ) {
+	//assert(f -> getPiNum() == g -> getPiNum() + _candNameList.size());
+	// we should get pi from g instead of f
+	for( unsigned i = 0; i < g -> getPiNum(); ++i ) {
 		CirGate* fPi = f -> getPi(i);
 		CirGate* gPi = g -> getGateByName(fPi -> getName());
 		gPi -> setVar(fPi -> getVar());
