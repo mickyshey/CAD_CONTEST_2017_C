@@ -135,7 +135,7 @@ CirMgr::buildItp(const string& fileName)
     vector<unsigned> clausePos;
     
     // tmp var
-    CirNet* ntk;
+    CirNet* ntk = new CirNet;
     CirGate* g;
     CirGate* g1;
     CirGate* g2;
@@ -170,7 +170,7 @@ CirMgr::buildItp(const string& fileName)
                             tmpG = tmpG.flipInv();
                             g->setFanout(tmp, j);
                         }*/
-                        for(int j = 0; j = g1->getFanoutSize(); j++) {
+                        for(int j = 0; j < g1->getFanoutSize(); j++) {
                             CirGateV tmpG = CirGateV(g1->getFanout(j));
                             tmpG.flipInv();
                             g1->setFanout(tmpG, j);
@@ -183,7 +183,7 @@ CirMgr::buildItp(const string& fileName)
                         if(_varGroup[idx >> 1] == COMMON) {
                             g2 = (_var2Gate.find(idx >> 1))->second;
                             if((idx & 1) == 1) {
-                                for(int j = 0; j = g2->getFanoutSize(); j++) {
+                                for(int j = 0; j < g2->getFanoutSize(); j++) {
                                     CirGateV tmpG = CirGateV(g2->getFanout(j));
                                     tmpG.flipInv();
                                     g2->setFanout(tmpG, j);
@@ -257,6 +257,11 @@ CirMgr::buildItp(const string& fileName)
 
     cid = usedClause[usedClause.size() - 1];
     g = claItpLookUp[cid]; // needed??
+    CirGate* po = _F->getError(0);
+    g->setFanoutSize(po->getFanoutSize());
+    for(size_t i = 0; i < po->getFanoutSize(); i++) {
+        g->setFanout(CirGateV(po->getFanout(i)), i);
+    }
 
     return ntk;
 }

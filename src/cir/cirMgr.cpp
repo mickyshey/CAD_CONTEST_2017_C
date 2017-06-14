@@ -17,9 +17,9 @@ CirMgr::test()
 	_dupF = dupNet(_F);
 	_dupG = dupNet(_G);
 
-	createMux4Candidates();
+	// createMux4Candidates();
 
-	assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
+	// assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
 	_F -> reportNetList();
 
 	createVar(_F);
@@ -68,6 +68,15 @@ CirMgr::test()
 	bool isSat = solve();
 	cout << (isSat ? "SAT" : "UNSAT") << endl;
         CirNet* patch = getItp();
+        _s->reset();
+        createVar(_F);
+        createVar(_G);
+        tiePi(_F, _G);
+        addToSolver(_F);
+        addToSolver(_G);
+        addXorConstraint(_F, _G);
+        bool eqCheck = solve();
+        cout << (eqCheck ? "SAT" : "UNSAT") << endl;
 	//_G -> reportGateAll();
 	//_dupG -> reportGateAll();
 	//_F -> reportNetList();

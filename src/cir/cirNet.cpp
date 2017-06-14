@@ -180,6 +180,7 @@ CirNet::sweep()
 CirGate*
 CirNet::createMux(CirGate* g_F, CirGate* g_dupF)
 {
+   
 	assert(g_F && g_dupF);
 	CirGate* mux = createGate(Gate_Mux, g_F -> getName() + "_mux");
 	CirGate* sel = createGate(Gate_Pi, g_F -> getName() + "_sel");
