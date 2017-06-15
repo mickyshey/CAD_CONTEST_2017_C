@@ -58,6 +58,7 @@ class SatSolverV
       //const size_t getFormula(const V3NetId&, const uint32_t&);
       //const V3BitVecX getDataValue(const V3NetId&, const uint32_t&) const;
       const bool getDataValue(const size_t& var) const;
+		const bool getAssignment(const Var& v) const;
       // Variable Interface Functions
       inline const size_t reserveFormula() { return getPosVar(newVar()); }
       inline const bool isNegFormula(const size_t& v) const { return (v & 1ul); }

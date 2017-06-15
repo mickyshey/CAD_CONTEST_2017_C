@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <unordered_map>
 
 #include "cir/cirNet.h"
 //#include "minisat/Solver.h"
@@ -26,7 +27,8 @@ public:
 			_patch(NULL) {
 			_candNameList.clear();
 			_isClauseOn.clear();
-			_s = new SatSolverV; }//_s -> init(); }
+			_s = new SatSolverV; 
+			_costSolver = new SatSolverV; }//_s -> init(); }
 	~CirMgr() {}//{ delete _F; delete _G; delete _patch; }
 
 //	info
@@ -52,6 +54,8 @@ public:
 
 //	in cirReport.cpp
 	void reportCandList() const;
+	void reportSortedCand() const;
+	void reportMuxAssignment() const;
 
 //	in cirSat.cpp
 	bool solve() { return _s -> solve(); }
@@ -63,6 +67,18 @@ public:
 	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
 	void markOnsetClause(const ClauseId& cid);
 	void markOffsetClause(const ClauseId& cid);
+
+// in cirCost.cpp
+	void sortCandidate();
+	void createVar4CostSolver(bool setMgr);
+	void addCostConstraint(unsigned cost);
+	bool getMuxAssignment();
+	void updateIndices(std::vector<unsigned>& indices, unsigned& currCost);
+	void addBlockingAssignment(const std::vector<bool>& assign);
+	unsigned getTotalCost();
+	void addAllBlockings();
+	void tieGateWithAssignment(const std::vector<bool>& assign);
+	void restoreTiedGates();
 
 //      in cirProof.cpp
         void checkPo();
@@ -76,10 +92,17 @@ private:
 	CirNet*								_dupG;
 	CirNet*								_patch;
 	SatSolverV*							_s;
+	SatSolverV*							_costSolver;
         CirNet*                                                         _out;
 	vector<string>						_candNameList;
+	vector<CirGate*>					_sortedCandGate;
+	vector<bool>						_muxAssignment;
+	unordered_map<Var, CirGate*>	_costVar2Gate;
 
 	vector<bool>						_isClauseOn;
+	std::vector<std::vector<bool>>		_blockingClauses;
+	// for restore
+	std::vector<Var>					_varsDup;
 };
 
 #endif

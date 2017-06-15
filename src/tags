@@ -21,7 +21,7 @@ CirConstGate	cir/cirGate.h	/^CirGateType(CirConstGate);$/;"	v
 CirErrorGate	cir/cirGate.h	/^CirGateType(CirErrorGate);$/;"	v
 CirGate	cir/cirGate.h	/^	CirGate(const string& name = "", unsigned id = 0): $/;"	f	class:CirGate
 CirGate	cir/cirGate.h	/^class CirGate$/;"	c
-CirGateType	cir/cirGate.h	117;"	d
+CirGateType	cir/cirGate.h	125;"	d
 CirGateV	cir/cirGate.h	/^	explicit CirGateV(CirGate* g = 0, bool inv = false): _gateV(reinterpret_cast<size_t>(g)) {$/;"	f	class:CirGateV
 CirGateV	cir/cirGate.h	/^class CirGateV$/;"	c
 CirInvGate	cir/cirGate.h	/^CirGateType(CirInvGate);$/;"	v
@@ -255,11 +255,15 @@ _READER_H_	sat/reader.h	10;"	d
 __SGI_STL_INTERNAL_RELOPS	sat/GlobalV.h	276;"	d
 _aborted	sat/SolverV.h	/^   bool     _aborted;$/;"	m	class:SolverV
 _assump	sat/sat.h	/^      vec<Lit>            _assump;    \/\/ Assumption List for assumption solve$/;"	m	class:SatSolverV
+_blockingClauses	cir/cirMgr.h	/^	std::vector<std::vector<bool>>		_blockingClauses;$/;"	m	class:CirMgr
 _candNameList	cir/cirMgr.h	/^	vector<string>						_candNameList;$/;"	m	class:CirMgr
 _cat	minisat/Solver.cpp	/^static const char* _cat = "CORE";$/;"	v	file:
 _conflictNum	sat/SolverV.h	/^   int      _conflictNum;$/;"	m	class:SolverV
 _const0	cir/cirNet.h	/^	CirGate*							_const0;$/;"	m	class:CirNet
 _const1	cir/cirNet.h	/^	CirGate*							_const1;$/;"	m	class:CirNet
+_costSolver	cir/cirMgr.h	/^	SatSolverV*							_costSolver;$/;"	m	class:CirMgr
+_costVar	cir/cirGate.h	/^	Var						_costVar;$/;"	m	class:CirGate
+_costVar2Gate	cir/cirMgr.h	/^	unordered_map<Var, CirGate*>	_costVar2Gate;$/;"	m	class:CirMgr
 _curVar	sat/sat.h	/^      Var                 _curVar;    \/\/ Variable currently$/;"	m	class:SatSolverV
 _currentMem	util/myUsage.h	/^   double     _currentMem;$/;"	m	class:MyUsage
 _currentTick	util/myUsage.h	/^   double     _currentTick;$/;"	m	class:MyUsage
@@ -276,10 +280,11 @@ _in	cir/cirGate.h	/^	GateVList				_in;$/;"	m	class:CirGate
 _initMem	util/myUsage.h	/^   double     _initMem;$/;"	m	class:MyUsage
 _insert	minisat/Map.h	/^    void   _insert (const K& k, const D& d) { $/;"	f	class:Minisat::Map
 _isClauseOn	cir/cirMgr.h	/^	vector<bool>						_isClauseOn;$/;"	m	class:CirMgr
+_muxAssignment	cir/cirMgr.h	/^	vector<bool>						_muxAssignment;$/;"	m	class:CirMgr
 _name	cir/cirGate.h	/^	string					_name;$/;"	m	class:CirGate
 _name	cir/cirMgr.h	/^	string 								_name;$/;"	m	class:CirMgr
 _name	cir/cirNet.h	/^	string								_name;$/;"	m	class:CirNet
-_name2GateMap	cir/cirNet.h	/^	unordered_map<string, CirGate*>		_name2GateMap;	$/;"	m	class:CirNet
+_name2GateMap	cir/cirNet.h	/^	name2GateMap					_name2GateMap;	$/;"	m	class:CirNet
 _out	cir/cirGate.h	/^	GateVList				_out;$/;"	m	class:CirGate
 _out	cir/cirMgr.h	/^        CirNet*                                                         _out;$/;"	m	class:CirMgr
 _patch	cir/cirMgr.h	/^	CirNet*								_patch;$/;"	m	class:CirMgr
@@ -289,6 +294,7 @@ _poList	cir/cirNet.h	/^	GateList							_piList, _poList;$/;"	m	class:CirNet
 _ref	cir/cirGate.h	/^	mutable unsigned		_ref;$/;"	m	class:CirGate
 _s	cir/cirMgr.h	/^	SatSolverV*							_s;$/;"	m	class:CirMgr
 _solver	sat/sat.h	/^      SolverV            *_solver;    \/\/ Pointer to a Minisat solver$/;"	m	class:SatSolverV
+_sortedCandGate	cir/cirMgr.h	/^	vector<CirGate*>					_sortedCandGate;$/;"	m	class:CirMgr
 _topoList	cir/cirNet.h	/^	mutable GateList					_topoList;$/;"	m	class:CirNet
 _totalUsedTime	util/myUsage.h	/^   double     _totalUsedTime;$/;"	m	class:MyUsage
 _var	cir/cirGate.h	/^	Var						_var;$/;"	m	class:CirGate
@@ -304,11 +310,13 @@ activity	sat/SolverTypesV.h	/^    float&    activity    ()      const { return *
 activity	sat/SolverV.h	/^    vec<double>         activity;         \/\/ A heuristic measurement of the activity of a variable.$/;"	m	class:SolverV
 activity	sat/VarOrderV.h	/^    const vec<double>&  activity;    \/\/ var->act. Pointer to external activity table.$/;"	m	class:VarOrder
 activity	sat/VarOrderV.h	/^    const vec<double>&  activity;$/;"	m	struct:VarOrder_lt
+addAllBlockings	cir/cirCost.cpp	/^CirMgr::addAllBlockings()$/;"	f	class:CirMgr
 addAndCNF	minisat/sat.cpp	/^void SatSolver::addAndCNF(Var out, Var in0, bool inv0, Var in1, bool inv1) {$/;"	f	class:SatSolver
 addAndCNF	sat/sat.cpp	/^void SatSolverV::addAndCNF(Var out, Var in0, bool inv0, Var in1, bool inv1)$/;"	f	class:SatSolverV
 addBinary	sat/SolverV.h	/^    void    addBinary (Lit p, Lit q)        { addBinary_tmp [0] = p; addBinary_tmp [1] = q; addClause(addBinary_tmp); }$/;"	f	class:SolverV
 addBinary	sat/sat.h	/^  		void addBinary(Lit lit0, Lit lit1) { _solver->addBinary(lit0, lit1); }$/;"	f	class:SatSolverV
 addBinary_tmp	sat/SolverV.h	/^    vec<Lit>            addBinary_tmp;$/;"	m	class:SolverV
+addBlockingAssignment	cir/cirCost.cpp	/^CirMgr::addBlockingAssignment(const std::vector<bool>& assign)$/;"	f	class:CirMgr
 addClause	minisat/Solver.h	/^inline bool     Solver::addClause       (Lit p)                 { add_tmp.clear(); add_tmp.push(p); return addClause_(add_tmp); }$/;"	f	class:Minisat::Solver
 addClause	minisat/Solver.h	/^inline bool     Solver::addClause       (Lit p, Lit q)          { add_tmp.clear(); add_tmp.push(p); add_tmp.push(q); return addClause_(add_tmp); }$/;"	f	class:Minisat::Solver
 addClause	minisat/Solver.h	/^inline bool     Solver::addClause       (Lit p, Lit q, Lit r)   { add_tmp.clear(); add_tmp.push(p); add_tmp.push(q); add_tmp.push(r); return addClause_(add_tmp); }$/;"	f	class:Minisat::Solver
@@ -321,10 +329,12 @@ addClause	minisat/sat.h	/^  void addClause(const vec<Lit>& clause) { solver_->ad
 addClause	sat/SolverV.h	/^    void    addClause (const vec<Lit>& ps )  { if (okay()) newClause(ps); }  \/\/ (used to be a difference between internal and external method...)$/;"	f	class:SolverV
 addClause	sat/sat.h	/^  		void addClause(const vec<Lit>& clause) { _solver->addClause(clause); }$/;"	f	class:SatSolverV
 addClause_	minisat/Solver.cpp	/^bool Solver::addClause_(vec<Lit>& ps)$/;"	f	class:Solver
+addCostConstraint	cir/cirCost.cpp	/^CirMgr::addCostConstraint(unsigned cost)$/;"	f	class:CirMgr
 addEmptyClause	minisat/Solver.h	/^inline bool     Solver::addEmptyClause  ()                      { add_tmp.clear(); return addClause_(add_tmp); }$/;"	f	class:Minisat::Solver
 addEqCNF	minisat/sat.cpp	/^void SatSolver::addEqCNF(Var var0, Var var1, bool inv) {$/;"	f	class:SatSolver
 addEqCNF	sat/sat.cpp	/^void SatSolverV::addEqCNF(Var var0, Var var1, bool inv)$/;"	f	class:SatSolverV
 addErrorConstraint	cir/cirSat.cpp	/^CirMgr::addErrorConstraint(CirNet* n, bool val)$/;"	f	class:CirMgr
+addMuxCNF	sat/sat.cpp	/^void SatSolverV::addMuxCNF(Var out, Var in0, bool inv0, Var in1, bool inv1, Var sel, bool invSel)$/;"	f	class:SatSolverV
 addNeg	util/unate.h	/^  void addNeg() { val_ |= 2; }$/;"	f	class:Unateness
 addOrCNF	minisat/sat.cpp	/^void SatSolver::addOrCNF(Var out, Var in0, bool inv0, Var in1, bool inv1) {$/;"	f	class:SatSolver
 addOrCNF	sat/sat.cpp	/^void SatSolverV::addOrCNF(Var out, Var in0, bool inv0, Var in1, bool inv1)$/;"	f	class:SatSolverV
@@ -472,6 +482,7 @@ clear	minisat/SolverTypes.h	/^    void     clear       ()                       
 clear	minisat/SolverTypes.h	/^    void  clear(bool free = true){$/;"	f	class:Minisat::OccLists
 clear	minisat/Vec.h	/^void vec<T,_Size>::clear(bool dealloc) {$/;"	f	class:Minisat::vec
 clear	sat/GlobalV.h	/^void vec<T>::clear(bool dealloc) {$/;"	f	class:vec
+clearFanout	cir/cirGate.h	/^	void clearFanout()									{ _out.clear(); }$/;"	f	class:CirGate
 clearInterrupt	minisat/Solver.h	/^inline void     Solver::clearInterrupt(){ asynch_interrupt = false; }$/;"	f	class:Minisat::Solver
 close	sat/FileV.cpp	/^void File::close(void)$/;"	f	class:File
 close	sat/reader.cpp	/^void Reader::close(){$/;"	f	class:Reader
@@ -495,9 +506,11 @@ cpuTime	sat/GlobalV.h	/^static inline double cpuTime(void) {$/;"	f
 createConst	cir/cirNet.cpp	/^CirNet::createConst(bool val)$/;"	f	class:CirNet
 createGate	cir/cirNet.cpp	/^CirNet::createGate(const GateType& t, const string& name, unsigned id)$/;"	f	class:CirNet
 createGateRec	cir/cirParse.cpp	/^CirNet::createGateRec(const vector<string>& tokens, const GateType& t, unsigned i)$/;"	f	class:CirNet
+createMux	cir/cirNet.cpp	/^CirNet::createMux(CirGate* g_F, CirGate* g_dupF)$/;"	f	class:CirNet
 createMux4Candidates	cir/cirMgr.cpp	/^CirMgr::createMux4Candidates()$/;"	f	class:CirMgr
 createVar	cir/cirMgr.h	/^	void createVar(CirNet* n) const { n -> createVar(_s); }$/;"	f	class:CirMgr
 createVar	cir/cirSat.cpp	/^CirNet::createVar(SatSolverV* s) const$/;"	f	class:CirNet
+createVar4CostSolver	cir/cirCost.cpp	/^CirMgr::createVar4CostSolver()$/;"	f	class:CirMgr
 cref	minisat/Solver.h	/^        CRef cref;$/;"	m	struct:Minisat::Solver::Watcher
 crefs	minisat/SolverTypes.h	/^    const CRef*            crefs;$/;"	m	class:Minisat::ClauseIterator
 data	minisat/Map.h	/^    struct Pair { K key; D data; };$/;"	m	struct:Minisat::Map::Pair
@@ -564,19 +577,21 @@ garbageCollect	minisat/Solver.cpp	/^void Solver::garbageCollect()$/;"	f	class:So
 garbage_frac	minisat/Solver.h	/^    double    garbage_frac;       \/\/ The fraction of wasted memory allowed before a garbage collection is triggered.$/;"	m	class:Minisat::Solver
 genProofModel	cir/cirProof.cpp	/^CirMgr::genProofModel(SatSolverV& solver)$/;"	f	class:CirMgr
 get64	sat/reader.cpp	/^unsigned long long Reader::get64(){$/;"	f	class:Reader
+getAssignment	sat/sat.cpp	/^const bool SatSolverV::getAssignment(const Var& v) const$/;"	f	class:SatSolverV
 getChar	sat/FileV.h	/^    int getChar(void) {$/;"	f	class:File
 getChar	sat/reader.cpp	/^unsigned int Reader::getChar(){$/;"	f	class:Reader
 getCharQ	sat/FileV.h	/^    int getCharQ(void) {            \/\/ Quick version with minimal overhead -- don't call this in the wrong mode!$/;"	f	class:File
 getConst	cir/cirNet.h	/^    CirGate* getConst(bool val) 					{ if(val) return _const1; else return _const0; }$/;"	f	class:CirNet
+getCostVar	cir/cirGate.h	/^	Var getCostVar()					{ return _costVar; }$/;"	f	class:CirGate
 getDataValue	sat/sat.cpp	/^const bool SatSolverV::getDataValue(const size_t& var) const $/;"	f	class:SatSolverV
 getError	cir/cirNet.h	/^	CirGate* getError(unsigned idx)					{ return _errorList[idx]; }$/;"	f	class:CirNet
 getErrorNum	cir/cirNet.h	/^	unsigned getErrorNum() const					{ return _errorList.size(); }$/;"	f	class:CirNet
 getF	cir/cirMgr.h	/^	CirNet* getF() 						{ return _F; }$/;"	f	class:CirMgr
-getFanin	cir/cirGate.h	/^	CirGate* getFanin(unsigned idx) const			{ return _in[idx].getGate(); }$/;"	f	class:CirGate
-getFaninId	cir/cirGate.h	/^	unsigned getFaninId(unsigned idx) const			{ return _in[idx].getGate() -> _id; }$/;"	f	class:CirGate
-getFaninSize	cir/cirGate.h	/^	unsigned getFaninSize() const					{ return _in.size(); }$/;"	f	class:CirGate
-getFaninVar	cir/cirGate.h	/^	Var getFaninVar(unsigned idx) const				{ return _in[idx].getGate() -> _var; }$/;"	f	class:CirGate
-getFanout	cir/cirGate.h	/^	CirGate* getFanout(unsigned idx) const			{ return _out[idx].getGate(); }$/;"	f	class:CirGate
+getFanin	cir/cirGate.h	/^	CirGate* getFanin(unsigned idx) const			{ assert(idx < _in.size()); return _in[idx].getGate(); }$/;"	f	class:CirGate
+getFaninId	cir/cirGate.h	/^	unsigned getFaninId(unsigned idx) const		{ assert(idx < _in.size()); return _in[idx].getGate() -> _id; }$/;"	f	class:CirGate
+getFaninSize	cir/cirGate.h	/^	unsigned getFaninSize() const						{ return _in.size(); }$/;"	f	class:CirGate
+getFaninVar	cir/cirGate.h	/^	Var getFaninVar(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].getGate() -> _var; }$/;"	f	class:CirGate
+getFanout	cir/cirGate.h	/^	CirGate* getFanout(unsigned idx) const			{ assert(idx < _out.size()); return _out[idx].getGate(); }$/;"	f	class:CirGate
 getFanoutSize	cir/cirGate.h	/^	unsigned getFanoutSize() const					{ return _out.size(); }$/;"	f	class:CirGate
 getG	cir/cirMgr.h	/^	CirNet* getG() 						{ return _G; }$/;"	f	class:CirMgr
 getGate	cir/cirGate.h	/^	CirGate* getGate() const 	{ return (CirGate*)(_gateV & PTR_MASK); }$/;"	f	class:CirGateV
@@ -584,10 +599,11 @@ getGate	cir/cirNet.h	/^    CirGate* getGate(unsigned id) 					{ return _gateList
 getGateByName	cir/cirNet.h	/^	CirGate* getGateByName(const string& n) 		{ return _name2GateMap[n]; }$/;"	f	class:CirNet
 getGateNum	cir/cirNet.h	/^    unsigned getGateNum() const						{ return _gateList.size(); }$/;"	f	class:CirNet
 getHelpPrefixString	minisat/Options.h	/^    static const char*&  getHelpPrefixString() { static const char* help_prefix_str = ""; return help_prefix_str; }$/;"	f	class:Minisat::Option
-getId	cir/cirGate.h	/^	unsigned getId() 				{ return _id; }$/;"	f	class:CirGate
+getId	cir/cirGate.h	/^	unsigned getId() 					{ return _id; }$/;"	f	class:CirGate
 getInt	sat/FileV.h	/^static inline uint64 getInt  (File& in)             { return decode64(getUInt(in)); }$/;"	f
 getLineSafe	util/parse.h	/^std::string getLineSafe(std::ifstream& ifs) {$/;"	f
 getMode	sat/FileV.h	/^    FileMode getMode(void) {$/;"	f	class:File
+getMuxAssignment	cir/cirCost.cpp	/^CirMgr::getMuxAssignment()$/;"	f	class:CirMgr
 getName	cir/cirGate.h	/^	const string& getName() 		{ return _name; }$/;"	f	class:CirGate
 getName	cir/cirNet.h	/^	const string& getName() const					{ return _name; }$/;"	f	class:CirNet
 getNegFormula	sat/sat.h	/^      inline const size_t getNegFormula(const size_t& v) const { return (v ^ 1ul); }$/;"	f	class:SatSolverV
@@ -603,6 +619,7 @@ getPiNum	cir/cirNet.h	/^    unsigned getPiNum() const						{ return _piList.size
 getPo	cir/cirNet.h	/^	CirGate* getPo(unsigned idx) 					{ return _poList[idx]; }$/;"	f	class:CirNet
 getPoNum	cir/cirNet.h	/^    unsigned getPoNum() const						{ return _poList.size(); }$/;"	f	class:CirNet
 getPosVar	sat/sat.h	/^      inline const size_t getPosVar(const Var& v) const { return (((size_t)v) << 1ul); }$/;"	f	class:SatSolverV
+getTotalCost	cir/cirCost.cpp	/^CirMgr::getTotalCost()$/;"	f	class:CirMgr
 getType	cir/cirGate.cpp	/^CirAndGate::getType() const$/;"	f	class:CirAndGate
 getType	cir/cirGate.cpp	/^CirBufGate::getType() const$/;"	f	class:CirBufGate
 getType	cir/cirGate.cpp	/^CirConstGate::getType() const$/;"	f	class:CirConstGate
@@ -620,7 +637,8 @@ getUInt	sat/FileV.cpp	/^uint64 getUInt(File& in)$/;"	f
 getUsageString	minisat/Options.h	/^    static const char*&  getUsageString() { static const char* usage_str; return usage_str; }$/;"	f	class:Minisat::Option
 getVal	minisat/sat.h	/^  unsigned getVal(Var var) const {$/;"	f	class:SatSolver
 getVal	util/unate.h	/^  unsigned getVal() const { return val_; }$/;"	f	class:Unateness
-getVar	cir/cirGate.h	/^	Var getVar()					{ return _var; }$/;"	f	class:CirGate
+getVar	cir/cirGate.h	/^	Var getVar()						{ return _var; }$/;"	f	class:CirGate
+getWeight	cir/cirGate.h	/^	unsigned getWeight()				{ return _weight; }$/;"	f	class:CirGate
 getmin	sat/HeapV.h	/^    int  getmin() {$/;"	f	class:Heap
 grow	sat/GlobalV.h	/^void vec<T>::grow(int min_cap) {$/;"	f	class:vec
 growTo	minisat/SolverTypes.h	/^    void     growTo      (CRef cr, const T& t){ map.insert(cr, t); } \/\/ NOTE: for compatibility$/;"	f	class:Minisat::CMap
@@ -691,7 +709,7 @@ irand	sat/GlobalV.h	/^static inline int irand(double& seed, int size) {$/;"	f
 isBinate	util/unate.h	/^  bool isBinate() const { return val_ == 3; }$/;"	f	class:Unateness
 isEof	minisat/ParseUtils.h	/^static inline bool isEof(StreamBuffer& in) { return *in == EOF;  }$/;"	f	namespace:Minisat
 isEof	minisat/ParseUtils.h	/^static inline bool isEof(const char*   in) { return *in == '\\0'; }$/;"	f	namespace:Minisat
-isFaninInv	cir/cirGate.h	/^	bool isFaninInv(unsigned idx) const				{ return _in[idx].isInv(); }$/;"	f	class:CirGate
+isFaninInv	cir/cirGate.h	/^	bool isFaninInv(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].isInv(); }$/;"	f	class:CirGate
 isInv	cir/cirGate.h	/^	bool isInv() const 			{ return _gateV & (size_t)INV_MASK; }$/;"	f	class:CirGateV
 isLit	sat/SolverTypesV.h	/^    bool        isLit    () const { return ((uintp)data & 1) == 1; }$/;"	f	class:GClause
 isNeg	util/unate.h	/^  bool isNeg()    const { return val_ == 2; }$/;"	f	class:Unateness
@@ -824,6 +842,7 @@ nVars	minisat/sat.h	/^  int nVars() const { return solver_->nVars(); }$/;"	f	cla
 nVars	sat/SolverV.h	/^    int     nVars     ()                    { return assigns.size(); }$/;"	f	class:SolverV
 nVars	sat/sat.h	/^		int nVars() const { return _solver -> nVars(); }$/;"	f	class:SatSolverV
 name	minisat/Options.h	/^    const char* name;$/;"	m	class:Minisat::Option
+name2GateMap	cir/cirNet.h	/^typedef unordered_map<string, CirGate*> name2GateMap;$/;"	t
 neg	sat/SolverTypesV.h	/^	inline void neg() { x ^= 0x1; }$/;"	f	class:Lit
 newClause	sat/SolverV.cpp	/^void SolverV::newClause(const vec<Lit>& ps_, bool learnt, ClauseId id )$/;"	f	class:SolverV
 newDecisionLevel	minisat/Solver.h	/^inline void     Solver::newDecisionLevel()                      { trail_lim.push(trail.size()); }$/;"	f	class:Minisat::Solver
@@ -1075,8 +1094,10 @@ report	cir/cirGate.cpp	/^CirXorGate::report() const$/;"	f	class:CirXorGate
 report	util/myUsage.h	/^   void report(bool repTime, bool repMem) {$/;"	f	class:MyUsage
 reportCandList	cir/cirReport.cpp	/^CirMgr::reportCandList() const$/;"	f	class:CirMgr
 reportGateAll	cir/cirReport.cpp	/^CirNet::reportGateAll() const$/;"	f	class:CirNet
+reportMuxAssignment	cir/cirReport.cpp	/^CirMgr::reportMuxAssignment() const$/;"	f	class:CirMgr
 reportNetList	cir/cirReport.cpp	/^CirNet::reportNetList() const$/;"	f	class:CirNet
 reportNetListRec	cir/cirReport.cpp	/^CirNet::reportNetListRec(CirGate* g, unsigned level) const$/;"	f	class:CirNet
+reportSortedCand	cir/cirReport.cpp	/^CirMgr::reportSortedCand() const$/;"	f	class:CirMgr
 reportTopoList	cir/cirReport.cpp	/^CirNet::reportTopoList() const$/;"	f	class:CirNet
 reportf	sat/SolverV.h	28;"	d
 reserve	minisat/IntMap.h	/^        void     reserve(K key)              { map.growTo(index(key)+1); }$/;"	f	class:Minisat::IntMap
@@ -1109,10 +1130,11 @@ selectionSort	sat/SortV.h	/^template <class T> static inline void selectionSort(
 selectionSort	sat/SortV.h	/^void selectionSort(T* array, int size, LessThan lt)$/;"	f
 setBounds	sat/HeapV.h	/^    void setBounds (int size) { assert(size >= 0); indices.growTo(size,0); }$/;"	f	class:Heap
 setConfBudget	minisat/Solver.h	/^inline void     Solver::setConfBudget(int64_t x){ conflict_budget    = conflicts    + x; }$/;"	f	class:Minisat::Solver
+setCostVar	cir/cirGate.h	/^	void setCostVar(Var v)			{ _costVar = v; }$/;"	f	class:CirGate
 setDecisionVar	minisat/Solver.h	/^inline void     Solver::setDecisionVar(Var v, bool b) $/;"	f	class:Minisat::Solver
-setFanin	cir/cirGate.h	/^	void setFanin(CirGateV gateV, unsigned idx) 	{ if(idx >= _in.size()) _in.resize(idx+1);$/;"	f	class:CirGate
+setFanin	cir/cirGate.h	/^	void setFanin(CirGateV gateV, unsigned idx) 	{ assert(idx < _in.size()); _in[idx] = gateV; }$/;"	f	class:CirGate
 setFaninSize	cir/cirGate.h	/^	void setFaninSize(unsigned s) 					{ _in.resize(s); }$/;"	f	class:CirGate
-setFanout	cir/cirGate.h	/^	void setFanout(CirGateV gateV, unsigned idx) 	{ if(idx >= _out.size()) _out.resize(idx+1);$/;"	f	class:CirGate
+setFanout	cir/cirGate.h	/^	void setFanout(CirGateV gateV, unsigned idx) { assert(idx < _out.size()); _out[idx] = gateV; }$/;"	f	class:CirGate
 setFanoutSize	cir/cirGate.h	/^	void setFanoutSize(unsigned s) 					{ _out.resize(s); }$/;"	f	class:CirGate
 setHelpPrefixStr	minisat/Options.cpp	/^void Minisat::setHelpPrefixStr  (const char* str){ Option::getHelpPrefixString() = str; }$/;"	f	class:Minisat
 setId	cir/cirGate.h	/^	void setId(unsigned i) 			{ _id = i; }$/;"	f	class:CirGate
@@ -1128,7 +1150,7 @@ setTimeUsage	util/myUsage.h	/^   void setTimeUsage() {$/;"	f	class:MyUsage
 setToRef	cir/cirGate.h	/^	void setToRef() 				{ _ref = _globalRef; }$/;"	f	class:CirGate
 setUsageHelp	minisat/Options.cpp	/^void Minisat::setUsageHelp      (const char* str){ Option::getUsageString() = str; }$/;"	f	class:Minisat
 setVar	cir/cirGate.h	/^	void setVar(Var v)				{ _var = v; }$/;"	f	class:CirGate
-setWeight	cir/cirGate.h	/^    void setWeight(unsigned w)      { _weight = w; }$/;"	f	class:CirGate
+setWeight	cir/cirGate.h	/^    void setWeight(unsigned w)	{ _weight = w; }$/;"	f	class:CirGate
 setX86FPUPrecision	minisat/System.cpp	/^void Minisat::setX86FPUPrecision()$/;"	f	class:Minisat
 shrink	minisat/SolverTypes.h	/^    void         shrink      (int i)         { assert(i <= size()); if (header.has_extra) data[header.size-i] = data[header.size]; header.size -= i; }$/;"	f	class:Minisat::Clause
 shrink	minisat/Vec.h	/^    void     shrink   (Size nelems)  { assert(nelems <= sz); for (Size i = 0; i < nelems; i++) sz--, data[sz].~T(); }$/;"	f	class:Minisat::vec
@@ -1195,6 +1217,8 @@ sort	sat/SortV.h	/^template <class T, class LessThan> void sort(vec<T>& v, LessT
 sort	sat/SortV.h	/^template <class T> static inline void sort(T* array, int size) {$/;"	f
 sort	sat/SortV.h	/^template <class T> void sort(vec<T>& v) {$/;"	f
 sort	sat/SortV.h	/^void sort(T* array, int size, LessThan lt, double& seed)$/;"	f
+sortCandidate	cir/cirCost.cpp	/^CirMgr::sortCandidate()$/;"	f	class:CirMgr
+sortGateByWeight	cir/cirCost.cpp	/^bool sortGateByWeight(CirGate* a, CirGate* b)$/;"	f
 sortUnique	sat/SortV.h	/^template <class T, class LessThan> void sortUnique(vec<T>& v, LessThan lt) {$/;"	f
 sortUnique	sat/SortV.h	/^template <class T> static inline void sortUnique(T* array, int& size) {$/;"	f
 sortUnique	sat/SortV.h	/^template <class T> void sortUnique(vec<T>& v) {$/;"	f
@@ -1216,6 +1240,7 @@ tell	sat/FileV.cpp	/^int64 File::tell(void)$/;"	f	class:File
 temp_files	sat/ProofV.cpp	/^static TempFiles temp_files;       \/\/ (should be singleton)$/;"	v	file:
 test	cir/cirMgr.cpp	/^CirMgr::test()$/;"	f	class:CirMgr
 tieGate	cir/cirSat.cpp	/^CirMgr::tieGate(CirGate* g1, CirGate* g2)$/;"	f	class:CirMgr
+tieGateWithAssignment	cir/cirCost.cpp	/^CirMgr::tieGateWithAssignment(const std::vector<bool>& assign)$/;"	f	class:CirMgr
 tiePi	cir/cirSat.cpp	/^CirMgr::tiePi(CirNet* f, CirNet* g)$/;"	f	class:CirMgr
 toDimacs	minisat/Solver.cpp	/^void Solver::toDimacs(FILE* f, Clause& c, vec<Var>& map, Var& max)$/;"	f	class:Solver
 toDimacs	minisat/Solver.cpp	/^void Solver::toDimacs(FILE* f, const vec<Lit>& assumps)$/;"	f	class:Solver
@@ -1259,6 +1284,7 @@ unit_id	sat/SolverV.h	/^    vec<ClauseId>       unit_id;          \/\/ 'unit_id[
 unsign	sat/SolverTypesV.h	/^inline Lit  unsign(Lit p) { Lit q; q.x = p.x & ~1; return q; }$/;"	f
 update	minisat/Heap.h	/^    void update(K k)$/;"	f	class:Minisat::Heap
 update	sat/VarOrderV.h	/^void VarOrder::update(Var x)$/;"	f	class:VarOrder
+updateIndices	cir/cirCost.cpp	/^CirMgr::updateIndices(std::vector<unsigned>& indices, unsigned& currCost)$/;"	f	class:CirMgr
 user_pol	minisat/Solver.h	/^    VMap<lbool>         user_pol;         \/\/ The users preferred polarity of each variable.$/;"	m	class:Minisat::Solver
 val_	util/unate.h	/^  unsigned val_;$/;"	m	class:Unateness
 value	minisat/Options.h	/^    bool value;$/;"	m	class:Minisat::BoolOption

@@ -63,6 +63,7 @@ public:
 		_name	(name),
 		_id 	(id),
 		_var	(0),
+		_costVar	(0),
         _weight (0),
 		_ref	(0)	{}
 	virtual ~CirGate() {}
@@ -74,8 +75,11 @@ public:
 	unsigned getId() 					{ return _id; }
 	void setVar(Var v)				{ _var = v; }
 	Var getVar()						{ return _var; }
+	void setCostVar(Var v)			{ _costVar = v; }
+	Var getCostVar()					{ return _costVar; }
 	const string& getName() 		{ return _name; }
     void setWeight(unsigned w)	{ _weight = w; }
+	unsigned getWeight()				{ return _weight; }
 	virtual const GateType getType() const = 0;
 
 //	gate io
@@ -110,6 +114,7 @@ protected:
 	string					_name;
 	unsigned				_id;
 	Var						_var;
+	Var						_costVar;
 	GateVList				_in;
 	GateVList				_out;
     unsigned				_weight;

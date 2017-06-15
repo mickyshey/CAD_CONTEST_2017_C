@@ -195,6 +195,11 @@ const bool SatSolverV::getDataValue(const size_t& var) const
 {
    return (isNegFormula(var)) ^ (l_True == _solver->model[getOriVar(var)] );
 }
+
+const bool SatSolverV::getAssignment(const Var& v) const
+{
+	return (l_True == _solver -> model[v]);
+}
 /*
 const size_t SatSolverV::getFormula(const V3NetId& id, const uint32_t& depth)
 {
