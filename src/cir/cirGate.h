@@ -81,6 +81,8 @@ public:
     void setWeight(unsigned w)	{ _weight = w; }
 	unsigned getWeight()				{ return _weight; }
 	virtual const GateType getType() const = 0;
+        // bool isConst0() { return (getType() == Gate_Const) && (!(CirGateV)*this.isInv()); }
+        // bool isConst1() { return (getType() == Gate_Const) && ((CirGateV)*this.isInv()); }
 
 //	gate io
 	void setFaninSize(unsigned s) 					{ _in.resize(s); }

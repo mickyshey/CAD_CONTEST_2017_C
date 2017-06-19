@@ -14,6 +14,16 @@ CirMgr::test()
 {
 	_dupF = dupNet(_F);
 	_dupG = dupNet(_G);
+	_F -> reportNetList();
+
+	createVar(_F);
+	createVar(_G);
+	createVar(_dupF);
+	createVar(_dupG);
+	/********************/
+	// tie variables
+	/*******************/
+
 	createMux4Candidates();
 	assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
 	sortCandidate();
@@ -45,6 +55,50 @@ CirMgr::test()
 	assert(_dupF -> getPiNum() == _dupG -> getPiNum());
 	tiePi(_dupF, _dupG);
 
+	unsigned numClauses = getNumClauses();
+	addToSolver(_F);
+        buildVarMap(_F);
+	addToSolver(_G);
+        buildVarMap(_G);
+	addXorConstraint(_F, _G);
+	addErrorConstraint(_F, 1);
+
+	/********************/
+	// mark onset clause 
+	/*******************/
+
+	for( unsigned i = numClauses; i < getNumClauses(); ++i ) markOnsetClause(i);
+
+	numClauses = getNumClauses();
+	addToSolver(_dupF);
+        buildVarMap(_dupF);
+	addToSolver(_dupG);
+        buildVarMap(_dupG);
+	addXorConstraint(_dupF, _dupG);
+	addErrorConstraint(_dupF, 0);
+
+	/********************/
+	// mark onset clause 
+	/*******************/
+
+	for( unsigned i = numClauses; i < getNumClauses(); ++i) markOffsetClause(i);
+
+	bool isSat = solve();
+	cout << (isSat ? "SAT" : "UNSAT") << endl;
+        CirNet* patch = getItp();
+        _s->reset();
+        createVar(_F);
+        createVar(_G);
+        tiePi(_F, _G);
+        addToSolver(_F);
+        addToSolver(_G);
+        addXorConstraint(_F, _G);
+        bool eqCheck = solve();
+        cout << (eqCheck ? "SAT" : "UNSAT") << endl;
+	//_G -> reportGateAll();
+	//_dupG -> reportGateAll();
+	//_F -> reportNetList();
+	//_F -> addToSolver(_s);
 
 	//tieGate(_F -> getGateByName("g1"), _dupF -> getGateByName("g1"));
 	//tieGate(_F -> getGateByName("g2"), _dupF -> getGateByName("g2"));

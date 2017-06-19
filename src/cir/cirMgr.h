@@ -5,15 +5,25 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <cstring>
 #include <unordered_map>
 
 #include "cir/cirNet.h"
 //#include "minisat/Solver.h"
 #include "sat/sat.h"
+#include "reader.h"
 
 using namespace std;
 
-typedef map<CirGate*, Var> VarMap;
+typedef map<Var, CirGate*> VarMap;
+
+enum VAR_GROUP
+{
+    LOCAL_ON,
+    LOCAL_OFF,
+    COMMON,
+    NONE
+};
 
 class CirMgr
 {
@@ -67,6 +77,11 @@ public:
 	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
 	void markOnsetClause(const ClauseId& cid);
 	void markOffsetClause(const ClauseId& cid);
+        void buildVarMap(CirNet* ntk);
+        CirNet* getItp();
+        CirNet* buildItp(const string& fileName);
+        void retrieveProof(Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId>& usedClause);
+
 
 // in cirCost.cpp
 	void sortCandidate();
@@ -100,6 +115,9 @@ private:
 	unordered_map<Var, CirGate*>	_costVar2Gate;
 
 	vector<bool>						_isClauseOn;
+	vector<bool>						_isClauseOnDup;
+        vector<VAR_GROUP>                                       _varGroup;
+        VarMap                                                  _var2Gate;
 	std::vector<std::vector<bool>>		_blockingClauses;
 	// for restore
 	std::vector<Var>					_varsDup;
