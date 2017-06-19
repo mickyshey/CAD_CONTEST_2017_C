@@ -70,7 +70,27 @@ void
 CirMgr::reportCandList() const
 {
 	for( unsigned i = 0; i < _candNameList.size(); ++i ) {
-		cout << _candNameList[i] << " ";
+		cout << _candNameList[i] << "(" << _F -> getGateByName(_candNameList[i]) -> getWeight() << ") ";
+	}
+	cout << endl;
+}
+
+void
+CirMgr::reportSortedCand() const
+{
+	assert(_sortedCandGate.size() == _candNameList.size());
+	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+		cout << _sortedCandGate[i] -> getName() << "(" << _sortedCandGate[i] -> getWeight() << ") ";
+	}
+	cout << endl;
+}
+
+void
+CirMgr::reportMuxAssignment() const
+{
+	assert(_muxAssignment.size() == _sortedCandGate.size());
+	for( unsigned i = 0; i < _muxAssignment.size(); ++i ) {
+		cout << _sortedCandGate[i] -> getName() << "[" << _muxAssignment[i] << "] ";
 	}
 	cout << endl;
 }

@@ -300,4 +300,6 @@ void
 CirMuxGate::addToSolver(SatSolverV* s) const
 {
 	// TODO
+	assert(_in.size() == 3);
+	s -> addMuxCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1), getFaninVar(2), isFaninInv(2));	
 }
