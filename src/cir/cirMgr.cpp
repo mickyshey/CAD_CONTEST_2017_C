@@ -57,9 +57,9 @@ CirMgr::test()
 
 	unsigned numClauses = getNumClauses();
 	addToSolver(_F);
-        buildVarMap(_F);
+    buildVarMap(_F);
 	addToSolver(_G);
-        buildVarMap(_G);
+    buildVarMap(_G);
 	addXorConstraint(_F, _G);
 	addErrorConstraint(_F, 1);
 
@@ -71,9 +71,9 @@ CirMgr::test()
 
 	numClauses = getNumClauses();
 	addToSolver(_dupF);
-        buildVarMap(_dupF);
+    buildVarMap(_dupF);
 	addToSolver(_dupG);
-        buildVarMap(_dupG);
+    buildVarMap(_dupG);
 	addXorConstraint(_dupF, _dupG);
 	addErrorConstraint(_dupF, 0);
 
@@ -85,16 +85,16 @@ CirMgr::test()
 
 	bool isSat = solve();
 	cout << (isSat ? "SAT" : "UNSAT") << endl;
-        CirNet* patch = getItp();
-        _s->reset();
-        createVar(_F);
-        createVar(_G);
-        tiePi(_F, _G);
-        addToSolver(_F);
-        addToSolver(_G);
-        addXorConstraint(_F, _G);
-        bool eqCheck = solve();
-        cout << (eqCheck ? "SAT" : "UNSAT") << endl;
+	CirNet* patch = getItp();
+	_s->reset();
+	createVar(_F);
+	createVar(_G);
+	tiePi(_F, _G);
+	addToSolver(_F);
+	addToSolver(_G);
+	addXorConstraint(_F, _G);
+	bool eqCheck = solve();
+	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
 	//_G -> reportGateAll();
 	//_dupG -> reportGateAll();
 	//_F -> reportNetList();

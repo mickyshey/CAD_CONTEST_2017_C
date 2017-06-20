@@ -4,7 +4,8 @@
 #include <queue>
 
 #include "cir/cirMgr.h"
-#include "cir/reader.h"
+// #include "cir/reader.h"
+#include "util/parse.h"
 
 using namespace std;
 
@@ -140,13 +141,16 @@ CirMgr::buildItp(const string& fileName)
     CirGate* g;
     CirGate* g1;
     CirGate* g2;
-    int i, cid, tmp, idx, tmp_cid;
+    int i, cid, tmp, idx, tmp_cid, w;
+	string wireName = "w";
 
     ntk->createConst(0);
     ntk->createConst(1);
 
     rdr.open(fileName.c_str());
     retrieveProof(rdr, clausePos, usedClause);
+
+	w = 0;
 
     for(i = 0; i < (int)usedClause.size(); i++) {
         cid = usedClause[i];
@@ -191,7 +195,9 @@ CirMgr::buildItp(const string& fileName)
                                 }
                             }
                             // or
-                            g = ntk->createGate(Gate_Or);
+							std::string name = wireName + myToString(w);
+							w++;
+                            g = ntk->createGate(Gate_Or, name);
                             g->pushBackFanin(CirGateV(g1));
                             g->pushBackFanin(CirGateV(g2));
                             g1 = g;
@@ -228,7 +234,9 @@ CirMgr::buildItp(const string& fileName)
                             g = g1; // wtf in SoCV here???
                         } else {
                             // or
-                            g = ntk->createGate(Gate_Or);
+							std::string name = wireName + myToString(w);
+							w++;
+                            g = ntk->createGate(Gate_Or, name);
                             g->pushBackFanin(CirGateV(g1));
                             g->pushBackFanin(CirGateV(g2));
                             g1 = g;
@@ -244,6 +252,8 @@ CirMgr::buildItp(const string& fileName)
                             g = g1;
                         } else {
                             // and
+							std::string name = wireName + myToString(w);
+							w++;
                             g = ntk->createGate(Gate_And);
                             g->pushBackFanin(CirGateV(g1));
                             g->pushBackFanin(CirGateV(g2));
@@ -258,11 +268,21 @@ CirMgr::buildItp(const string& fileName)
 
     cid = usedClause[usedClause.size() - 1];
     g = claItpLookUp[cid]; // needed??
+	cout << "po of the itp circuit: " << g->getName() << endl;
+	cout << "reporting ITP..." << endl;
+	ntk->buildTopoList();
+	ntk->reportTopoList();
     CirGate* po = _F->getError(0);
     g->setFanoutSize(po->getFanoutSize());
     for(size_t i = 0; i < po->getFanoutSize(); i++) {
         g->setFanout(CirGateV(po->getFanout(i)), i);
     }
+	for(size_t i = 0; i < po->getFanoutSize(); i++) {
+		CirGate* fo = po->getFanout(i);
+		unsigned currFiSize = fo->getFaninSize();
+		fo->setFaninSize(currFiSize + 1);
+		fo->setFanin(CirGateV(g), currFiSize);
+	}
 
     return ntk;
 }
