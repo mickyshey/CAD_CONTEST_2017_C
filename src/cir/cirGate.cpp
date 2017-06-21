@@ -280,7 +280,11 @@ CirErrorGate::report() const
 
 void
 CirErrorGate::addToSolver(SatSolverV* s) const
-{}
+{
+    assert(_in.size() < 2);
+    if(_in.size() == 0) return;
+    s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));
+}
 /*************************
 		CirMuxGate
 *************************/

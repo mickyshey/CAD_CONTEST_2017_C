@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <queue>
+#include <bitset>
 
 #include "cir/cirMgr.h"
 // #include "cir/reader.h"
@@ -124,6 +125,7 @@ CirMgr::getItp()
     
     CirNet* itp = buildItp(proofName);
     
+    unlink(proofName.c_str());
     return itp;
 }
 
@@ -150,8 +152,59 @@ CirMgr::buildItp(const string& fileName)
     rdr.open(fileName.c_str());
     retrieveProof(rdr, clausePos, usedClause);
 
-	w = 0;
+    
+    // MY DEBUGGING
+    cerr << "*********** START DEBUGGING **************" << endl;
+    for(i = 0; i < (int)usedClause.size() ; i++) {
+        cid = usedClause[i];
+        rdr.seek( clausePos[ cid ] );
+        tmp = rdr.get64();
+		if((tmp & 1) == 0) {
+		    //Root Clause
+			cerr << cid;
+			if( _isClauseOnDup[ cid ] ) cerr << " (A): ";
+			else cerr << " (B): ";
+			idx = tmp >> 1;
+			if ( _varGroup[idx >> 1] == COMMON )
+			    cerr << (idx&1) << '_' << (_var2Gate.find(idx >> 1)->second)->getName() << ' ';
+			else
+				cerr << (idx&1) << '_' << (idx>>1) << ' ';
+			while(1){
+				tmp = rdr.get64();
+				if( tmp == 0 ) break;
+				idx += tmp;
+				if ( _varGroup[idx >> 1] == COMMON )
+				    cerr << (idx&1) << '_' << (_var2Gate.find(idx >> 1)->second)->getName() << ' ';
+				else
+				    cerr << (idx&1) << '_' << (idx>>1) << ' ';
+			}
+			cerr << endl;
+		} else {
+			//Derived Clause
+			cerr << cid << ": ";
+			tmp_cid = cid - (tmp >> 1);
+			cerr << tmp_cid << ' ';
+			while(1) {
+				idx = rdr.get64();
+				if( idx == 0 ) break;
+				idx--;
+				if ( _varGroup[idx] == COMMON )
+			        cerr << '(' << (_var2Gate.find(idx)->second)->getName() << ") ";
+				else if(_varGroup[idx] == LOCAL_ON)
+				    cerr << '(' << idx << "/A) ";
+				else if(_varGroup[idx] == LOCAL_OFF)
+				    cerr << '(' << idx << "/B) ";
+				//Var is idx
+				tmp_cid = cid - rdr.get64();
+				cerr << tmp_cid << ' ';
+			}
+			cerr << endl;
+		}
+	}
+    cerr << "*********** END DEBUGGING **************" << endl;
+	// END OF MY DEBUGGING
 
+	w = 0;
     for(i = 0; i < (int)usedClause.size(); i++) {
         cid = usedClause[i];
         rdr.seek(clausePos[cid]);
@@ -272,8 +325,14 @@ CirMgr::buildItp(const string& fileName)
 	cout << "reporting ITP..." << endl;
 	ntk->buildTopoList();
 	ntk->reportTopoList();
+    // FIXME: paste patch should be done outside this function
     CirGate* po = _F->getError(0);
-    g->setFanoutSize(po->getFanoutSize());
+	unsigned gSize = g->getFanoutSize();
+    g->setFanoutSize(gSize + 1);
+	g->setFanout(CirGateV(po), gSize);
+	po->setFaninSize(1);
+	po->setFanin(CirGateV(g), 0);
+/*
     for(size_t i = 0; i < po->getFanoutSize(); i++) {
         g->setFanout(CirGateV(po->getFanout(i)), i);
     }
@@ -283,6 +342,7 @@ CirMgr::buildItp(const string& fileName)
 		fo->setFaninSize(currFiSize + 1);
 		fo->setFanin(CirGateV(g), currFiSize);
 	}
+*/
 
     return ntk;
 }

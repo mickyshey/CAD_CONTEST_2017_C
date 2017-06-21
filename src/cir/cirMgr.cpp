@@ -14,7 +14,7 @@ CirMgr::test()
 {
 	_dupF = dupNet(_F);
 	_dupG = dupNet(_G);
-	_F -> reportNetList();
+	// _F -> reportNetList();
 
 	createVar(_F);
 	createVar(_G);
@@ -78,7 +78,7 @@ CirMgr::test()
 	addErrorConstraint(_dupF, 0);
 
 	/********************/
-	// mark onset clause 
+	// mark offset clause 
 	/*******************/
 
 	for( unsigned i = numClauses; i < getNumClauses(); ++i) markOffsetClause(i);
