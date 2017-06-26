@@ -1,0 +1,8 @@
+mlllk
+*.o
+*.a
+*.d
+*.swp
+*.swo
+*.tmp
+src/tags

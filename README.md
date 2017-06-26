@@ -1,1 +1,1 @@
-# CAD_CONTEST_2017_C
+# CAD_CONTEST_2017_C# HOW TO RUN```./mlllk <F.v> <G.v> <weight.txt> <patch.v> <out.v>```

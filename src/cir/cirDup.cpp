@@ -14,8 +14,19 @@ CirMgr::dupNet(CirNet* n) const
 	newNet -> setName(n -> getName() + "_dup");
 	newNet -> createConst(0);
 	newNet -> createConst(1);
-	GateList topoList = n -> buildTopoList();
-	for( unsigned i = 2; i < topoList.size(); ++i ) {			// 0 for const0, 1 for const1
+    GateList totalList = n -> totGateList();
+    for( unsigned i = 2; i < totalList.size(); ++i ) {
+        CirGate* g = totalList[i];
+        CirGate* dupG = newNet -> createGate(g -> getType(), g -> getName(), g -> getId());
+        for( unsigned j = 0; j < g -> getFaninSize(); ++j ) {
+            CirGate* in = g -> getFanin(j);
+            CirGate* dupIn = newNet -> getGateByName(in -> getName());
+            dupG -> pushBackFanin(CirGateV(dupIn, false));
+            dupIn -> pushBackFanout(CirGateV(dupG, false));
+        }
+    }
+    /*
+    for( unsigned i = 2; i < topoList.size(); ++i ) {			// 0 for const0, 1 for const1
 		CirGate* g = topoList[i];
 		CirGate* dupG = newNet -> createGate(g -> getType(), g -> getName(), g -> getId());		// duplicate name and id, also maintain every lists
 		for( unsigned j = 0; j < g -> getFaninSize(); ++j ) {
@@ -24,7 +35,7 @@ CirMgr::dupNet(CirNet* n) const
 			dupG -> pushBackFanin(CirGateV(dupIn, false));		// _in still remains order
 			dupIn -> pushBackFanout(CirGateV(dupG,false));		// _out will not remain order
 		}
-	}
+	}*/
 	return newNet;
 }
 

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <fstream>
 #include <cassert>
 #include <cmath>
 
@@ -12,14 +13,17 @@ using namespace std;
 void
 CirMgr::test()
 {
-	_dupF = dupNet(_F);
-	_dupG = dupNet(_G);
-	_F -> reportNetList();
+    _dupF = dupNet(_F);
+    _dupG = dupNet(_G);
+    // cerr << "### debug report _F ###" << endl;
+    // _F -> reportNetList();
+    // cerr << "### debug report _dupF ###" << endl;
+    // _dupF -> reportNetList();
 
-	createVar(_F);
-	createVar(_G);
-	createVar(_dupF);
-	createVar(_dupG);
+    createVar(_F);
+    createVar(_G);
+    createVar(_dupF);
+    createVar(_dupG);
 	/********************/
 	// tie variables
 	/*******************/
@@ -27,6 +31,7 @@ CirMgr::test()
 	createMux4Candidates();
 	assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
 	sortCandidate();
+    //cerr << "### debug report sorted _candList ###" << endl;
 	//reportSortedCand();
 
 	std::vector<bool> assign(_candNameList.size(), false);
@@ -57,9 +62,9 @@ CirMgr::test()
 
 	unsigned numClauses = getNumClauses();
 	addToSolver(_F);
-        buildVarMap(_F);
+    buildVarMap(_F);
 	addToSolver(_G);
-        buildVarMap(_G);
+    buildVarMap(_G);
 	addXorConstraint(_F, _G);
 	addErrorConstraint(_F, 1);
 
@@ -71,30 +76,31 @@ CirMgr::test()
 
 	numClauses = getNumClauses();
 	addToSolver(_dupF);
-        buildVarMap(_dupF);
+    buildVarMap(_dupF);
 	addToSolver(_dupG);
-        buildVarMap(_dupG);
+    buildVarMap(_dupG);
 	addXorConstraint(_dupF, _dupG);
 	addErrorConstraint(_dupF, 0);
 
 	/********************/
-	// mark onset clause 
+	// mark offset clause 
 	/*******************/
 
 	for( unsigned i = numClauses; i < getNumClauses(); ++i) markOffsetClause(i);
 
 	bool isSat = solve();
-	cout << (isSat ? "SAT" : "UNSAT") << endl;
-        CirNet* patch = getItp();
-        _s->reset();
-        createVar(_F);
-        createVar(_G);
-        tiePi(_F, _G);
-        addToSolver(_F);
-        addToSolver(_G);
-        addXorConstraint(_F, _G);
-        bool eqCheck = solve();
-        cout << (eqCheck ? "SAT" : "UNSAT") << endl;
+	//cout << (isSat ? "SAT" : "UNSAT") << endl;
+	_patch = getItp();
+    //_patch -> reportGateAll();
+	_s->reset();
+	createVar(_F);
+	createVar(_G);
+	tiePi(_F, _G);
+	addToSolver(_F);
+	addToSolver(_G);
+	addXorConstraint(_F, _G);
+	bool eqCheck = solve();
+	//cout << (eqCheck ? "SAT" : "UNSAT") << endl;
 	//_G -> reportGateAll();
 	//_dupG -> reportGateAll();
 	//_F -> reportNetList();
@@ -102,6 +108,7 @@ CirMgr::test()
 
 	//tieGate(_F -> getGateByName("g1"), _dupF -> getGateByName("g1"));
 	//tieGate(_F -> getGateByName("g2"), _dupF -> getGateByName("g2"));
+/*
 	unsigned count = 0;
 	while( 1 ) {
 		++count;
@@ -154,6 +161,7 @@ CirMgr::test()
 			}
 		}
 	}
+*/
 }
 
 void
@@ -180,3 +188,156 @@ CirMgr::miterCkt(CirNet* f, CirNet* g)
         out << "module top(";
 
 }*/
+
+void
+CirMgr::writeToPatch(const string& fileName)
+{
+    std::ofstream ofs(fileName.c_str());
+    size_t max = _patch -> getPiNum() - 1;
+    // write header
+    ofs << "module patch (";
+    for( unsigned i = 0; i < _patch -> getPoNum(); ++i ) {
+        ofs << _patch -> getPo(i) -> getName() << ", ";
+    }
+    for( unsigned i = 0; i < _patch -> getPiNum(); ++i ) {
+        ofs << _patch -> getPi(i) -> getName() << (i == max ? ");" : ", ");
+    }
+    ofs << endl;
+    // write input
+    ofs << "input ";
+    for( unsigned i = 0; i < _patch -> getPiNum(); ++i ) {
+        ofs << _patch -> getPi(i) -> getName() << (i == max ? ";" : ", ");
+    }
+    ofs << endl;
+    // write output
+    ofs << "output " << _patch -> getPo(0) -> getName() << ";" << endl;
+    // write wire
+    max = _patch -> getGateNum() - 1;
+    ofs << "wire ";
+    for( unsigned i = 0; i < _patch -> getGateNum(); ++i ) {
+        ofs << _patch -> getGate(i) -> getName() << (i == max ? ";" : ", ");
+    }
+    ofs << endl;
+    // write gate
+    //GateList topoList = _patch -> buildTopoList();
+    for( unsigned i = 0; i < _patch -> getGateNum(); ++i ) {
+       CirGate* g = _patch -> getGate(i);
+       switch( g -> getType() ) {
+           case Gate_And:
+               ofs << "and (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+               break;
+           case Gate_Buf:
+               ofs << "buf(" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ");" << endl;
+               break;
+           case Gate_Inv:
+               ofs << "not(" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ");" << endl;
+               break;
+           case Gate_Or:
+               ofs << "or (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+               break;
+           case Gate_Nand:
+               ofs << "nand (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+               break;
+           case Gate_Nor:
+               ofs << "nor (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+               break;
+           case Gate_Xnor:
+               ofs << "xnor (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+               break;
+           case Gate_Xor:
+               ofs << "xor (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+               break;
+           default:
+               break;
+       }
+    }
+    ofs << "endmodule";
+    ofs.close();
+}
+
+void
+CirMgr::writeToOut(const string& fileName)
+{
+    std::ofstream ofs(fileName.c_str());
+    size_t max = _F -> getPiNum() - 1;
+    // write header
+    ofs << "module top (";
+    for( unsigned i = 0; i < _F -> getPoNum(); ++i ) {
+        ofs << _F -> getPo(i) -> getName() << ", ";
+    }
+    for( unsigned i = 0; i < _F -> getPiNum(); ++i ) {
+        ofs << _F -> getPi(i) -> getName() << (i == max ? ");" : ", ");
+    }
+    ofs << endl;
+    // write input
+    ofs << "input ";
+    for( unsigned i = 0; i < _F -> getPiNum(); ++i ) {
+        ofs << _F -> getPi(i) -> getName() << (i == max ? ";" : ", ");
+    }
+    ofs << endl;
+    // write output
+    ofs << "output ";
+    max = _F -> getPoNum() - 1;
+    for( unsigned i = 0; i < _F -> getPoNum(); ++i ) {
+        ofs << _F -> getPo(i) -> getName() << (i == max ? ";" : ", ");
+    }
+    ofs << endl;
+    // write wire
+    ofs << "wire ";
+    max = _F -> getGateNum() - 1;
+    for( unsigned i = 0; i < _F -> getGateNum(); ++i ) {
+        ofs << _F -> getGate(i) -> getName() << (i == max ? ";" : ", ");
+    }
+    ofs << endl;
+    // write error
+    ofs << "wire ";
+    max = _F -> getErrorNum() - 1;
+    for( unsigned i = 0; i < _F -> getErrorNum(); ++i ) {
+        ofs << _F -> getError(i) -> getName() << (i == max ? ";" : ", ");
+    }
+    ofs << endl;
+    // write gate list
+    GateList totList = _F -> totGateList();
+    for( unsigned i = 0; i < totList.size(); ++i ) {
+        CirGate* g = totList[i];
+        switch( g -> getType() ) {
+            case Gate_And:
+                ofs << "and (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+                break;
+            case Gate_Buf:
+                ofs << "buf(" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ");" << endl;
+                break;
+            case Gate_Inv:
+                ofs << "not(" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ");" << endl;
+                break;
+            case Gate_Or:
+                ofs << "or (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+                break;
+            case Gate_Nand:
+                ofs << "nand (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+                break;
+            case Gate_Nor:
+                ofs << "nor (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+                break;
+            case Gate_Xnor:
+                ofs << "xnor (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+                break;
+            case Gate_Xor:
+                ofs << "xor (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+                break;
+            default:
+                break;
+        }
+    }
+    // write patch
+    // FIXME: only single error, so only one patch...
+    ofs << "patch p0 (";
+    ofs << "." << _patch -> getPo(0) -> getName() << "(" << _F -> getError(0) -> getName() << "), ";
+    max = _patch -> getPiNum() - 1;
+    for(unsigned i = 0; i < _patch -> getPiNum(); ++i ) {
+        ofs << "." << _patch -> getPi(i) -> getName() << "(" << _patch -> getPi(i)  -> getName() << ")" << (i == max ? ");" : ", ");
+    }
+    ofs << endl;
+    ofs << "endmodule";
+    ofs.close();
+}
