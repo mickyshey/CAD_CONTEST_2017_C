@@ -61,6 +61,8 @@ public:
 // in cirMgr.cpp
 	void test();
 	void createMux4Candidates();
+    void writeToPatch(const string& fileName);
+    void writeToOut(const string& fileName);
 
 //	in cirReport.cpp
 	void reportCandList() const;
@@ -77,10 +79,10 @@ public:
 	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
 	void markOnsetClause(const ClauseId& cid);
 	void markOffsetClause(const ClauseId& cid);
-        void buildVarMap(CirNet* ntk);
-        CirNet* getItp();
-        CirNet* buildItp(const string& fileName);
-        void retrieveProof(Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId>& usedClause);
+    void buildVarMap(CirNet* ntk);
+    CirNet* getItp();
+    CirNet* buildItp(const string& fileName);
+    void retrieveProof(Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId>& usedClause);
 
 
 // in cirCost.cpp

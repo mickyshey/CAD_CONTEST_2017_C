@@ -158,6 +158,46 @@ CirNet::buildTopoListRec(CirGate* g) const
 	_topoList.push_back(g);
 }
 
+const GateList&
+CirNet::dfsFromGate(CirGate* g) const
+{
+    CirGate::incRef();
+    GateList list;
+    dfsFromGateRec(g, list);
+    return list;
+}
+void
+CirNet::dfsFromGateRec(CirGate* g, GateList& list) const
+{
+    if( g -> isRef() ) return;
+    g -> setToRef();
+    for( unsigned i = 0; i < g -> getFaninSize(); ++i )
+        dfsFromGateRec(g -> getFanin(i), list);
+    list.push_back(g);
+}
+
+const GateList&
+CirNet::totGateList() const
+{
+    CirGate::incRef();
+	_const0 -> setToRef();
+	_const1 -> setToRef();
+    _totGateList.push_back(_const0);
+    _totGateList.push_back(_const1);
+    for( unsigned i = 0; i < _poList.size(); ++i )
+        dfsFromGateRec(_poList[i], _totGateList);
+    // std::unordered_map<string, CirGate*>::iterator it;
+    for( auto it = _name2GateMap.begin(); it != _name2GateMap.end(); ++it ) {
+        bool find = false;
+        CirGate* g = it -> second;
+        for( unsigned i = 0; i < _totGateList.size(); ++i ) {
+           if(g == _totGateList[i]) find = true;
+        }
+        if(!find) dfsFromGateRec(g, _totGateList);
+    }
+    return _totGateList;
+}
+
 void
 CirNet::sweep()
 {

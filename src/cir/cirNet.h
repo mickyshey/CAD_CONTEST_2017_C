@@ -43,8 +43,13 @@ public:
 	void init();
 	CirGate* createGate(const GateType& t, const string& name = "", unsigned id = 0);
 	void createConst(bool is0);
-	const GateList& buildTopoList() const;			// from PI to PO
+	const GateList& buildTopoList() const;			// from PI to PO --> from PO to PI?? 
 	void buildTopoListRec(CirGate* g) const;
+    const GateList& dfsFromGate(CirGate* g) const;
+    void dfsFromGateRec(CirGate* g, GateList& list) const;
+    const GateList& totGateList() const;
+    void pushBackPOList(CirGate* g)                 { _poList.push_back(g); }
+    void pushBackPIList(CirGate* g)                 { _piList.push_back(g); }
 	//CirNet* constructNet();
     void sweep();
 	CirGate* createMux(CirGate* g_F, CirGate* g_dupF);
@@ -75,6 +80,7 @@ private:
 	GateList							_errorList;
 	name2GateMap					_name2GateMap;	
 	mutable GateList					_topoList;
+    mutable GateList                    _totGateList;
 };
 
 

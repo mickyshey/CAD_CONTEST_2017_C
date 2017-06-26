@@ -2,7 +2,7 @@
 
 #include <cassert>
 #include <queue>
-#include <bitset>
+#include <set>
 
 #include "cir/cirMgr.h"
 // #include "cir/reader.h"
@@ -145,14 +145,21 @@ CirMgr::buildItp(const string& fileName)
     CirGate* g2;
     int i, cid, tmp, idx, tmp_cid, w;
 	string wireName = "w";
+    set<CirGate*> wireGate;
 
     ntk->createConst(0);
     ntk->createConst(1);
 
     rdr.open(fileName.c_str());
     retrieveProof(rdr, clausePos, usedClause);
-
-    
+    //for(size_t n = 0; n < _isClauseOn.size(); ++n) cerr << _isClauseOn[n];
+    //cerr << endl;
+    //for(size_t i = 0; i < _isClauseOnDup.size(); ++i) cerr << _isClauseOnDup[i];
+    //cerr << endl;
+    //cerr << "usedClause: ";
+    //for( unsigned i = 0; i < usedClause.size(); ++i )cerr  << usedClause[i] << ' ';
+    //cerr << endl;
+/* 
     // MY DEBUGGING
     cerr << "*********** START DEBUGGING **************" << endl;
     for(i = 0; i < (int)usedClause.size() ; i++) {
@@ -203,7 +210,7 @@ CirMgr::buildItp(const string& fileName)
 	}
     cerr << "*********** END DEBUGGING **************" << endl;
 	// END OF MY DEBUGGING
-
+*/
 	w = 0;
     for(i = 0; i < (int)usedClause.size(); i++) {
         cid = usedClause[i];
@@ -248,11 +255,13 @@ CirMgr::buildItp(const string& fileName)
                                 }
                             }
                             // or
+                            //cerr << "created OR gate!!" << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
                             g = ntk->createGate(Gate_Or, name);
                             g->pushBackFanin(CirGateV(g1));
                             g->pushBackFanin(CirGateV(g2));
+                            wireGate.insert(g);
                             g1 = g;
                         }
                     }
@@ -292,6 +301,7 @@ CirMgr::buildItp(const string& fileName)
                             g = ntk->createGate(Gate_Or, name);
                             g->pushBackFanin(CirGateV(g1));
                             g->pushBackFanin(CirGateV(g2));
+                            wireGate.insert(g);
                             g1 = g;
                         }
                     } else { // build AND gate
@@ -307,9 +317,10 @@ CirMgr::buildItp(const string& fileName)
                             // and
 							std::string name = wireName + myToString(w);
 							w++;
-                            g = ntk->createGate(Gate_And);
+                            g = ntk->createGate(Gate_And, name);
                             g->pushBackFanin(CirGateV(g1));
                             g->pushBackFanin(CirGateV(g2));
+                            wireGate.insert(g);
                             g1 = g;
                         }
                     }
@@ -320,11 +331,25 @@ CirMgr::buildItp(const string& fileName)
     }
 
     cid = usedClause[usedClause.size() - 1];
-    g = claItpLookUp[cid]; // needed??
-	cout << "po of the itp circuit: " << g->getName() << endl;
-	cout << "reporting ITP..." << endl;
-	ntk->buildTopoList();
-	ntk->reportTopoList();
+    g = claItpLookUp[cid];
+    // IMPORTANT!! when a new net created, every PI/PO/Gate/Topo lists shoud be mantained carefully.
+    ntk -> pushBackPOList(g); // add po to _poList
+	//cout << "po of the itp circuit: " << g->getName() << endl;
+	//cout << "reporting ITP..." << endl;
+	//GateList topoList = ntk->buildTopoList(); // construct _topoList
+    //for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) {
+    //    cerr << ntk -> getGate(i) -> getName() << endl;
+    //}
+    for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) { // add pis to _piList
+        CirGate* wire = ntk -> getGate(i);
+        cerr << wire -> getName() << endl;
+        if(wire -> getType() == Gate_Const) continue;
+        for( unsigned j = 0; j < wire -> getFaninSize(); ++j ) {
+            CirGate* baseNode = wire -> getFanin(j);
+            if((baseNode -> getType() != Gate_Const) && (wireGate.find(baseNode) == wireGate.end())) ntk -> pushBackPIList(baseNode);
+        }
+    }
+
     // FIXME: paste patch should be done outside this function
     CirGate* po = _F->getError(0);
 	unsigned gSize = g->getFanoutSize();
@@ -332,7 +357,9 @@ CirMgr::buildItp(const string& fileName)
 	g->setFanout(CirGateV(po), gSize);
 	po->setFaninSize(1);
 	po->setFanin(CirGateV(g), 0);
-/*
+    
+    /*
+    CirGate* po = _F -> getError(0);
     for(size_t i = 0; i < po->getFanoutSize(); i++) {
         g->setFanout(CirGateV(po->getFanout(i)), i);
     }
@@ -342,7 +369,7 @@ CirMgr::buildItp(const string& fileName)
 		fo->setFaninSize(currFiSize + 1);
 		fo->setFanin(CirGateV(g), currFiSize);
 	}
-*/
+    */
 
     return ntk;
 }
@@ -368,6 +395,9 @@ CirMgr::retrieveProof( Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId
         clausePos.push_back(pos);
         if((tmp & 1) == 0){ // root clause
             _isClauseOnDup.push_back(_isClauseOn[root_cid]);
+            // debug
+            // cerr << (_isClauseOn[cid] ? "A":"B") << " ";
+            // cerr << "R" << cid << ": ";
             idx = tmp >> 1;
             if(_isClauseOn[root_cid]) {
                 if(_varGroup[idx >> 1] == NONE) _varGroup[idx >> 1] = LOCAL_ON;
@@ -441,5 +471,9 @@ CirMgr::retrieveProof( Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId
     for(unsigned i = 0; i < in_queue.size(); i++) {
         if(in_queue[i]) usedClause.push_back(i);
     }
+    // debug
+    //cerr << "retrive... _varGroup" << endl;
+    //for(size_t n = 0; n < _varGroup.size(); ++n) cerr << _varGroup[n];
+    //cerr << endl;
 }
 
