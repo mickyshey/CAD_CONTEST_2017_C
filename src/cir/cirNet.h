@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <string>
-#include <unordered_map>
 #include <map>
 
 #include "cir/cirGate.h"
@@ -13,7 +12,7 @@
 
 using namespace std;
 
-typedef unordered_map<string, CirGate*> name2GateMap;
+typedef map<string, CirGate*> name2GateMap;
 
 class CirNet
 {

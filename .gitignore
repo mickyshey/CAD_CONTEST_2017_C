@@ -1,8 +1,16 @@
+# ignore binary
 mlllk
+# ignore object files
 *.o
+# ignore libraries
 *.a
 *.d
+# ignore swap files
 *.swp
 *.swo
+# ignore temporary files
 *.tmp
+# ignore tags
 src/tags
+# ignore test cases
+*.v
