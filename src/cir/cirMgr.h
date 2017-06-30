@@ -6,7 +6,6 @@
 #include <string>
 #include <map>
 #include <cstring>
-#include <unordered_map>
 
 #include "cir/cirNet.h"
 //#include "minisat/Solver.h"
@@ -114,7 +113,7 @@ private:
 	vector<string>						_candNameList;
 	vector<CirGate*>					_sortedCandGate;
 	vector<bool>						_muxAssignment;
-	unordered_map<Var, CirGate*>	_costVar2Gate;
+	map<Var, CirGate*>	                _costVar2Gate;
 
 	vector<bool>						_isClauseOn;
 	vector<bool>						_isClauseOnDup;
