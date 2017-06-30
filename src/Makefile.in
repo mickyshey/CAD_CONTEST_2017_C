@@ -12,9 +12,8 @@ CXX       = g++ -std=c++11
 CCC       = gcc
 AR        = ar cr
 
-CFLAGS = -O2 -Wall -g $(PKGFLAG)
-# CFLAGS = -O3 -DNDEBUG -DVERBOSE -Wall $(PKGFLAG)
-# CFLAGS = -g -Wall $(PKGFLAG)
+CFLAGS = -O3 $(PKGFLAG) -Wall -Wno-paretheses -Wno-unused-function
+# CFLAGS = -O3 $(PKGFLAG) -DNDEBUG -DVERBOSE -Wall
 
 .PHONY: depend
 

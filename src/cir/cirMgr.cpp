@@ -13,24 +13,30 @@ using namespace std;
 void
 CirMgr::test()
 {
+	//if( proveEQ( _F, _G ) ) std::cout << "EQ " << std::endl;
+	//else std::cout << "nonEQ" << std::endl;
+	//return ;
+
     _dupF = dupNet(_F);
     _dupG = dupNet(_G);
+	
     // cerr << "### debug report _F ###" << endl;
-    // _F -> reportNetList();
+     //_F -> reportNetList();
+		//_G -> reportNetList();
     // cerr << "### debug report _dupF ###" << endl;
-    // _dupF -> reportNetList();
+     //_dupF -> reportNetList();
+		//_dupG -> reportNetList();
 
-    createVar(_F);
-    createVar(_G);
-    createVar(_dupF);
-    createVar(_dupG);
 	/********************/
 	// tie variables
 	/*******************/
 
-	createMux4Candidates();
-	assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
-	sortCandidate();
+	//createMux4Candidates();
+	//assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
+	//sortCandidate();
+
+	//std::cout << "after create Mux " << std::endl;
+	//_F -> reportNetList();	
     //cerr << "### debug report sorted _candList ###" << endl;
 	//reportSortedCand();
 
@@ -52,27 +58,74 @@ CirMgr::test()
 	_blockingClauses.push_back(assign);
 */	
 // end of modification
-	unsigned totalCost = getTotalCost();
+	//unsigned totalCost = getTotalCost();
 	//if(getMuxAssignment()) reportMuxAssignment();
 
-	assert(_F -> getPiNum() == _G -> getPiNum() + _candNameList.size());
+	// Var should be created right here !!
+    createVar(_F);
+	const GateList& topo = _F -> buildTopoList();
+	for( unsigned i = 0; i < topo.size(); ++i )
+		std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
+	std::cout << std::endl;
+    createVar(_G);
+	const GateList& topo1 = _G -> buildTopoList();
+	for( unsigned i = 0; i < topo1.size(); ++i )
+		std::cout << topo1[i] -> getName() << "(" << topo1[i] -> getVar() << ") ";
+	std::cout << std::endl;
+    createVar(_dupF);
+	const GateList& topo2 = _dupF -> buildTopoList();
+	for( unsigned i = 0; i < topo2.size(); ++i )
+		std::cout << topo2[i] -> getName() << "(" << topo2[i] -> getVar() << ") ";
+	std::cout << std::endl;
+    createVar(_dupG);
+	const GateList& topo3 = _dupG -> buildTopoList();
+	for( unsigned i = 0; i < topo3.size(); ++i )
+		std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
+	std::cout << std::endl;
+	
+	//assert(_F -> getPiNum() == _G -> getPiNum() + _candNameList.size());
+	assert(_F -> getPiNum() == _dupF -> getPiNum());
+	tieConst(_F, _G);
 	tiePi(_F, _G);
-	assert(_dupF -> getPiNum() == _dupG -> getPiNum());
-	tiePi(_dupF, _dupG);
+	//assert(_dupF -> getPiNum() == _dupG -> getPiNum());
+	//tiePi(_dupF, _dupG);
+	tiePi(_F, _dupF);
+	tieConst(_F, _dupF);
+	tiePi(_F, _dupG);
+	tieConst(_F, _dupG);
+	for( unsigned i = 0; i < topo.size(); ++i )
+		std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
+	std::cout << std::endl;
+	for( unsigned i = 0; i < topo1.size(); ++i )
+		std::cout << topo1[i] -> getName() << "(" << topo1[i] -> getVar() << ") ";
+	std::cout << std::endl;
+	for( unsigned i = 0; i < topo2.size(); ++i )
+		std::cout << topo2[i] -> getName() << "(" << topo2[i] -> getVar() << ") ";
+	std::cout << std::endl;
+	for( unsigned i = 0; i < topo3.size(); ++i )
+		std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
+	std::cout << std::endl;
 
 	unsigned numClauses = getNumClauses();
+	assert(numClauses == 0);
 	addToSolver(_F);
     buildVarMap(_F);
 	addToSolver(_G);
     buildVarMap(_G);
 	addXorConstraint(_F, _G);
-	addErrorConstraint(_F, 1);
+	addErrorConstraint(_F, 0);
 
 	/********************/
 	// mark onset clause 
 	/*******************/
 
 	for( unsigned i = numClauses; i < getNumClauses(); ++i ) markOnsetClause(i);
+	assert(_isClauseOn.size() == getNumClauses());
+	std::cout << "after markON" << std::endl;
+	for( unsigned i = 0; i < _isClauseOn.size(); ++i ) {
+		std::cout << _isClauseOn[i];
+	}
+	std::cout << std::endl;
 
 	numClauses = getNumClauses();
 	addToSolver(_dupF);
@@ -80,18 +133,32 @@ CirMgr::test()
 	addToSolver(_dupG);
     buildVarMap(_dupG);
 	addXorConstraint(_dupF, _dupG);
-	addErrorConstraint(_dupF, 0);
+	addErrorConstraint(_dupF, 1);
 
 	/********************/
 	// mark offset clause 
 	/*******************/
 
 	for( unsigned i = numClauses; i < getNumClauses(); ++i) markOffsetClause(i);
+	assert(_isClauseOn.size() == getNumClauses());
+	std::cout << "after markOFF" << std::endl;
+	for( unsigned i = 0; i < _isClauseOn.size(); ++i ) {
+		std::cout << _isClauseOn[i];
+	}
+	std::cout << std::endl;
 
 	bool isSat = solve();
-	//cout << (isSat ? "SAT" : "UNSAT") << endl;
+	cout << (isSat ? "SAT" : "UNSAT") << endl;
 	_patch = getItp();
     //_patch -> reportGateAll();
+	_patch -> reportNetList();
+
+
+	std::cout << "after patching..." << std::endl;
+	std::cout << "_F: " << std::endl;
+	_F -> reportNetList();
+	std::cout << "_G: " << std::endl;
+	_G -> reportNetList();
 	_s->reset();
 	createVar(_F);
 	createVar(_G);
@@ -100,7 +167,7 @@ CirMgr::test()
 	addToSolver(_G);
 	addXorConstraint(_F, _G);
 	bool eqCheck = solve();
-	//cout << (eqCheck ? "SAT" : "UNSAT") << endl;
+	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
 	//_G -> reportGateAll();
 	//_dupG -> reportGateAll();
 	//_F -> reportNetList();

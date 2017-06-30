@@ -49,6 +49,8 @@ CirNet::reportNetListRec(CirGate* g, unsigned level) const
 	for( unsigned i = 0; i < level; ++i ) cout << "  ";
 	cout << "[" << level << "]";
 	g -> report();
+	// print out address
+	std::cout << ", " << g;
 	if( g -> isRef() ) { cout << " (*)" << endl; return; }
 	cout << endl;
 	g -> setToRef();

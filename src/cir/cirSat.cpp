@@ -66,24 +66,45 @@ CirMgr::tiePi(CirNet* f, CirNet* g)
 	for( unsigned i = 0; i < g -> getPiNum(); ++i ) {
 		CirGate* fPi = f -> getPi(i);
 		CirGate* gPi = g -> getGateByName(fPi -> getName());
+		//std::cout << "f: " << fPi -> getName() << "(" << fPi -> getVar() << ")" << std::endl;
+		//std::cout << "before tie: " << std::endl;
+		//std::cout << "g: " << gPi -> getName() << "(" << gPi -> getVar() << ")" << std::endl;
 		gPi -> setVar(fPi -> getVar());
+		//std::cout << "after tie: " << std::endl;
+		//std::cout << "g: " << gPi -> getName() << "(" << gPi -> getVar() << ")" << std::endl;
 	}
+}
+
+void
+CirMgr::tieConst(CirNet* f, CirNet* g)
+{
+	g -> getConst(1) -> setVar(f -> getConst(1) -> getVar());
+	g -> getConst(0) -> setVar(f -> getConst(0) -> getVar());
 }
 
 void
 CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 {
 	assert(f -> getPoNum() == g -> getPoNum());
+	vector<Var> Xors;
 	for( unsigned i = 0; i < f -> getPoNum(); ++i ) {
 		CirGate* fPo = f -> getPo(i);
-		CirGate* gPo = g -> getPo(i);
+		CirGate* gPo = g -> getGateByName(fPo -> getName());
+		//CirGate* gPo = g -> getPo(i);
 		Var v = _s -> newVar();
 		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
 		// should i record these vars ? for later purpose: make assumption
 		
 		// we first assert all Xors to be 1
+		// NO !! we should add an OR gate
 		_s -> addUnitCNF(v, 1);
+		//Xors.push_back(v);
 	}
+	// first assume only two outputs
+	//assert(Xors.size() == 2);
+	//Var out = _s -> newVar();
+	//_s -> addOrCNF(out, Xors[0], false, Xors[1], false);
+	//_s -> addUnitCNF(out, 1);
 }
 
 // for single error only
@@ -352,6 +373,7 @@ CirMgr::buildItp(const string& fileName)
 
     // FIXME: paste patch should be done outside this function
     CirGate* po = _F->getError(0);
+	//std::cout << "itp out: " << g -> getName() << std::endl;
 	unsigned gSize = g->getFanoutSize();
     g->setFanoutSize(gSize + 1);
 	g->setFanout(CirGateV(po), gSize);
@@ -475,5 +497,19 @@ CirMgr::retrieveProof( Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId
     //cerr << "retrive... _varGroup" << endl;
     //for(size_t n = 0; n < _varGroup.size(); ++n) cerr << _varGroup[n];
     //cerr << endl;
+}
+
+bool
+CirMgr::proveEQ(CirNet* f, CirNet* g)
+{
+	_s -> reset();
+	assert(getNumClauses() == 0);
+	createVar(f);
+	createVar(g);
+	tiePi(f, g);
+	addToSolver(f);
+	addToSolver(g);
+	addXorConstraint(f, g);
+	return !solve();
 }
 
