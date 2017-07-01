@@ -21,7 +21,8 @@ CirMgr::test()
     _dupG = dupNet(_G);
 	
     // cerr << "### debug report _F ###" << endl;
-     //_F -> reportNetList();
+		std::cout << "report F: " << std::endl;
+     _F -> reportNetList();
 		//_G -> reportNetList();
     // cerr << "### debug report _dupF ###" << endl;
      //_dupF -> reportNetList();
@@ -112,6 +113,13 @@ CirMgr::test()
     buildVarMap(_F);
 	addToSolver(_G);
     buildVarMap(_G);
+	std::cout << "before addXORconstraint" << std::endl;
+	std::cout << "F: " << std::endl;
+	for( unsigned i = 0; i < _F -> getPoNum(); ++i )
+		std::cout << _F -> getPo(i) -> getName() << ", " << _F -> getPo(i) << std::endl;
+	std::cout << "G: " << std::endl;
+	for( unsigned i = 0; i < _G -> getPoNum(); ++i )
+		std::cout << _G -> getPo(i) -> getName() << ", " << _G -> getPo(i) << std::endl;
 	addXorConstraint(_F, _G);
 	addErrorConstraint(_F, 0);
 
@@ -134,6 +142,10 @@ CirMgr::test()
     buildVarMap(_dupG);
 	addXorConstraint(_dupF, _dupG);
 	addErrorConstraint(_dupF, 1);
+	VarMap::iterator it;
+	for( it = _var2Gate.begin(); it != _var2Gate.end(); ++it ) {
+		std::cout << "Var: " << it -> first << ", name: " << it -> second -> getName() << ", " << it -> second << std::endl;
+	}
 
 	/********************/
 	// mark offset clause 

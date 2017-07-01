@@ -1,115 +1,169 @@
-1'b0(1) 1'b1(2) a(3) b(4) c(5) g1(6) g2(7) t_0(8) y(9) y_po(10) 
-1'b0(11) 1'b1(12) a(13) b(14) g1(15) c(16) g2(17) g4(18) g3(19) y(20) y_po(21) 
-1'b0(22) 1'b1(23) a(24) b(25) c(26) g1(27) g2(28) t_0(29) y(30) y_po(31) 
-1'b0(32) 1'b1(33) a(34) b(35) g1(36) c(37) g2(38) g4(39) g3(40) y(41) y_po(42) 
-1'b0(1) 1'b1(2) a(3) b(4) c(5) g1(6) g2(7) t_0(8) y(9) y_po(10) 
-1'b0(1) 1'b1(2) a(3) b(4) g1(15) c(5) g2(17) g4(18) g3(19) y(20) y_po(21) 
-1'b0(1) 1'b1(2) a(3) b(4) c(5) g1(27) g2(28) t_0(29) y(30) y_po(31) 
-1'b0(1) 1'b1(2) a(3) b(4) g1(36) c(5) g2(38) g4(39) g3(40) y(41) y_po(42) 
+report F: 
+[0][Po]: y1_po, 0x12dc450
+  [1][And]: y1, 0x12dc2a0
+    [2][And]: g1, 0x12dbfb0
+      [3][Pi]: a, 0x12dbc30
+      [3][Pi]: b, 0x12dbc90
+    [2][Xor]: g2, 0x12dc0d0
+      [3][Pi]: a, 0x12dbc30 (*)
+      [3][Pi]: c, 0x12dbd30
+[0][Po]: y2_po, 0x12dc510
+  [1][Or]: y2, 0x12dc370
+    [2][Error]: t_0, 0x12dbe90
+    [2][Nor]: g3, 0x12dc1a0
+      [3][Pi]: b, 0x12dbc90 (*)
+      [3][Pi]: c, 0x12dbd30 (*)
+1'b0(1) 1'b1(2) a(3) b(4) g1(5) c(6) g2(7) y1(8) y1_po(9) t_0(10) g3(11) y2(12) y2_po(13) 
+1'b0(14) 1'b1(15) b(16) a(17) c(18) g1(19) g2(20) y1(21) y1_po(22) g3(23) g4(24) y2_1(25) y2(26) y2_po(27) 
+1'b0(28) 1'b1(29) a(30) b(31) g1(32) c(33) g2(34) y1(35) y1_po(36) t_0(37) g3(38) y2(39) y2_po(40) 
+1'b0(41) 1'b1(42) b(43) a(44) c(45) g1(46) g2(47) y1(48) y1_po(49) g3(50) g4(51) y2_1(52) y2(53) y2_po(54) 
+1'b0(1) 1'b1(2) a(3) b(4) g1(5) c(6) g2(7) y1(8) y1_po(9) t_0(10) g3(11) y2(12) y2_po(13) 
+1'b0(1) 1'b1(2) b(4) a(3) c(6) g1(19) g2(20) y1(21) y1_po(22) g3(23) g4(24) y2_1(25) y2(26) y2_po(27) 
+1'b0(1) 1'b1(2) a(3) b(4) g1(32) c(6) g2(34) y1(35) y1_po(36) t_0(37) g3(38) y2(39) y2_po(40) 
+1'b0(1) 1'b1(2) b(4) a(3) c(6) g1(46) g2(47) y1(48) y1_po(49) g3(50) g4(51) y2_1(52) y2(53) y2_po(54) 
+before addXORconstraint
+F: 
+y1_po, 0x12dc450
+y2_po, 0x12dc510
+G: 
+y1_po, 0x12dd2f0
+y2_po, 0x12dd3b0
+XORing: y1_po(0x12dc450) and y1_po(0x12dd2f0)
+XORing: y2_po(0x12dc510) and y2_po(0x12dd3b0)
 after markON
-111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111
+XORing: y1_po(0x12d9b70) and y1_po(0x12da8e0)
+XORing: y2_po(0x12d9ef0) and y2_po(0x12dad20)
+Var: 3, name: a, 0x12dbc30
+Var: 4, name: b, 0x12dbc90
+Var: 5, name: g1, 0x12dbfb0
+Var: 6, name: c, 0x12dbd30
+Var: 7, name: g2, 0x12dc0d0
+Var: 8, name: y1, 0x12dc2a0
+Var: 9, name: y1_po, 0x12dc450
+Var: 11, name: g3, 0x12dc1a0
+Var: 12, name: y2, 0x12dc370
+Var: 13, name: y2_po, 0x12dc510
+Var: 19, name: g1, 0x12dcdb0
+Var: 20, name: g2, 0x12dce70
+Var: 21, name: y1, 0x12dd140
+Var: 22, name: y1_po, 0x12dd2f0
+Var: 23, name: g3, 0x12dcf70
+Var: 24, name: g4, 0x12dd070
+Var: 25, name: y2_1, 0x12dd710
+Var: 26, name: y2, 0x12dd210
+Var: 27, name: y2_po, 0x12dd3b0
+Var: 32, name: g1, 0x12d9850
+Var: 34, name: g2, 0x12d99d0
+Var: 35, name: y1, 0x12d9a90
+Var: 36, name: y1_po, 0x12d9b70
+Var: 38, name: g3, 0x12d9d30
+Var: 39, name: y2, 0x12d9e10
+Var: 40, name: y2_po, 0x12d9ef0
+Var: 46, name: g1, 0x12da610
+Var: 47, name: g2, 0x12da6d0
+Var: 48, name: y1, 0x12da7d0
+Var: 49, name: y1_po, 0x12da8e0
+Var: 50, name: g3, 0x12da9e0
+Var: 51, name: g4, 0x12daac0
+Var: 52, name: y2_1, 0x12dab60
+Var: 53, name: y2, 0x12dac40
+Var: 54, name: y2_po, 0x12dad20
 after markOFF
-1111111111111111111111111111111111110000000000000000000000000000000000
+11111111111111111111111111111111111111111111111111111111111000000000000000000000000000000000000000000000000000000000
 UNSAT
-[0][And]: w21, 0xc0acf0
-  [1][Or]: w19, 0xc0aa30
-    [2][Pi]: c, 0xc03d60
-    [2][Const1], 0xc06c40
-  [1][And]: w20, 0xc0ab90
-    [2][Or]: w18, 0xc0a8d0
-      [3][Pi]: b, 0xc03bc0
-      [3][Const1], 0xc06c40 (*)
-    [2][And]: w14, 0xc0a210
-      [3][And]: w13, 0xc0a070
-        [4][And]: w12, 0xc09f10
-          [5][And]: w11, 0xc09df0
-            [6][And]: w10, 0xc09cd0
-              [7][And]: w9, 0xc09b80
-                [8][And]: w8, 0xc099d0
-                  [9][And]: w7, 0xc098b0
-                    [10][And]: w6, 0xc09790
-                      [11][And]: w5, 0xc09690
-                        [12][And]: w4, 0xc095c0
-                          [13][And]: w3, 0xc09480
-                            [14][And]: w2, 0xc09350
-                              [15][Or]: w1, 0xc09250
-                                [16][Or]: w0, 0xc06040
-                                  [17][Pi]: c, 0xc03d60 (*)
-                                  [17][Pi]: b, 0xc03bc0 (*)
-                                [16][Pi]: b, 0xc03bc0 (*)
-                              [15][Const1], 0xc06c40 (*)
-                            [14][Const1], 0xc06c40 (*)
-                          [13][Const1], 0xc06c40 (*)
-                        [12][Const1], 0xc06c40 (*)
-                      [11][Const1], 0xc06c40 (*)
-                    [10][Const1], 0xc06c40 (*)
-                  [9][Const1], 0xc06c40 (*)
-                [8][Const1], 0xc06c40 (*)
-              [7][Const1], 0xc06c40 (*)
-            [6][Const1], 0xc06c40 (*)
-          [5][Const1], 0xc06c40 (*)
-        [4][Const1], 0xc06c40 (*)
-      [3][Const1], 0xc06c40 (*)
+[0][And]: w15, 0x12e4450
+  [1][And]: w13, 0x12e4190
+    [2][And]: w11, 0x12e3e10
+      [3][And]: w8, 0x12e38f0
+        [4][Or]: w6, 0x12e3650
+          [5][Pi]: a, 0x12dbc30
+          [5][Or]: w5, 0x12e3510
+            [6][Or]: w4, 0x12e3400
+              [7][And]: w3, 0x12e3280
+                [8][Pi]: c, 0x12dbd30
+                [8][Const1], 0x12dfd30
+              [7][And]: w2, 0x12e2fd0
+                [8][Pi]: b, 0x12dbc90
+                [8][Const1], 0x12dfd30 (*)
+            [6][Const1], 0x12dfd30 (*)
+        [4][Const1], 0x12dfd30 (*)
+      [3][Const1], 0x12dfd30 (*)
+    [2][And]: w10, 0x12e3c70
+      [3][And]: w7, 0x12e3790
+        [4][Or]: w6, 0x12e3650 (*)
+        [4][Const1], 0x12dfd30 (*)
+      [3][And]: w9, 0x12e3ae0
+        [4][Or]: w6, 0x12e3650 (*)
+        [4][Const1], 0x12dfd30 (*)
+  [1][And]: w14, 0x12e42f0
+    [2][And]: w12, 0x12e4030
+      [3][And]: w8, 0x12e38f0 (*)
+      [3][Const1], 0x12dfd30 (*)
+    [2][Const1], 0x12dfd30 (*)
 after patching...
 _F: 
-[0][Po]: y_po, 0xc05230
-  [1][And]: y, 0xc05150
-    [2][Or]: g2, 0xc05080
-      [3][Pi]: a, 0xc04be0
-      [3][And]: g1, 0xc04f60
-        [4][Pi]: b, 0xc04c40
-        [4][Pi]: c, 0xc04ce0
-    [2][Error]: t_0, 0xc04e70
-      [3][And]: w21, 0xc0acf0
-        [4][Or]: w19, 0xc0aa30
-          [5][Pi]: c, 0xc03d60
-          [5][Const1], 0xc06c40
-        [4][And]: w20, 0xc0ab90
-          [5][Or]: w18, 0xc0a8d0
-            [6][Pi]: b, 0xc03bc0
-            [6][Const1], 0xc06c40 (*)
-          [5][And]: w14, 0xc0a210
-            [6][And]: w13, 0xc0a070
-              [7][And]: w12, 0xc09f10
-                [8][And]: w11, 0xc09df0
-                  [9][And]: w10, 0xc09cd0
-                    [10][And]: w9, 0xc09b80
-                      [11][And]: w8, 0xc099d0
-                        [12][And]: w7, 0xc098b0
-                          [13][And]: w6, 0xc09790
-                            [14][And]: w5, 0xc09690
-                              [15][And]: w4, 0xc095c0
-                                [16][And]: w3, 0xc09480
-                                  [17][And]: w2, 0xc09350
-                                    [18][Or]: w1, 0xc09250
-                                      [19][Or]: w0, 0xc06040
-                                        [20][Pi]: c, 0xc03d60 (*)
-                                        [20][Pi]: b, 0xc03bc0 (*)
-                                      [19][Pi]: b, 0xc03bc0 (*)
-                                    [18][Const1], 0xc06c40 (*)
-                                  [17][Const1], 0xc06c40 (*)
-                                [16][Const1], 0xc06c40 (*)
-                              [15][Const1], 0xc06c40 (*)
-                            [14][Const1], 0xc06c40 (*)
-                          [13][Const1], 0xc06c40 (*)
-                        [12][Const1], 0xc06c40 (*)
-                      [11][Const1], 0xc06c40 (*)
-                    [10][Const1], 0xc06c40 (*)
-                  [9][Const1], 0xc06c40 (*)
-                [8][Const1], 0xc06c40 (*)
-              [7][Const1], 0xc06c40 (*)
-            [6][Const1], 0xc06c40 (*)
+[0][Po]: y1_po, 0x12dc450
+  [1][And]: y1, 0x12dc2a0
+    [2][And]: g1, 0x12dbfb0
+      [3][Pi]: a, 0x12dbc30
+      [3][Pi]: b, 0x12dbc90
+    [2][Xor]: g2, 0x12dc0d0
+      [3][Pi]: a, 0x12dbc30 (*)
+      [3][Pi]: c, 0x12dbd30
+[0][Po]: y2_po, 0x12dc510
+  [1][Or]: y2, 0x12dc370
+    [2][Error]: t_0, 0x12dbe90
+      [3][And]: w15, 0x12e4450
+        [4][And]: w13, 0x12e4190
+          [5][And]: w11, 0x12e3e10
+            [6][And]: w8, 0x12e38f0
+              [7][Or]: w6, 0x12e3650
+                [8][Pi]: a, 0x12dbc30 (*)
+                [8][Or]: w5, 0x12e3510
+                  [9][Or]: w4, 0x12e3400
+                    [10][And]: w3, 0x12e3280
+                      [11][Pi]: c, 0x12dbd30 (*)
+                      [11][Const1], 0x12dfd30
+                    [10][And]: w2, 0x12e2fd0
+                      [11][Pi]: b, 0x12dbc90 (*)
+                      [11][Const1], 0x12dfd30 (*)
+                  [9][Const1], 0x12dfd30 (*)
+              [7][Const1], 0x12dfd30 (*)
+            [6][Const1], 0x12dfd30 (*)
+          [5][And]: w10, 0x12e3c70
+            [6][And]: w7, 0x12e3790
+              [7][Or]: w6, 0x12e3650 (*)
+              [7][Const1], 0x12dfd30 (*)
+            [6][And]: w9, 0x12e3ae0
+              [7][Or]: w6, 0x12e3650 (*)
+              [7][Const1], 0x12dfd30 (*)
+        [4][And]: w14, 0x12e42f0
+          [5][And]: w12, 0x12e4030
+            [6][And]: w8, 0x12e38f0 (*)
+            [6][Const1], 0x12dfd30 (*)
+          [5][Const1], 0x12dfd30 (*)
+    [2][Nor]: g3, 0x12dc1a0
+      [3][Pi]: b, 0x12dbc90 (*)
+      [3][Pi]: c, 0x12dbd30 (*)
 _G: 
-[0][Po]: y_po, 0xc02f90
-  [1][Or]: y, 0xc02eb0
-    [2][Or]: g4, 0xc02de0
-      [3][And]: g1, 0xc02bb0
-        [4][Pi]: a, 0xc02880
-        [4][Pi]: b, 0xc028e0
-      [3][And]: g2, 0xc02c10
-        [4][Pi]: a, 0xc02880 (*)
-        [4][Pi]: c, 0xc02980
-    [2][And]: g3, 0xc02ce0
-      [3][Pi]: b, 0xc028e0 (*)
-      [3][Pi]: c, 0xc02980 (*)
+[0][Po]: y1_po, 0x12dd2f0
+  [1][And]: y1, 0x12dd140
+    [2][Pi]: b, 0x12dcb20
+    [2][And]: g2, 0x12dce70
+      [3][Pi]: a, 0x12dcac0
+      [3][Inv]: g1, 0x12dcdb0
+        [4][Pi]: c, 0x12dcbc0
+[0][Po]: y2_po, 0x12dd3b0
+  [1][Or]: y2, 0x12dd210
+    [2][And]: g2, 0x12dce70 (*)
+    [2][Or]: y2_1, 0x12dd710
+      [3][Nor]: g3, 0x12dcf70
+        [4][Pi]: a, 0x12dcac0 (*)
+        [4][Pi]: b, 0x12dcb20 (*)
+      [3][And]: g4, 0x12dd070
+        [4][Pi]: b, 0x12dcb20 (*)
+        [4][Pi]: c, 0x12dcbc0 (*)
+XORing: y1_po(0x12dc450) and y1_po(0x12dd2f0)
+XORing: y2_po(0x12dc510) and y2_po(0x12dd3b0)
 SAT

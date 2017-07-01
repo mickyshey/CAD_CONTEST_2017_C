@@ -35,17 +35,20 @@ CirMgr::buildVarMap(CirNet* ntk) {
     // map PI var
     for(int i = 0; i < ntk->getPiNum(); i++) {
         CirGate* g = ntk->getPi(i);
-        _var2Gate[g->getVar()] = g;
+			Var v = g -> getVar();
+			if( _var2Gate.find(v) == _var2Gate.end() ) _var2Gate.insert({v, g});
     }
     // map PO var
     for(int i = 0; i < ntk->getPoNum(); i++) {
         CirGate* g = ntk->getPo(i);
-        _var2Gate[g->getVar()] = g;
+			Var v = g -> getVar();
+			if( _var2Gate.find(v) == _var2Gate.end() ) _var2Gate.insert({v, g});
     }
     // map gate var
     for(int i = 0; i < ntk->getGateNum(); i++) {
         CirGate* g = ntk->getGate(i);
-        _var2Gate[g->getVar()] = g;
+			Var v = g -> getVar();
+			if( _var2Gate.find(v) == _var2Gate.end() ) _var2Gate.insert({v, g});
     }
 
 }
@@ -90,6 +93,7 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 	for( unsigned i = 0; i < f -> getPoNum(); ++i ) {
 		CirGate* fPo = f -> getPo(i);
 		CirGate* gPo = g -> getGateByName(fPo -> getName());
+		std::cout << "XORing: " << fPo -> getName() << "(" << fPo << ") and " << gPo -> getName() << "(" << gPo << ")" << std::endl;
 		//CirGate* gPo = g -> getPo(i);
 		Var v = _s -> newVar();
 		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
@@ -97,14 +101,19 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 		
 		// we first assert all Xors to be 1
 		// NO !! we should add an OR gate
-		_s -> addUnitCNF(v, 1);
-		//Xors.push_back(v);
+
+	// for debugging, only one PO
+		//_s -> addUnitCNF(v, 1);
+
+
+	// if real case is more than two POs
+		Xors.push_back(v);
 	}
 	// first assume only two outputs
-	//assert(Xors.size() == 2);
-	//Var out = _s -> newVar();
-	//_s -> addOrCNF(out, Xors[0], false, Xors[1], false);
-	//_s -> addUnitCNF(out, 1);
+	assert(Xors.size() == 2);
+	Var out = _s -> newVar();
+	_s -> addOrCNF(out, Xors[0], false, Xors[1], false);
+	_s -> addUnitCNF(out, 1);
 }
 
 // for single error only
