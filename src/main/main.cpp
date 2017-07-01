@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
     cirMgr.addWeight(argv[3]);
 	
 	cirMgr.test();	
-    //cirMgr.writeToPatch(argv[4]);
-    //cirMgr.writeToOut(argv[5]);
+    // cirMgr.writeToPatch(argv[4]);
+    // cirMgr.writeToOut(argv[5]);
 }
 

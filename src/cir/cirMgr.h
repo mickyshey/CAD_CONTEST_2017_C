@@ -75,7 +75,8 @@ public:
 	void tieGate(CirGate* g1, CirGate* g2);
 	void tiePi(CirNet* f, CirNet* g);					// _F = _G, _dupF = _dupG
 	void tieConst(CirNet* f, CirNet* g);
-	void addXorConstraint(CirNet* f, CirNet* g);		// _F ^ _G, _dupF ^ _dupG
+    void addXorConstraint(CirNet* f, CirNet* g);		// _F ^ _G, _dupF ^ _dupG
+	void addXorCheck(CirNet* f, CirNet* g, CirNet* p);
 	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
 	void markOnsetClause(const ClauseId& cid);
 	void markOffsetClause(const ClauseId& cid);
@@ -112,7 +113,7 @@ private:
 	CirNet*								_patch;
 	SatSolverV*							_s;
 	SatSolverV*							_costSolver;
-        CirNet*                                                         _out;
+    CirNet*                                                         _out;
 	vector<string>						_candNameList;
 	vector<CirGate*>					_sortedCandGate;
 	vector<bool>						_muxAssignment;
@@ -120,9 +121,9 @@ private:
 
 	vector<bool>						_isClauseOn;
 	vector<bool>						_isClauseOnDup;
-        vector<VAR_GROUP>                                       _varGroup;
-        VarMap                                                  _var2Gate;
-	std::vector<std::vector<bool>>		_blockingClauses;
+    vector<VAR_GROUP>                                       _varGroup;
+    VarMap                                                  _var2Gate;
+	std::vector<std::vector<bool> >		_blockingClauses;
 	// for restore
 	std::vector<Var>					_varsDup;
 };
