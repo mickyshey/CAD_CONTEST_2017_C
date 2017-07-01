@@ -23,21 +23,25 @@ CirMgr::test()
     // cerr << "### debug report _F ###" << endl;
 		std::cout << "report F: " << std::endl;
      _F -> reportNetList();
+		//std::cout << "report G: " << std::endl;
 		//_G -> reportNetList();
     // cerr << "### debug report _dupF ###" << endl;
-     //_dupF -> reportNetList();
+		std::cout << "report _dupF: " << std::endl;
+		_dupF -> reportNetList();
+		//std::cout << "report _dupG: " << std::endl;
 		//_dupG -> reportNetList();
 
 	/********************/
 	// tie variables
 	/*******************/
 
-	//createMux4Candidates();
-	//assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
+	createMux4Candidates();
+	assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
 	//sortCandidate();
 
-	//std::cout << "after create Mux " << std::endl;
-	//_F -> reportNetList();	
+	std::cout << "after create Mux " << std::endl;
+	_F -> reportNetList();	
+	return;
     //cerr << "### debug report sorted _candList ###" << endl;
 	//reportSortedCand();
 

@@ -89,6 +89,21 @@ void
 CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 {
 	assert(f -> getPoNum() == g -> getPoNum());
+// test
+/*
+	assert(f -> getPoNum() == 1);
+	CirGate* fPo = f -> getPo(0);
+	CirGate* gPo = g -> getGateByName(fPo -> getName());
+	std::cout << "error po: " << fPo -> getName() << std::endl;
+	assert(fPo -> getName() == gPo -> getName());
+	Var v = _s -> newVar();
+	_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
+	_s -> addUnitCNF(v, 1);
+*/
+// end of test
+
+
+
 	vector<Var> Xors;
 	for( unsigned i = 0; i < f -> getPoNum(); ++i ) {
 		CirGate* fPo = f -> getPo(i);
@@ -114,6 +129,7 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 	Var out = _s -> newVar();
 	_s -> addOrCNF(out, Xors[0], false, Xors[1], false);
 	_s -> addUnitCNF(out, 1);
+
 }
 
 // for single error only
@@ -265,6 +281,8 @@ CirMgr::buildItp(const string& fileName)
                             tmpG = tmpG.flipInv();
                             g->setFanout(tmp, j);
                         }*/
+								std::cout << "need to flip inv: " << std::endl;
+								std::cout << "fanout size: " << g2 -> getFanoutSize() << std::endl;
                         for(int j = 0; j < g1->getFanoutSize(); j++) {
                             CirGateV tmpG = CirGateV(g1->getFanout(j));
                             tmpG.flipInv();
@@ -278,6 +296,8 @@ CirMgr::buildItp(const string& fileName)
                         if(_varGroup[idx >> 1] == COMMON) {
                             g2 = (_var2Gate.find(idx >> 1))->second;
                             if((idx & 1) == 1) {
+								std::cout << "need to flip inv: " << std::endl;
+								std::cout << "fanout size: " << g2 -> getFanoutSize() << std::endl;
                                 for(int j = 0; j < g2->getFanoutSize(); j++) {
                                     CirGateV tmpG = CirGateV(g2->getFanout(j));
                                     tmpG.flipInv();

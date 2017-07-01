@@ -99,6 +99,7 @@ public:
 	void restoreTiedGates();
 
 //      in cirProof.cpp
+	void checkValidPatch();
         void checkPo();
         void genProofModel(SatSolverV& solver);
 

@@ -30,3 +30,12 @@ CirMgr::genProofModel(SatSolverV& solver)
     assert(_F->_piList.size() == _G->_piList.size());
 */
 }
+
+void
+CirMgr::checkValidPatch()
+{
+	_s -> reset();
+	// create OFF set
+	
+	
+}
