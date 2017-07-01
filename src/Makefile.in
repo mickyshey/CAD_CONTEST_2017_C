@@ -8,7 +8,7 @@ LIBDIR    = ../../lib
 EXTLINK   = $(PKGNAME).d
 LIBDEPEND = $(LIBDIR)/lib.d
 
-CXX       = g++ -std=c++11
+CXX       = g++
 CCC       = gcc
 AR        = ar cr
 

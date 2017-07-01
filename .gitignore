@@ -12,5 +12,3 @@ mlllk
 *.tmp
 # ignore tags
 src/tags
-# ignore test cases
-*.v

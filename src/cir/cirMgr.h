@@ -111,7 +111,7 @@ private:
 	CirNet*								_patch;
 	SatSolverV*							_s;
 	SatSolverV*							_costSolver;
-        CirNet*                                                         _out;
+    CirNet*                                                         _out;
 	vector<string>						_candNameList;
 	vector<CirGate*>					_sortedCandGate;
 	vector<bool>						_muxAssignment;
@@ -119,9 +119,9 @@ private:
 
 	vector<bool>						_isClauseOn;
 	vector<bool>						_isClauseOnDup;
-        vector<VAR_GROUP>                                       _varGroup;
-        VarMap                                                  _var2Gate;
-	std::vector<std::vector<bool>>		_blockingClauses;
+    vector<VAR_GROUP>                                       _varGroup;
+    VarMap                                                  _var2Gate;
+	std::vector<std::vector<bool> >		_blockingClauses;
 	// for restore
 	std::vector<Var>					_varsDup;
 };
