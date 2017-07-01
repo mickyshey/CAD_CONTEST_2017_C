@@ -5,7 +5,6 @@
 #include <set>
 
 #include "cir/cirMgr.h"
-// #include "cir/reader.h"
 #include "util/parse.h"
 
 using namespace std;
@@ -116,6 +115,40 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 	_s -> addUnitCNF(out, 1);
 }
 
+void
+CirMgr::addXorCheck(CirNet* f, CirNet* g, CirNet* p)
+{
+	assert(f -> getPoNum() == g -> getPoNum());
+	vector<Var> Xors;
+	for( unsigned i = 0; i < f -> getPoNum(); ++i ) {
+		CirGate* fPo = f -> getPo(i);
+		CirGate* gPo = g -> getGateByName(fPo -> getName());
+		std::cout << "XORing: " << fPo -> getName() << "(" << fPo << ") and " << gPo -> getName() << "(" << gPo << ")" << std::endl;
+		//CirGate* gPo = g -> getPo(i);
+		Var v = _s -> newVar();
+		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
+		// should i record these vars ? for later purpose: make assumption
+		
+		// we first assert all Xors to be 1
+		// NO !! we should add an OR gate
+
+	// for debugging, only one PO
+		//_s -> addUnitCNF(v, 1);
+
+
+	// if real case is more than two POs
+		Xors.push_back(v);
+	}
+	// first assume only two outputs
+	assert(Xors.size() == 2);
+	Var out = _s -> newVar();
+	_s -> addOrCNF(out, Xors[0], false, Xors[1], false);
+	_s -> addUnitCNF(out, 1);
+    Var po = p->getPo(0)->getVar();
+    Var out1 = _s -> newVar();
+    _s -> addXorCNF(out1, out, false, po, false);
+}
+
 // for single error only
 void
 CirMgr::addErrorConstraint(CirNet* n, bool val)
@@ -175,7 +208,8 @@ CirMgr::buildItp(const string& fileName)
     CirGate* g2;
     int i, cid, tmp, idx, tmp_cid, w;
 	string wireName = "w";
-    set<CirGate*> wireGate;
+    unsigned curFoSize, curFiSize;
+    // set<CirGate*> wireGate;
 
     ntk->createConst(0);
     ntk->createConst(1);
@@ -189,7 +223,7 @@ CirMgr::buildItp(const string& fileName)
     //cerr << "usedClause: ";
     //for( unsigned i = 0; i < usedClause.size(); ++i )cerr  << usedClause[i] << ' ';
     //cerr << endl;
-/* 
+/*
     // MY DEBUGGING
     cerr << "*********** START DEBUGGING **************" << endl;
     for(i = 0; i < (int)usedClause.size() ; i++) {
@@ -259,16 +293,12 @@ CirMgr::buildItp(const string& fileName)
                 if(_varGroup[idx >> 1] == COMMON) {
                     g = (_var2Gate.find(idx >> 1))->second;
                     g1 = (_var2Gate.find(idx >> 1))->second;
+                    ntk -> pushBackPIList(g); // push BaseNode into ntk _piList
                     if((idx & 1) == 1) {
-                        /*for(int j = 0; j = g->getFanoutSize(); j++) {
-                            CirGateV tmpG = g->getFanout(j);
-                            tmpG = tmpG.flipInv();
-                            g->setFanout(tmp, j);
-                        }*/
-                        for(int j = 0; j < g1->getFanoutSize(); j++) {
-                            CirGateV tmpG = CirGateV(g1->getFanout(j));
+                        for(int j = 0; j < g -> getFanoutSize(); j++) {
+                            CirGateV tmpG = CirGateV(g -> getFanout(j));
                             tmpG.flipInv();
-                            g1->setFanout(tmpG, j);
+                            g -> setFanout(tmpG, j);
                         }
                     }
                     while(1) {
@@ -277,21 +307,24 @@ CirMgr::buildItp(const string& fileName)
                         idx += tmp;
                         if(_varGroup[idx >> 1] == COMMON) {
                             g2 = (_var2Gate.find(idx >> 1))->second;
+                            ntk -> pushBackPIList(g2); // push BaseNode into ntk _piList
                             if((idx & 1) == 1) {
-                                for(int j = 0; j < g2->getFanoutSize(); j++) {
-                                    CirGateV tmpG = CirGateV(g2->getFanout(j));
+                                for(int j = 0; j < g2 -> getFanoutSize(); j++) {
+                                    CirGateV tmpG = CirGateV(g2 -> getFanout(j));
                                     tmpG.flipInv();
-                                    g2->setFanout(tmpG, j);
+                                    g2 -> setFanout(tmpG, j);
                                 }
                             }
                             // or
-                            //cerr << "created OR gate!!" << endl; // for debug
+                            cerr << "created OR gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
                             g = ntk->createGate(Gate_Or, name);
-                            g->pushBackFanin(CirGateV(g1));
-                            g->pushBackFanin(CirGateV(g2));
-                            wireGate.insert(g);
+                            g -> pushBackFanin(CirGateV(g1));
+                            g -> pushBackFanin(CirGateV(g2));
+                            // maintain the corresponding fanout of g1, g2
+                            g1 -> pushBackFanout(CirGateV(g));
+                            g2 -> pushBackFanout(CirGateV(g));
                             g1 = g;
                         }
                     }
@@ -316,7 +349,7 @@ CirMgr::buildItp(const string& fileName)
                 g2 = (claItpLookUp.find(tmp_cid))->second;
                 if(g1 != g2) {
                     if(_varGroup[idx] == LOCAL_ON) {
-                        if((g1 == ntk->getConst(1)) || (g2 == ntk->getConst(0))) {
+                        if((g1 == ntk->getConst(1)) || (g2 == ntk->getConst(1))) {
                             g = ntk->getConst(1);
                             g1 = g;
                         } else if(g1 == ntk->getConst(0)) {
@@ -326,12 +359,15 @@ CirMgr::buildItp(const string& fileName)
                             g = g1; // wtf in SoCV here???
                         } else {
                             // or
+                            cerr << "created OR gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
                             g = ntk->createGate(Gate_Or, name);
-                            g->pushBackFanin(CirGateV(g1));
-                            g->pushBackFanin(CirGateV(g2));
-                            wireGate.insert(g);
+                            g -> pushBackFanin(CirGateV(g1));
+                            g -> pushBackFanin(CirGateV(g2));
+                            // maintain corresponding fanout of g1, g2
+                            g1 -> pushBackFanout(CirGateV(g));
+                            g2 -> pushBackFanout(CirGateV(g));
                             g1 = g;
                         }
                     } else { // build AND gate
@@ -341,16 +377,19 @@ CirMgr::buildItp(const string& fileName)
                         } else if(g1 == ntk->getConst(1)) {
                             g = g2;
                             g1 = g;
-                        } else if(g2 == ntk->getConst(0)) {
+                        } else if(g2 == ntk->getConst(1)) {
                             g = g1;
                         } else {
                             // and
+                            cerr << "created AND gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
                             g = ntk->createGate(Gate_And, name);
-                            g->pushBackFanin(CirGateV(g1));
-                            g->pushBackFanin(CirGateV(g2));
-                            wireGate.insert(g);
+                            g -> pushBackFanin(CirGateV(g1));
+                            g -> pushBackFanin(CirGateV(g2));
+                            // maintain corresponding fanout of g1, g2
+                            g1 -> pushBackFanout(CirGateV(g));
+                            g2 -> pushBackFanout(CirGateV(g));
                             g1 = g;
                         }
                     }
@@ -364,25 +403,9 @@ CirMgr::buildItp(const string& fileName)
     g = claItpLookUp[cid];
     // IMPORTANT!! when a new net created, every PI/PO/Gate/Topo lists shoud be mantained carefully.
     ntk -> pushBackPOList(g); // add po to _poList
-	//cout << "po of the itp circuit: " << g->getName() << endl;
-	//cout << "reporting ITP..." << endl;
-	//GateList topoList = ntk->buildTopoList(); // construct _topoList
-    //for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) {
-    //    cerr << ntk -> getGate(i) -> getName() << endl;
-    //}
-    for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) { // add pis to _piList
-        CirGate* wire = ntk -> getGate(i);
-        cerr << wire -> getName() << endl;
-        if(wire -> getType() == Gate_Const) continue;
-        for( unsigned j = 0; j < wire -> getFaninSize(); ++j ) {
-            CirGate* baseNode = wire -> getFanin(j);
-            if((baseNode -> getType() != Gate_Const) && (wireGate.find(baseNode) == wireGate.end())) ntk -> pushBackPIList(baseNode);
-        }
-    }
 
     // FIXME: paste patch should be done outside this function
     CirGate* po = _F->getError(0);
-	//std::cout << "itp out: " << g -> getName() << std::endl;
 	unsigned gSize = g->getFanoutSize();
     g->setFanoutSize(gSize + 1);
 	g->setFanout(CirGateV(po), gSize);
@@ -396,9 +419,9 @@ CirMgr::buildItp(const string& fileName)
     }
 	for(size_t i = 0; i < po->getFanoutSize(); i++) {
 		CirGate* fo = po->getFanout(i);
-		unsigned currFiSize = fo->getFaninSize();
-		fo->setFaninSize(currFiSize + 1);
-		fo->setFanin(CirGateV(g), currFiSize);
+		curFiSize = fo->getFaninSize();
+		fo->setFaninSize(curFiSize + 1);
+		fo->setFanin(CirGateV(g), curFiSize);
 	}
     */
 

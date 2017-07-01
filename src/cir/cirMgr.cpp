@@ -171,6 +171,19 @@ CirMgr::test()
 	_F -> reportNetList();
 	std::cout << "_G: " << std::endl;
 	_G -> reportNetList();
+    // check correctness of patch
+    _s -> reset();
+    createVar(_patch);
+    createVar(_dupF);
+    createVar(_dupG);
+    tiePi(_dupF, _dupG);
+    tiePi(_patch, _dupF);
+    addToSolver(_patch);
+	addToSolver(_dupF);
+	addToSolver(_dupG);
+	addXorCheck(_dupF, _dupG, _patch);
+    bool corchek = solve();
+    cout << (corchek ? "SAT" : "UNSAT") << endl;
 	_s->reset();
 	createVar(_F);
 	createVar(_G);
