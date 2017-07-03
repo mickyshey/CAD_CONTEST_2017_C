@@ -1,0 +1,276 @@
+report F: 
+[0][Po]: y_po, fanout size: 0, inv0: 0 , 0x1f1f1f0
+  [1][And]: y, fanout size: 1, inv0: 0 , inv1: 0 , 0x1f1f110
+    [2][Or]: g2, fanout size: 1, inv0: 0 , inv1: 0 , 0x1f1f040
+      [3][Pi]: a, fanout size: 1, 0x1f1ebd0
+      [3][And]: g1, fanout size: 1, inv0: 0 , inv1: 0 , 0x1f1ef30
+        [4][Pi]: b, fanout size: 1, 0x1f1ec30
+        [4][Pi]: c, fanout size: 1, 0x1f1ecd0
+    [2][Error]: t_0, fanout size: 1, 0x1f1ee10
+1'b0(1) 1'b1(2) a(3) b(4) c(5) g1(6) g2(7) t_0(8) y(9) y_po(10) 
+1'b0(11) 1'b1(12) a(13) b(14) g1(15) c(16) g2(17) g3(18) g4(19) y(20) y_po(21) 
+1'b0(22) 1'b1(23) a(24) b(25) c(26) g1(27) g2(28) t_0(29) y(30) y_po(31) 
+1'b0(32) 1'b1(33) a(34) b(35) g1(36) c(37) g2(38) g3(39) g4(40) y(41) y_po(42) 
+1'b0(1) 1'b1(2) a(3) b(4) c(5) g1(6) g2(7) t_0(8) y(9) y_po(10) 
+1'b0(1) 1'b1(2) a(3) b(4) g1(15) c(5) g2(17) g3(18) g4(19) y(20) y_po(21) 
+1'b0(1) 1'b1(2) a(3) b(4) c(5) g1(27) g2(28) t_0(29) y(30) y_po(31) 
+1'b0(1) 1'b1(2) a(3) b(4) g1(36) c(5) g2(38) g3(39) g4(40) y(41) y_po(42) 
+before addXORconstraint
+F: 
+y_po, 0x1f1f1f0
+G: 
+y_po, 0x1f1cfa0
+after markON
+111111111111111111111111111111111111
+Var: 3, name: a, 0x1f1ebd0
+Var: 4, name: b, 0x1f1ec30
+Var: 5, name: c, 0x1f1ecd0
+Var: 6, name: g1, 0x1f1ef30
+Var: 7, name: g2, 0x1f1f040
+Var: 9, name: y, 0x1f1f110
+Var: 10, name: y_po, 0x1f1f1f0
+after markOFF
+1111111111111111111111111111111111110000000000000000000000000000000000
+UNSAT
+start
+root clause
+g is const0
+root clause
+g is const0
+root clause
+g and g1: a
+root clause
+g and g1: b
+root clause
+g and g1: b
+root clause
+g and g1: c
+root clause
+g is const0
+root clause
+g and g1: a
+root clause
+g and g1: c
+root clause
+g is const0
+root clause
+g is const0
+root clause
+g is const0
+root clause
+g is const0
+root clause
+g is const0
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+root clause
+g is const1
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+AND
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+derived clause
+g and g1: 1'b0
+in while loooooop, g: 1'b0, g1: 1'b0
+g2: 1'b0
+[0][Const0], fanout size: 1, 0x1f20ad0
+after patching...
+_F: 
+[0][Po]: y_po, fanout size: 0, inv0: 0 , 0x1f1f1f0
+  [1][And]: y, fanout size: 1, inv0: 0 , inv1: 0 , 0x1f1f110
+    [2][Or]: g2, fanout size: 1, inv0: 0 , inv1: 0 , 0x1f1f040
+      [3][Pi]: a, fanout size: 1, 0x1f1ebd0
+      [3][And]: g1, fanout size: 1, inv0: 0 , inv1: 0 , 0x1f1ef30
+        [4][Pi]: b, fanout size: 1, 0x1f1ec30
+        [4][Pi]: c, fanout size: 1, 0x1f1ecd0
+    [2][Error]: t_0, fanout size: 1, inv0: 0 , 0x1f1ee10
+      [3][Const0], fanout size: 1, 0x1f20ad0
+_G: 
+[0][Po]: y_po, fanout size: 0, inv0: 0 , 0x1f1cfa0
+  [1][Or]: y, fanout size: 1, inv0: 0 , inv1: 0 , 0x1f1cec0
+    [2][Or]: g3, fanout size: 1, inv0: 0 , inv1: 0 , 0x1f1ccf0
+      [3][And]: g1, fanout size: 1, inv0: 0 , inv1: 0 , 0x1f1cbd0
+        [4][Pi]: a, fanout size: 2, 0x1f1c8a0
+        [4][Pi]: b, fanout size: 2, 0x1f1c900
+      [3][And]: g2, fanout size: 1, inv0: 0 , inv1: 0 , 0x1f1cc50
+        [4][Pi]: b, fanout size: 2, 0x1f1c900 (*)
+        [4][Pi]: c, fanout size: 2, 0x1f1c9a0
+    [2][And]: g4, fanout size: 1, inv0: 0 , inv1: 0 , 0x1f1cdf0
+      [3][Pi]: a, fanout size: 2, 0x1f1c8a0 (*)
+      [3][Pi]: c, fanout size: 2, 0x1f1c9a0 (*)
