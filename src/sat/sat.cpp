@@ -95,8 +95,51 @@ void SatSolverV::addOrCNF(Var out, Var in0, bool inv0, Var in1, bool inv1)
   _solver->addTernary(in0Lit, in1Lit, ~outLit);
 }
 
+void SatSolverV::addOrCNF(Var out, const vector<Var>& Xors)
+{
+	vec<Lit> longCla;		longCla.clear();
+	vec<Lit> shortCla; 	shortCla.clear();
+	Lit outLit = mkLit(out, false);
+	assert(_solver -> value(outLit) == l_Undef);
+	longCla.push(~outLit);
+	for( unsigned i = 0; i < Xors.size(); ++i ) {
+		assert(_solver -> value(outLit) == l_Undef);
+		shortCla.push(outLit);
+		assert(_solver -> value(Xors[i]) == l_Undef);
+		// var of Xors should have no inv
+		Lit inLit = mkLit(Xors[i], false);
+		assert(_solver -> value(inLit) == l_Undef);
+		shortCla.push(~inLit);
+		//assert(_solver -> value(inLit) == l_Undef);
+		assert(shortCla.size() == 2);
+		std::cout << "[" << i << "] short: " << var(shortCla[0]) << "(" << sign(shortCla[0]) << ") + " << var(shortCla[1]) << "(" << sign(shortCla[1]) << ")" << std::endl;
+		_solver -> addClause(shortCla);
+		std::cout << "# clauses: " << getNumClauses() << std::endl;
+		shortCla.clear();
+		longCla.push(inLit);
+	}
+	std::cout << "before add long: " << getNumClauses() << std::endl;
+	assert(longCla.size() == Xors.size() + 1);
+	_solver -> addClause(longCla);
+	std::cout << "long: ";
+	for( unsigned i = 0; i < longCla.size(); ++i ) {
+		std::cout << var(longCla[i]) << "(" << sign(longCla[i]) << ") ";
+	}
+	std::cout << std::endl;
+	std::cout << "after add long: " << getNumClauses() << std::endl;
+	longCla.clear();
+}
+
 void SatSolverV::addXorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1)
 {
+	std::cout << "out: " << out << std::endl;
+	std::cout << "in0: " << in0 << std::endl;
+	std::cout << "in1: " << in1 << std::endl;
+	assert(_solver -> value(out) == l_Undef);
+	if( _solver -> value(in0) == l_True ) std::cout << "is true" << std::endl;
+	if( _solver -> value(in0) == l_False ) std::cout << "is false" << std::endl;
+	assert(_solver -> value(in0) == l_Undef);
+	assert(_solver -> value(in1) == l_Undef);
   Lit outLit = mkLit(out, false);
   Lit in0Lit = mkLit(in0, inv0);
   Lit in1Lit = mkLit(in1, inv1);

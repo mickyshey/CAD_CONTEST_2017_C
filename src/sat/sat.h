@@ -50,6 +50,7 @@ class SatSolverV
  		void addEqCNF(Var var0, Var var1, bool inv);
   		void addAndCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
   		void addOrCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
+		void addOrCNF(Var out, const vector<Var>& Xors);
   		void addXorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
   		void addXnorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1);
 		void addMuxCNF(Var out, Var in0, bool inv0, Var in1, bool inv1, Var sel, bool invSel);

@@ -101,35 +101,29 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 	_s -> addUnitCNF(v, 1);
 */
 // end of test
-
-
-
 	vector<Var> Xors;
 	for( unsigned i = 0; i < f -> getPoNum(); ++i ) {
 		CirGate* fPo = f -> getPo(i);
 		CirGate* gPo = g -> getGateByName(fPo -> getName());
 		std::cout << "XORing: " << fPo -> getName() << "(" << fPo << ") and " << gPo -> getName() << "(" << gPo << ")" << std::endl;
-		//CirGate* gPo = g -> getPo(i);
 		Var v = _s -> newVar();
+		assert(_s -> _solver -> value(v) == l_Undef);
 		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
-		// should i record these vars ? for later purpose: make assumption
-		
+		assert(_s -> _solver -> value(v) == l_Undef);
 		// we first assert all Xors to be 1
 		// NO !! we should add an OR gate
-
-	// for debugging, only one PO
-		//_s -> addUnitCNF(v, 1);
-
-
-	// if real case is more than two POs
+		// record these vars
 		Xors.push_back(v);
 	}
-	// first assume only two outputs
-	assert(Xors.size() == 2);
+	assert(Xors.size() == f -> getPoNum());
 	Var out = _s -> newVar();
-	_s -> addOrCNF(out, Xors[0], false, Xors[1], false);
+	unsigned numClauses = _s -> getNumClauses();
+	std::cout << "curr # clauses: " << numClauses << std::endl;
+	std::cout << "# po: " << f -> getPoNum() << std::endl;
+	_s -> addOrCNF(out, Xors);
+	std::cout << "after addOr, # clauses: " << _s -> getNumClauses() << std::endl;
+	assert(_s -> getNumClauses() - numClauses == Xors.size() + 1);
 	_s -> addUnitCNF(out, 1);
-
 }
 
 // for single error only

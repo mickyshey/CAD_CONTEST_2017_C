@@ -55,7 +55,7 @@ CirNet::reportNetListRec(CirGate* g, unsigned level) const
 		std::cout << ", inv" << i << ": " << g -> isFaninInv(i) << " ";
 	}
 	// print out address
-	std::cout << ", " << g;
+	//std::cout << ", " << g;
 	if( g -> isRef() ) { cout << " (*)" << endl; return; }
 	cout << endl;
 	g -> setToRef();
