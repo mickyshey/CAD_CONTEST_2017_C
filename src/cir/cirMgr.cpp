@@ -35,13 +35,13 @@ CirMgr::test()
 	// tie variables
 	/*******************/
 
-	createMux4Candidates();
-	assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
+	//createMux4Candidates();
+	//assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
 	//sortCandidate();
 
-	std::cout << "after create Mux " << std::endl;
-	_F -> reportNetList();	
-	return;
+	//std::cout << "after create Mux " << std::endl;
+	//_F -> reportNetList();	
+	//return;
     //cerr << "### debug report sorted _candList ###" << endl;
 	//reportSortedCand();
 
@@ -116,7 +116,7 @@ CirMgr::test()
 	addToSolver(_F);
     buildVarMap(_F);
 	addToSolver(_G);
-    buildVarMap(_G);
+    //buildVarMap(_G);
 	std::cout << "before addXORconstraint" << std::endl;
 	std::cout << "F: " << std::endl;
 	for( unsigned i = 0; i < _F -> getPoNum(); ++i )
@@ -141,9 +141,9 @@ CirMgr::test()
 
 	numClauses = getNumClauses();
 	addToSolver(_dupF);
-    buildVarMap(_dupF);
+    //buildVarMap(_dupF);
 	addToSolver(_dupG);
-    buildVarMap(_dupG);
+    //buildVarMap(_dupG);
 	addXorConstraint(_dupF, _dupG);
 	addErrorConstraint(_dupF, 1);
 	VarMap::iterator it;
