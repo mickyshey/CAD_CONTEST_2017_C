@@ -90,16 +90,14 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 {
 	assert(f -> getPoNum() == g -> getPoNum());
 // test
-/*
-	assert(f -> getPoNum() == 1);
-	CirGate* fPo = f -> getPo(0);
-	CirGate* gPo = g -> getGateByName(fPo -> getName());
-	std::cout << "error po: " << fPo -> getName() << std::endl;
-	assert(fPo -> getName() == gPo -> getName());
-	Var v = _s -> newVar();
-	_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
-	_s -> addUnitCNF(v, 1);
-*/
+	if( f -> getPoNum() == 1 ) {
+		CirGate* fPo = f -> getPo(0);
+		CirGate* gPo = g -> getGateByName(fPo -> getName());
+		Var v = _s -> newVar();
+		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
+		_s -> addUnitCNF(v, 1);
+		return;
+	}
 // end of test
 	vector<Var> Xors;
 	for( unsigned i = 0; i < f -> getPoNum(); ++i ) {

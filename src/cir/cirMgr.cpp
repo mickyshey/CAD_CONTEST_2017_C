@@ -16,16 +16,17 @@ CirMgr::test()
 	//if( proveEQ( _F, _G ) ) std::cout << "EQ " << std::endl;
 	//else std::cout << "nonEQ" << std::endl;
 	//return ;
+	std::cout << "in test" << std::endl;
 	_s -> reset();
 
     _dupF = dupNet(_F);
     _dupG = dupNet(_G);
 	
     // cerr << "### debug report _F ###" << endl;
-		//std::cout << "report F: " << std::endl;
-     //_F -> reportNetList();
-		//std::cout << "report G: " << std::endl;
-		//_G -> reportNetList();
+		std::cout << "report F: " << std::endl;
+     _F -> reportNetList();
+		std::cout << "report G: " << std::endl;
+		_G -> reportNetList();
     // cerr << "### debug report _dupF ###" << endl;
 		//std::cout << "report _dupF: " << std::endl;
 		//_dupF -> reportNetList();

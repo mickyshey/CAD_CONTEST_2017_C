@@ -97,6 +97,7 @@ void SatSolverV::addOrCNF(Var out, Var in0, bool inv0, Var in1, bool inv1)
 
 void SatSolverV::addOrCNF(Var out, const vector<Var>& Xors)
 {
+	assert(Xors.size() > 1);
 	vec<Lit> longCla;		longCla.clear();
 	vec<Lit> shortCla; 	shortCla.clear();
 	Lit outLit = mkLit(out, false);
