@@ -196,6 +196,8 @@ CirMgr::test()
 	addToSolver(_F);
 	addToSolver(_G);
 	addXorConstraint(_F, _G);
+   addConstConstraint(_F);
+   addConstConstraint(_G);
 	_s -> simplify();
 	bool eqCheck = solve();
 	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
