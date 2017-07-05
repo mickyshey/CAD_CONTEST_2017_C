@@ -48,6 +48,8 @@ public:
 	bool isInv() const 			{ return _gateV & (size_t)INV_MASK; }
 	void setInv() 				{ _gateV |= (size_t)INV_MASK; }
 	void flipInv() 				{ _gateV ^= (size_t)INV_MASK; }
+	bool operator != (CirGateV gateV) { return ((*this).getGate() != gateV.getGate()) || ((*this).isInv() != gateV.isInv()); }
+	bool operator == (CirGateV gateV) { return ((*this).getGate() == gateV.getGate()) && ((*this).isInv() == gateV.isInv()); }
 
 private:
         static const size_t INV_MASK = 0x1;

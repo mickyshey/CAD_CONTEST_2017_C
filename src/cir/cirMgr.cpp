@@ -16,6 +16,7 @@ CirMgr::test()
 	//if( proveEQ( _F, _G ) ) std::cout << "EQ " << std::endl;
 	//else std::cout << "nonEQ" << std::endl;
 	//return ;
+	_s -> reset();
 
     _dupF = dupNet(_F);
     _dupG = dupNet(_G);
@@ -23,25 +24,24 @@ CirMgr::test()
     // cerr << "### debug report _F ###" << endl;
 		std::cout << "report F: " << std::endl;
      _F -> reportNetList();
-		//std::cout << "report G: " << std::endl;
-		//_G -> reportNetList();
+		std::cout << "report G: " << std::endl;
+		_G -> reportNetList();
     // cerr << "### debug report _dupF ###" << endl;
-		std::cout << "report _dupF: " << std::endl;
-		_dupF -> reportNetList();
+		//std::cout << "report _dupF: " << std::endl;
+		//_dupF -> reportNetList();
 		//std::cout << "report _dupG: " << std::endl;
 		//_dupG -> reportNetList();
-
 	/********************/
 	// tie variables
 	/*******************/
 
-	createMux4Candidates();
-	assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
+	//createMux4Candidates();
+	//assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
 	//sortCandidate();
 
-	std::cout << "after create Mux " << std::endl;
-	_F -> reportNetList();	
-	return;
+	//std::cout << "after create Mux " << std::endl;
+	//_F -> reportNetList();	
+	//return;
     //cerr << "### debug report sorted _candList ###" << endl;
 	//reportSortedCand();
 
@@ -90,24 +90,28 @@ CirMgr::test()
 	
 	//assert(_F -> getPiNum() == _G -> getPiNum() + _candNameList.size());
 	assert(_F -> getPiNum() == _dupF -> getPiNum());
-	tieConst(_F, _G);
+	//tieConst(_F, _G);
 	tiePi(_F, _G);
 	//assert(_dupF -> getPiNum() == _dupG -> getPiNum());
 	//tiePi(_dupF, _dupG);
 	tiePi(_F, _dupF);
-	tieConst(_F, _dupF);
+	//tieConst(_F, _dupF);
 	tiePi(_F, _dupG);
-	tieConst(_F, _dupG);
+	//tieConst(_F, _dupG);
 	for( unsigned i = 0; i < topo.size(); ++i )
+		if( topo[i] -> getType() == Gate_Const || topo[i] -> getType() == Gate_Pi )
 		std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
 	std::cout << std::endl;
 	for( unsigned i = 0; i < topo1.size(); ++i )
+		if( topo1[i] -> getType() == Gate_Const || topo1[i] -> getType() == Gate_Pi )
 		std::cout << topo1[i] -> getName() << "(" << topo1[i] -> getVar() << ") ";
 	std::cout << std::endl;
 	for( unsigned i = 0; i < topo2.size(); ++i )
+		if( topo2[i] -> getType() == Gate_Const || topo2[i] -> getType() == Gate_Pi )
 		std::cout << topo2[i] -> getName() << "(" << topo2[i] -> getVar() << ") ";
 	std::cout << std::endl;
 	for( unsigned i = 0; i < topo3.size(); ++i )
+		if( topo3[i] -> getType() == Gate_Const || topo3[i] -> getType() == Gate_Pi )
 		std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
 	std::cout << std::endl;
 
@@ -116,7 +120,8 @@ CirMgr::test()
 	addToSolver(_F);
     buildVarMap(_F);
 	addToSolver(_G);
-    buildVarMap(_G);
+    //buildVarMap(_G);
+/*
 	std::cout << "before addXORconstraint" << std::endl;
 	std::cout << "F: " << std::endl;
 	for( unsigned i = 0; i < _F -> getPoNum(); ++i )
@@ -124,7 +129,10 @@ CirMgr::test()
 	std::cout << "G: " << std::endl;
 	for( unsigned i = 0; i < _G -> getPoNum(); ++i )
 		std::cout << _G -> getPo(i) -> getName() << ", " << _G -> getPo(i) << std::endl;
+*/
 	addXorConstraint(_F, _G);
+	addConstConstraint(_F);
+	addConstConstraint(_G);
 	addErrorConstraint(_F, 0);
 
 	/********************/
@@ -141,16 +149,20 @@ CirMgr::test()
 
 	numClauses = getNumClauses();
 	addToSolver(_dupF);
-    buildVarMap(_dupF);
+    //buildVarMap(_dupF);
 	addToSolver(_dupG);
-    buildVarMap(_dupG);
+    //buildVarMap(_dupG);
 	addXorConstraint(_dupF, _dupG);
+	addConstConstraint(_dupF);
+	addConstConstraint(_dupG);
 	addErrorConstraint(_dupF, 1);
+/*
 	VarMap::iterator it;
 	for( it = _var2Gate.begin(); it != _var2Gate.end(); ++it ) {
 		std::cout << "Var: " << it -> first << ", name: " << it -> second -> getName() << ", " << it -> second << std::endl;
-	}
 
+	}
+*/
 	/********************/
 	// mark offset clause 
 	/*******************/
@@ -163,8 +175,10 @@ CirMgr::test()
 	}
 	std::cout << std::endl;
 
+	_s -> simplify();
 	bool isSat = solve();
 	cout << (isSat ? "SAT" : "UNSAT") << endl;
+	if( isSat ) return;
 	_patch = getItp();
     //_patch -> reportGateAll();
 	_patch -> reportNetList();
@@ -195,6 +209,9 @@ CirMgr::test()
 	addToSolver(_F);
 	addToSolver(_G);
 	addXorConstraint(_F, _G);
+   addConstConstraint(_F);
+   addConstConstraint(_G);
+	_s -> simplify();
 	bool eqCheck = solve();
 	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
 	//_G -> reportGateAll();

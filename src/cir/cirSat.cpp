@@ -89,46 +89,35 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 {
 	assert(f -> getPoNum() == g -> getPoNum());
 // test
-/*
-	assert(f -> getPoNum() == 1);
-	CirGate* fPo = f -> getPo(0);
-	CirGate* gPo = g -> getGateByName(fPo -> getName());
-	std::cout << "error po: " << fPo -> getName() << std::endl;
-	assert(fPo -> getName() == gPo -> getName());
-	Var v = _s -> newVar();
-	_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
-	_s -> addUnitCNF(v, 1);
-*/
+	if( f -> getPoNum() == 1 ) {
+		CirGate* fPo = f -> getPo(0);
+		CirGate* gPo = g -> getGateByName(fPo -> getName());
+		Var v = _s -> newVar();
+		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
+		_s -> addUnitCNF(v, 1);
+		return;
+	}
 // end of test
-
-
-
 	vector<Var> Xors;
 	for( unsigned i = 0; i < f -> getPoNum(); ++i ) {
 		CirGate* fPo = f -> getPo(i);
 		CirGate* gPo = g -> getGateByName(fPo -> getName());
 		std::cout << "XORing: " << fPo -> getName() << "(" << fPo << ") and " << gPo -> getName() << "(" << gPo << ")" << std::endl;
-		//CirGate* gPo = g -> getPo(i);
 		Var v = _s -> newVar();
+		assert(_s -> _solver -> value(v) == l_Undef);
 		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
-		// should i record these vars ? for later purpose: make assumption
-		
+		assert(_s -> _solver -> value(v) == l_Undef);
 		// we first assert all Xors to be 1
 		// NO !! we should add an OR gate
-
-	// for debugging, only one PO
-		//_s -> addUnitCNF(v, 1);
-
-
-	// if real case is more than two POs
+		// record these vars
 		Xors.push_back(v);
 	}
-	// first assume only two outputs
-	assert(Xors.size() == 2);
+	assert(Xors.size() == f -> getPoNum());
 	Var out = _s -> newVar();
-	_s -> addOrCNF(out, Xors[0], false, Xors[1], false);
+	unsigned numClauses = _s -> getNumClauses();
+	_s -> addOrCNF(out, Xors);
+	assert(_s -> getNumClauses() - numClauses == Xors.size() + 1);
 	_s -> addUnitCNF(out, 1);
-
 }
 
 void
@@ -169,9 +158,16 @@ CirMgr::addXorCheck(CirNet* f, CirNet* g, CirNet* p)
 void
 CirMgr::addErrorConstraint(CirNet* n, bool val)
 {
-	assert(n -> getErrorNum());
+	assert(n -> getErrorNum() == 1);
 	CirGate* g = n -> getError(0);
 	_s -> addUnitCNF(g -> getVar(), val);
+}
+
+void
+CirMgr::addConstConstraint(CirNet* n)
+{
+	_s -> addUnitCNF(n -> getConst(0) -> getVar(), 0);
+	_s -> addUnitCNF(n -> getConst(1) -> getVar(), 1);
 }
 
 void
@@ -213,22 +209,24 @@ CirMgr::buildItp(const string& fileName)
 {
     Reader rdr;
 
-    map<ClauseId, CirGate*> claItpLookUp;
+    map<ClauseId, CirGateV> claItpLookUp;
     vector<ClauseId> usedClause;
     vector<unsigned> clausePos;
     
     // tmp var
-    CirNet* ntk = new CirNet;
-    CirGate* g;
-    CirGate* g1;
-    CirGate* g2;
+    CirNet* ntk = new CirNet("patch");
+    CirGateV g;
+    CirGateV g1;
+    CirGateV g2;
     int i, cid, tmp, idx, tmp_cid, w;
 	string wireName = "w";
-    unsigned curFoSize, curFiSize;
-    // set<CirGate*> wireGate;
+    //set<CirGate*> wireGate;
 
-    ntk->createConst(0);
-    ntk->createConst(1);
+	ntk -> createConst(0);
+	ntk -> createConst(1);
+    CirGateV CONST0 = CirGateV(ntk -> getConst(0), false);
+    //CirGateV CONST1 = CirGateV(ntk -> getConst(0), true);
+    CirGateV CONST1 = CirGateV(ntk -> getConst(1), false);
 
     rdr.open(fileName.c_str());
     retrieveProof(rdr, clausePos, usedClause);
@@ -307,10 +305,11 @@ CirMgr::buildItp(const string& fileName)
                 }
 
                 if(_varGroup[idx >> 1] == COMMON) {
-                    g = (_var2Gate.find(idx >> 1))->second;
-                    g1 = (_var2Gate.find(idx >> 1))->second;
-                    ntk -> pushBackPIList(g); // push BaseNode into ntk _piList
+                    g = CirGateV((_var2Gate.find(idx >> 1))->second, false);
+                    g1 = g;
+                    //g1 = (_var2Gate.find(idx >> 1))->second;
                     if((idx & 1) == 1) {
+/*
 								std::cout << "need to flip inv: " << std::endl;
 								std::cout << "fanout size: " << g2 -> getFanoutSize() << std::endl;
                         for(int j = 0; j < g -> getFanoutSize(); j++) {
@@ -318,15 +317,18 @@ CirMgr::buildItp(const string& fileName)
                             tmpG.flipInv();
                             g -> setFanout(tmpG, j);
                         }
+*/
+							g.flipInv();
+							g1.flipInv();
                     }
                     while(1) {
                         tmp = rdr.get64();
                         if(tmp == 0) break;
                         idx += tmp;
                         if(_varGroup[idx >> 1] == COMMON) {
-                            g2 = (_var2Gate.find(idx >> 1))->second;
-                            ntk -> pushBackPIList(g2); // push BaseNode into ntk _piList
+                            g2 = CirGateV((_var2Gate.find(idx >> 1))->second, false);
                             if((idx & 1) == 1) {
+/*
 								std::cout << "need to flip inv: " << std::endl;
 								std::cout << "fanout size: " << g2 -> getFanoutSize() << std::endl;
                                 for(int j = 0; j < g2 -> getFanoutSize(); j++) {
@@ -334,26 +336,28 @@ CirMgr::buildItp(const string& fileName)
                                     tmpG.flipInv();
                                     g2 -> setFanout(tmpG, j);
                                 }
+*/
+										g2.flipInv();
                             }
                             // or
                             cerr << "created OR gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
-                            g = ntk->createGate(Gate_Or, name);
-                            g -> pushBackFanin(CirGateV(g1));
-                            g -> pushBackFanin(CirGateV(g2));
-                            // maintain the corresponding fanout of g1, g2
-                            g1 -> pushBackFanout(CirGateV(g));
-                            g2 -> pushBackFanout(CirGateV(g));
+                            g = CirGateV(ntk->createGate(Gate_Or, name), false);
+                            g.getGate()->pushBackFanin(g1);
+                            g.getGate()->pushBackFanin(g2);
+									g1.getGate() -> pushBackFanout(g);
+									g2.getGate() -> pushBackFanout(g);
+                            //wireGate.insert(g);
                             g1 = g;
                         }
                     }
                 } else {
-                    g = ntk->getConst(0);
+                    g = CONST0;
                 }
                 claItpLookUp[cid] = g;
             } else {
-                claItpLookUp[cid] = ntk->getConst(1);
+                claItpLookUp[cid] = CONST1;
             }
         }  else {
             // derive clause
@@ -369,47 +373,49 @@ CirMgr::buildItp(const string& fileName)
                 g2 = (claItpLookUp.find(tmp_cid))->second;
                 if(g1 != g2) {
                     if(_varGroup[idx] == LOCAL_ON) {
-                        if((g1 == ntk->getConst(1)) || (g2 == ntk->getConst(1))) {
-                            g = ntk->getConst(1);
+                        if((g1 == CONST1) || (g2 == CONST1)) {
+                            g = CONST1;
                             g1 = g;
-                        } else if(g1 == ntk->getConst(0)) {
+                        } else if(g1 == CONST0) {
                             g = g2;
                             g1 = g;
-                        } else if(g2 == ntk->getConst(0)) {
+                        } else if(g2 == CONST0) {
                             g = g1; // wtf in SoCV here???
+									g1 = g;
                         } else {
                             // or
                             cerr << "created OR gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
-                            g = ntk->createGate(Gate_Or, name);
-                            g -> pushBackFanin(CirGateV(g1));
-                            g -> pushBackFanin(CirGateV(g2));
-                            // maintain corresponding fanout of g1, g2
-                            g1 -> pushBackFanout(CirGateV(g));
-                            g2 -> pushBackFanout(CirGateV(g));
+                            g = CirGateV(ntk->createGate(Gate_Or, name), false);
+                            g.getGate()->pushBackFanin(g1);
+                            g.getGate()->pushBackFanin(g2);
+									g1.getGate() -> pushBackFanout(g);
+									g2.getGate() -> pushBackFanout(g);
+                            //wireGate.insert(g);
                             g1 = g;
                         }
                     } else { // build AND gate
-                        if((g1 == ntk->getConst(0)) || (g2 == ntk->getConst(0))) {
-                            g = ntk->getConst(0);
+                        if((g1 == CONST0) || (g2 == CONST0)) {
+                            g = CONST0;
                             g1 = g;
-                        } else if(g1 == ntk->getConst(1)) {
+                        } else if(g1 == CONST1) {
                             g = g2;
                             g1 = g;
-                        } else if(g2 == ntk->getConst(1)) {
+                        } else if(g2 == CONST1) {
                             g = g1;
+									g1 = g;
                         } else {
                             // and
                             cerr << "created AND gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
-                            g = ntk->createGate(Gate_And, name);
-                            g -> pushBackFanin(CirGateV(g1));
-                            g -> pushBackFanin(CirGateV(g2));
-                            // maintain corresponding fanout of g1, g2
-                            g1 -> pushBackFanout(CirGateV(g));
-                            g2 -> pushBackFanout(CirGateV(g));
+                            g = CirGateV(ntk->createGate(Gate_And, name), false);
+                            g.getGate()->pushBackFanin(g1);
+                            g.getGate()->pushBackFanin(g2);
+									g1.getGate() -> pushBackFanout(g);
+									g2.getGate() -> pushBackFanout(g);
+                            //wireGate.insert(g);
                             g1 = g;
                         }
                     }
@@ -422,15 +428,32 @@ CirMgr::buildItp(const string& fileName)
     cid = usedClause[usedClause.size() - 1];
     g = claItpLookUp[cid];
     // IMPORTANT!! when a new net created, every PI/PO/Gate/Topo lists shoud be mantained carefully.
-    ntk -> pushBackPOList(g); // add po to _poList
-
+    ntk -> pushBackPOList(g.getGate()); // add po to _poList
+	//cout << "po of the itp circuit: " << g->getName() << endl;
+	//cout << "reporting ITP..." << endl;
+	//GateList topoList = ntk->buildTopoList(); // construct _topoList
+    //for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) {
+    //    cerr << ntk -> getGate(i) -> getName() << endl;
+    //}
+/*
+    for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) { // add pis to _piList
+        CirGate* wire = ntk -> getGate(i);
+        cerr << wire -> getName() << endl;
+        if(wire -> getType() == Gate_Const) continue;
+        for( unsigned j = 0; j < wire -> getFaninSize(); ++j ) {
+            CirGate* baseNode = wire -> getFanin(j);
+            if((baseNode -> getType() != Gate_Const) && (wireGate.find(baseNode) == wireGate.end())) ntk -> pushBackPIList(baseNode);
+        }
+    }
+*/
     // FIXME: paste patch should be done outside this function
     CirGate* po = _F->getError(0);
-	unsigned gSize = g->getFanoutSize();
-    g->setFanoutSize(gSize + 1);
-	g->setFanout(CirGateV(po), gSize);
+	//std::cout << "itp out: " << g -> getName() << std::endl;
+	unsigned gSize = g.getGate()->getFanoutSize();
+    g.getGate()->setFanoutSize(gSize + 1);
+	g.getGate()->setFanout(CirGateV(po), gSize);
 	po->setFaninSize(1);
-	po->setFanin(CirGateV(g), 0);
+	po->setFanin(g, 0);
     
     /*
     CirGate* po = _F -> getError(0);
