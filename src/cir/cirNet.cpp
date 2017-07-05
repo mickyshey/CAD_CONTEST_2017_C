@@ -186,7 +186,7 @@ CirNet::totGateList() const
     _totGateList.push_back(_const1);
     for( unsigned i = 0; i < _poList.size(); ++i )
         dfsFromGateRec(_poList[i], _totGateList);
-    for( auto it = _name2GateMap.begin(); it != _name2GateMap.end(); ++it ) {
+    for( std::map<string, CirGate*>::const_iterator it = _name2GateMap.begin(); it != _name2GateMap.end(); ++it ) {
         bool find = false;
         CirGate* g = it -> second;
         for( unsigned i = 0; i < _totGateList.size(); ++i ) {

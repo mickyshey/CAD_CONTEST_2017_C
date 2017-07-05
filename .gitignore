@@ -10,5 +10,6 @@ mlllk
 *.swo
 # ignore temporary files
 *.tmp
+*.out
 # ignore tags
 src/tags

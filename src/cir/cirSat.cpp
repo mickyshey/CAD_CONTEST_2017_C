@@ -5,7 +5,6 @@
 #include <set>
 
 #include "cir/cirMgr.h"
-// #include "cir/reader.h"
 #include "util/parse.h"
 
 using namespace std;
@@ -121,6 +120,40 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 	_s -> addUnitCNF(out, 1);
 }
 
+void
+CirMgr::addXorCheck(CirNet* f, CirNet* g, CirNet* p)
+{
+	assert(f -> getPoNum() == g -> getPoNum());
+	vector<Var> Xors;
+	for( unsigned i = 0; i < f -> getPoNum(); ++i ) {
+		CirGate* fPo = f -> getPo(i);
+		CirGate* gPo = g -> getGateByName(fPo -> getName());
+		std::cout << "XORing: " << fPo -> getName() << "(" << fPo << ") and " << gPo -> getName() << "(" << gPo << ")" << std::endl;
+		//CirGate* gPo = g -> getPo(i);
+		Var v = _s -> newVar();
+		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
+		// should i record these vars ? for later purpose: make assumption
+		
+		// we first assert all Xors to be 1
+		// NO !! we should add an OR gate
+
+	// for debugging, only one PO
+		//_s -> addUnitCNF(v, 1);
+
+
+	// if real case is more than two POs
+		Xors.push_back(v);
+	}
+	// first assume only two outputs
+	assert(Xors.size() == 2);
+	Var out = _s -> newVar();
+	_s -> addOrCNF(out, Xors[0], false, Xors[1], false);
+	_s -> addUnitCNF(out, 1);
+    Var po = p->getPo(0)->getVar();
+    Var out1 = _s -> newVar();
+    _s -> addXorCNF(out1, out, false, po, false);
+}
+
 // for single error only
 void
 CirMgr::addErrorConstraint(CirNet* n, bool val)
@@ -204,7 +237,7 @@ CirMgr::buildItp(const string& fileName)
     //cerr << "usedClause: ";
     //for( unsigned i = 0; i < usedClause.size(); ++i )cerr  << usedClause[i] << ' ';
     //cerr << endl;
-/* 
+/*
     // MY DEBUGGING
     cerr << "*********** START DEBUGGING **************" << endl;
     for(i = 0; i < (int)usedClause.size() ; i++) {
@@ -279,10 +312,10 @@ CirMgr::buildItp(const string& fileName)
 /*
 								std::cout << "need to flip inv: " << std::endl;
 								std::cout << "fanout size: " << g2 -> getFanoutSize() << std::endl;
-                        for(int j = 0; j < g1->getFanoutSize(); j++) {
-                            CirGateV tmpG = CirGateV(g1->getFanout(j));
+                        for(int j = 0; j < g -> getFanoutSize(); j++) {
+                            CirGateV tmpG = CirGateV(g -> getFanout(j));
                             tmpG.flipInv();
-                            g1->setFanout(tmpG, j);
+                            g -> setFanout(tmpG, j);
                         }
 */
 							g.flipInv();
@@ -298,16 +331,16 @@ CirMgr::buildItp(const string& fileName)
 /*
 								std::cout << "need to flip inv: " << std::endl;
 								std::cout << "fanout size: " << g2 -> getFanoutSize() << std::endl;
-                                for(int j = 0; j < g2->getFanoutSize(); j++) {
-                                    CirGateV tmpG = CirGateV(g2->getFanout(j));
+                                for(int j = 0; j < g2 -> getFanoutSize(); j++) {
+                                    CirGateV tmpG = CirGateV(g2 -> getFanout(j));
                                     tmpG.flipInv();
-                                    g2->setFanout(tmpG, j);
+                                    g2 -> setFanout(tmpG, j);
                                 }
 */
 										g2.flipInv();
                             }
                             // or
-                            //cerr << "created OR gate!!" << endl; // for debug
+                            cerr << "created OR gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
                             g = CirGateV(ntk->createGate(Gate_Or, name), false);
@@ -351,6 +384,7 @@ CirMgr::buildItp(const string& fileName)
 									g1 = g;
                         } else {
                             // or
+                            cerr << "created OR gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
                             g = CirGateV(ntk->createGate(Gate_Or, name), false);
@@ -373,6 +407,7 @@ CirMgr::buildItp(const string& fileName)
 									g1 = g;
                         } else {
                             // and
+                            cerr << "created AND gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
                             g = CirGateV(ntk->createGate(Gate_And, name), false);
@@ -427,9 +462,9 @@ CirMgr::buildItp(const string& fileName)
     }
 	for(size_t i = 0; i < po->getFanoutSize(); i++) {
 		CirGate* fo = po->getFanout(i);
-		unsigned currFiSize = fo->getFaninSize();
-		fo->setFaninSize(currFiSize + 1);
-		fo->setFanin(CirGateV(g), currFiSize);
+		curFiSize = fo->getFaninSize();
+		fo->setFaninSize(curFiSize + 1);
+		fo->setFanin(CirGateV(g), curFiSize);
 	}
     */
 
