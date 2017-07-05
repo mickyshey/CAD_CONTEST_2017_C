@@ -67,7 +67,6 @@ void SolverV::newClause(const vec<Lit>& ps_, bool learnt, ClauseId id )
 {
     assert(learnt || id == ClauseId_NULL);
     if (!ok) return;
-	std::cout << "ok" << std::endl;
 
     vec<Lit>    qs;
     if (!learnt){
@@ -77,25 +76,19 @@ void SolverV::newClause(const vec<Lit>& ps_, bool learnt, ClauseId id )
         // Remove duplicates:
         sortUnique(qs);
 
-	std::cout << "qs: " << std::endl;
-	for( unsigned i = 0; i < qs.size(); ++i ) {
-		std::cout << var(qs[i]) << "(" << sign(qs[i]) << ") ";
-	}
-	std::cout << std::endl;
         // Check if clause is satisfied:
         for (int i = 0; i < qs.size()-1; i++){
-            if (qs[i] == ~qs[i+1]) { std::cout << " == ~" << std::endl;
-                return; }}
+            if (qs[i] == ~qs[i+1]) 
+                return; }
         for (int i = 0; i < qs.size(); i++){
-            if (value(qs[i]) == l_True) { std::cout << var(qs[i]) << " is true" << std::endl;
-                return; }}
+            if (value(qs[i]) == l_True) 
+                return; }
 
         // Remove false literals:
         int     i, j;
         if (proof != NULL) {
           proof->beginChain(proof->addRoot(qs));
           ++root_cla_count; // MODIFICATION FOR SoCV
-			std::cout << "now: " << root_cla_count << std::endl;
         }
         for (i = j = 0; i < qs.size(); i++)
             if (value(qs[i]) != l_False)

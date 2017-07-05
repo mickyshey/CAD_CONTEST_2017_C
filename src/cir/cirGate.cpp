@@ -34,8 +34,8 @@ CirConstGate::addToSolver(SatSolverV* s) const
 		if( _name == "1'b0" ) std::cout << "add const0 CNF" << std::endl;
 		else std::cout << "add const1 CNF" << std::endl;
 	}
-	if( _name == "1'b0" ) s -> addUnitCNF(_var, false);
-	else s -> addUnitCNF(_var, true);
+	//if( _name == "1'b0" ) s -> addUnitCNF(_var, false);
+	//else s -> addUnitCNF(_var, true);
 }
 /*************************
 		CirPiGate

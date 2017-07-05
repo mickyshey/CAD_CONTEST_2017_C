@@ -77,6 +77,7 @@ public:
 	void tieConst(CirNet* f, CirNet* g);
 	void addXorConstraint(CirNet* f, CirNet* g);		// _F ^ _G, _dupF ^ _dupG
 	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
+	void addConstConstraint(CirNet* n);
 	void markOnsetClause(const ClauseId& cid);
 	void markOffsetClause(const ClauseId& cid);
     void buildVarMap(CirNet* ntk);

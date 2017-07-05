@@ -116,10 +116,7 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 	assert(Xors.size() == f -> getPoNum());
 	Var out = _s -> newVar();
 	unsigned numClauses = _s -> getNumClauses();
-	std::cout << "curr # clauses: " << numClauses << std::endl;
-	std::cout << "# po: " << f -> getPoNum() << std::endl;
 	_s -> addOrCNF(out, Xors);
-	std::cout << "after addOr, # clauses: " << _s -> getNumClauses() << std::endl;
 	assert(_s -> getNumClauses() - numClauses == Xors.size() + 1);
 	_s -> addUnitCNF(out, 1);
 }
@@ -131,6 +128,13 @@ CirMgr::addErrorConstraint(CirNet* n, bool val)
 	assert(n -> getErrorNum());
 	CirGate* g = n -> getError(0);
 	_s -> addUnitCNF(g -> getVar(), val);
+}
+
+void
+CirMgr::addConstConstraint(CirNet* n)
+{
+	_s -> addUnitCNF(n -> getConst(0) -> getVar(), 0);
+	_s -> addUnitCNF(n -> getConst(1) -> getVar(), 1);
 }
 
 void

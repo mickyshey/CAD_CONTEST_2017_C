@@ -16,7 +16,6 @@ CirMgr::test()
 	//if( proveEQ( _F, _G ) ) std::cout << "EQ " << std::endl;
 	//else std::cout << "nonEQ" << std::endl;
 	//return ;
-	std::cout << "in test" << std::endl;
 	_s -> reset();
 
     _dupF = dupNet(_F);
@@ -91,14 +90,14 @@ CirMgr::test()
 	
 	//assert(_F -> getPiNum() == _G -> getPiNum() + _candNameList.size());
 	assert(_F -> getPiNum() == _dupF -> getPiNum());
-	tieConst(_F, _G);
+	//tieConst(_F, _G);
 	tiePi(_F, _G);
 	//assert(_dupF -> getPiNum() == _dupG -> getPiNum());
 	//tiePi(_dupF, _dupG);
 	tiePi(_F, _dupF);
-	tieConst(_F, _dupF);
+	//tieConst(_F, _dupF);
 	tiePi(_F, _dupG);
-	tieConst(_F, _dupG);
+	//tieConst(_F, _dupG);
 	for( unsigned i = 0; i < topo.size(); ++i )
 		if( topo[i] -> getType() == Gate_Const || topo[i] -> getType() == Gate_Pi )
 		std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
@@ -132,6 +131,8 @@ CirMgr::test()
 		std::cout << _G -> getPo(i) -> getName() << ", " << _G -> getPo(i) << std::endl;
 */
 	addXorConstraint(_F, _G);
+	addConstConstraint(_F);
+	addConstConstraint(_G);
 	addErrorConstraint(_F, 0);
 
 	/********************/
@@ -152,6 +153,8 @@ CirMgr::test()
 	addToSolver(_dupG);
     //buildVarMap(_dupG);
 	addXorConstraint(_dupF, _dupG);
+	addConstConstraint(_dupF);
+	addConstConstraint(_dupG);
 	addErrorConstraint(_dupF, 1);
 /*
 	VarMap::iterator it;
