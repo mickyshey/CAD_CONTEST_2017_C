@@ -250,7 +250,16 @@ CirNet::createGateRec(const vector<string>& tokens, const GateType& t, unsigned 
 {
 	assert(tokens.size() >= 4);
 	if( tokens.size() == 4 ) return _name2GateMap[tokens[3]];
-	CirGate* g = createGate(t, tokens[1] + "_" + to_string(i - 2));
+
+   // modified
+   GateType tmpT = t;
+   if( tmpT == Gate_Nand ) tmpT = Gate_And;
+   else if( tmpT == Gate_Nor ) tmpT = Gate_Or;
+   else if( tmpT == Gate_Xnor ) tmpT = Gate_Xor;
+   // end of modification   
+
+	CirGate* g = createGate(tmpT, tokens[1] + "_" + to_string(i - 2));
+	//CirGate* g = createGate(t, tokens[1] + "_" + to_string(i - 2));
 	CirGate* in = _name2GateMap[tokens[i]];
 	g -> setFaninSize(2);
 	g -> setFanin(CirGateV(in, false), 0);

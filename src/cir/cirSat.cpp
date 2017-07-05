@@ -125,7 +125,7 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 void
 CirMgr::addErrorConstraint(CirNet* n, bool val)
 {
-	assert(n -> getErrorNum());
+	assert(n -> getErrorNum() == 1);
 	CirGate* g = n -> getError(0);
 	_s -> addUnitCNF(g -> getVar(), val);
 }
