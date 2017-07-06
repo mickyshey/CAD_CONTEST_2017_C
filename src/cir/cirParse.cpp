@@ -258,7 +258,7 @@ CirNet::createGateRec(const vector<string>& tokens, const GateType& t, unsigned 
    else if( tmpT == Gate_Xnor ) tmpT = Gate_Xor;
    // end of modification   
 
-	CirGate* g = createGate(tmpT, tokens[1] + "_" + to_string(i - 2));
+	CirGate* g = createGate(tmpT, tokens[1] + "_" + myToString(i - 2));
 	//CirGate* g = createGate(t, tokens[1] + "_" + to_string(i - 2));
 	CirGate* in = _name2GateMap[tokens[i]];
 	g -> setFaninSize(2);
