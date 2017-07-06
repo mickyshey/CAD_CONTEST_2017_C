@@ -76,7 +76,6 @@ public:
 	void tiePi(CirNet* f, CirNet* g);					// _F = _G, _dupF = _dupG
 	void tieConst(CirNet* f, CirNet* g);
     void addXorConstraint(CirNet* f, CirNet* g);		// _F ^ _G, _dupF ^ _dupG
-	void addXorCheck(CirNet* f, CirNet* g, CirNet* p);
 	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
 	void addConstConstraint(CirNet* n);
 	void markOnsetClause(const ClauseId& cid);

@@ -35,19 +35,19 @@ CirMgr::buildVarMap(CirNet* ntk) {
     for(int i = 0; i < ntk->getPiNum(); i++) {
         CirGate* g = ntk->getPi(i);
 			Var v = g -> getVar();
-			if( _var2Gate.find(v) == _var2Gate.end() ) _var2Gate.insert({v, g});
+			if( _var2Gate.find(v) == _var2Gate.end() ) _var2Gate.insert(std::pair<Var, CirGate*>(v, g));
     }
     // map PO var
     for(int i = 0; i < ntk->getPoNum(); i++) {
         CirGate* g = ntk->getPo(i);
 			Var v = g -> getVar();
-			if( _var2Gate.find(v) == _var2Gate.end() ) _var2Gate.insert({v, g});
+			if( _var2Gate.find(v) == _var2Gate.end() ) _var2Gate.insert(std::pair<Var, CirGate*>(v, g));
     }
     // map gate var
     for(int i = 0; i < ntk->getGateNum(); i++) {
         CirGate* g = ntk->getGate(i);
 			Var v = g -> getVar();
-			if( _var2Gate.find(v) == _var2Gate.end() ) _var2Gate.insert({v, g});
+			if( _var2Gate.find(v) == _var2Gate.end() ) _var2Gate.insert(std::pair<Var, CirGate*>(v, g));
     }
 
 }
@@ -118,40 +118,6 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 	_s -> addOrCNF(out, Xors);
 	assert(_s -> getNumClauses() - numClauses == Xors.size() + 1);
 	_s -> addUnitCNF(out, 1);
-}
-
-void
-CirMgr::addXorCheck(CirNet* f, CirNet* g, CirNet* p)
-{
-	assert(f -> getPoNum() == g -> getPoNum());
-	vector<Var> Xors;
-	for( unsigned i = 0; i < f -> getPoNum(); ++i ) {
-		CirGate* fPo = f -> getPo(i);
-		CirGate* gPo = g -> getGateByName(fPo -> getName());
-		std::cout << "XORing: " << fPo -> getName() << "(" << fPo << ") and " << gPo -> getName() << "(" << gPo << ")" << std::endl;
-		//CirGate* gPo = g -> getPo(i);
-		Var v = _s -> newVar();
-		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
-		// should i record these vars ? for later purpose: make assumption
-		
-		// we first assert all Xors to be 1
-		// NO !! we should add an OR gate
-
-	// for debugging, only one PO
-		//_s -> addUnitCNF(v, 1);
-
-
-	// if real case is more than two POs
-		Xors.push_back(v);
-	}
-	// first assume only two outputs
-	assert(Xors.size() == 2);
-	Var out = _s -> newVar();
-	_s -> addOrCNF(out, Xors[0], false, Xors[1], false);
-	_s -> addUnitCNF(out, 1);
-    Var po = p->getPo(0)->getVar();
-    Var out1 = _s -> newVar();
-    _s -> addXorCNF(out1, out, false, po, false);
 }
 
 // for single error only
