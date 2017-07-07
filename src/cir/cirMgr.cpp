@@ -17,15 +17,16 @@ CirMgr::test()
 	//else std::cout << "nonEQ" << std::endl;
 	//return ;
 	_s -> reset();
+	_var2Gate.clear();
 
     _dupF = dupNet(_F);
     _dupG = dupNet(_G);
 	
     // cerr << "### debug report _F ###" << endl;
-		std::cout << "report F: " << std::endl;
-     _F -> reportNetList();
-		std::cout << "report G: " << std::endl;
-		_G -> reportNetList();
+		//std::cout << "report F: " << std::endl;
+     //_F -> reportNetList();
+		//std::cout << "report G: " << std::endl;
+		//_G -> reportNetList();
     // cerr << "### debug report _dupF ###" << endl;
 		//std::cout << "report _dupF: " << std::endl;
 		//_dupF -> reportNetList();
@@ -45,9 +46,12 @@ CirMgr::test()
     //cerr << "### debug report sorted _candList ###" << endl;
 	//reportSortedCand();
 
+/*
 	std::vector<bool> assign(_candNameList.size(), false);
 	_blockingClauses.push_back(assign);
 	assert(_blockingClauses.size() == 1);
+*/
+
 //	modified to test
 /*
 	assign[4] = true;
@@ -68,36 +72,45 @@ CirMgr::test()
 
 	// Var should be created right here !!
     createVar(_F);
+/*
 	const GateList& topo = _F -> buildTopoList();
 	for( unsigned i = 0; i < topo.size(); ++i )
 		std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
 	std::cout << std::endl;
+*/
     createVar(_G);
+/*
 	const GateList& topo1 = _G -> buildTopoList();
 	for( unsigned i = 0; i < topo1.size(); ++i )
 		std::cout << topo1[i] -> getName() << "(" << topo1[i] -> getVar() << ") ";
 	std::cout << std::endl;
+*/
     createVar(_dupF);
+/*
 	const GateList& topo2 = _dupF -> buildTopoList();
 	for( unsigned i = 0; i < topo2.size(); ++i )
 		std::cout << topo2[i] -> getName() << "(" << topo2[i] -> getVar() << ") ";
 	std::cout << std::endl;
+*/
     createVar(_dupG);
+/*
 	const GateList& topo3 = _dupG -> buildTopoList();
 	for( unsigned i = 0; i < topo3.size(); ++i )
 		std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
 	std::cout << std::endl;
-	
+*/	
 	//assert(_F -> getPiNum() == _G -> getPiNum() + _candNameList.size());
 	assert(_F -> getPiNum() == _dupF -> getPiNum());
-	//tieConst(_F, _G);
 	tiePi(_F, _G);
-	//assert(_dupF -> getPiNum() == _dupG -> getPiNum());
-	//tiePi(_dupF, _dupG);
-	tiePi(_F, _dupF);
-	//tieConst(_F, _dupF);
-	tiePi(_F, _dupG);
-	//tieConst(_F, _dupG);
+	assert(_dupF -> getPiNum() == _dupG -> getPiNum());
+	tiePi(_dupF, _dupG);
+	tieGate(_F -> getGateByName("g1"), _dupF -> getGateByName("g1"));
+	tieGate(_F -> getGateByName("g2"), _dupF -> getGateByName("g2"));
+	buildVarMap(_F -> getGateByName("g1"));
+	buildVarMap(_F -> getGateByName("g2"));
+	//tiePi(_F, _dupF);
+	//tiePi(_F, _dupG);
+/*
 	for( unsigned i = 0; i < topo.size(); ++i )
 		if( topo[i] -> getType() == Gate_Const || topo[i] -> getType() == Gate_Pi )
 		std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
@@ -114,11 +127,11 @@ CirMgr::test()
 		if( topo3[i] -> getType() == Gate_Const || topo3[i] -> getType() == Gate_Pi )
 		std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
 	std::cout << std::endl;
-
+*/
 	unsigned numClauses = getNumClauses();
 	assert(numClauses == 0);
 	addToSolver(_F);
-    buildVarMap(_F);
+    //buildVarMap(_F);
 	addToSolver(_G);
     //buildVarMap(_G);
 /*

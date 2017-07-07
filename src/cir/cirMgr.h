@@ -81,6 +81,7 @@ public:
 	void markOnsetClause(const ClauseId& cid);
 	void markOffsetClause(const ClauseId& cid);
     void buildVarMap(CirNet* ntk);
+   void buildVarMap(CirGate* g);
     CirNet* getItp();
     CirNet* buildItp(const string& fileName);
     void retrieveProof(Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId>& usedClause);

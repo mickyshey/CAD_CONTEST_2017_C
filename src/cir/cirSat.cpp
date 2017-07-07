@@ -53,6 +53,12 @@ CirMgr::buildVarMap(CirNet* ntk) {
 }
 
 void
+CirMgr::buildVarMap(CirGate* g ) {
+	Var v = g -> getVar();
+	_var2Gate.insert(std::pair<Var, CirGate*>(v, g));
+}
+
+void
 CirMgr::tieGate(CirGate* g1, CirGate* g2)
 {
 	assert(g1 -> getName() == g2 -> getName());
