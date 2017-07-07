@@ -108,7 +108,7 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 	for( unsigned i = 0; i < f -> getPoNum(); ++i ) {
 		CirGate* fPo = f -> getPo(i);
 		CirGate* gPo = g -> getGateByName(fPo -> getName());
-		std::cout << "XORing: " << fPo -> getName() << "(" << fPo << ") and " << gPo -> getName() << "(" << gPo << ")" << std::endl;
+		//std::cout << "XORing: " << fPo -> getName() << "(" << fPo << ") and " << gPo -> getName() << "(" << gPo << ")" << std::endl;
 		Var v = _s -> newVar();
 		assert(_s -> _solver -> value(v) == l_Undef);
 		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?

@@ -113,18 +113,20 @@ void SatSolverV::addOrCNF(Var out, const vector<Var>& Xors)
 		shortCla.push(~inLit);
 		//assert(_solver -> value(inLit) == l_Undef);
 		assert(shortCla.size() == 2);
-		std::cout << "[" << i << "] short: " << var(shortCla[0]) << "(" << sign(shortCla[0]) << ") + " << var(shortCla[1]) << "(" << sign(shortCla[1]) << ")" << std::endl;
+		//std::cout << "[" << i << "] short: " << var(shortCla[0]) << "(" << sign(shortCla[0]) << ") + " << var(shortCla[1]) << "(" << sign(shortCla[1]) << ")" << std::endl;
 		_solver -> addClause(shortCla);
 		shortCla.clear();
 		longCla.push(inLit);
 	}
 	assert(longCla.size() == Xors.size() + 1);
 	_solver -> addClause(longCla);
+/*
 	std::cout << "long: ";
 	for( unsigned i = 0; i < longCla.size(); ++i ) {
 		std::cout << var(longCla[i]) << "(" << sign(longCla[i]) << ") ";
 	}
 	std::cout << std::endl;
+*/
 	longCla.clear();
 }
 

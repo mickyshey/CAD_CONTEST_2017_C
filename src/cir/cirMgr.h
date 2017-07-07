@@ -127,6 +127,10 @@ private:
 	std::vector<std::vector<bool> >		_blockingClauses;
 	// for restore
 	std::vector<Var>					_varsDup;
+
+   // for debug
+   bool     _debug = false;
+
 };
 
 #endif
