@@ -37,6 +37,11 @@ CirConstGate::addToSolver(SatSolverV* s) const
 	//if( _name == "1'b0" ) s -> addUnitCNF(_var, false);
 	//else s -> addUnitCNF(_var, true);
 }
+
+void
+CirConstGate::simulate() {
+
+}
 /*************************
 		CirPiGate
 *************************/
@@ -58,6 +63,11 @@ CirPiGate::addToSolver(SatSolverV* s) const
 	if( debug ) {
 		std::cout << "add Pi CNF, do nothing" << std::endl;
 	}
+}
+
+void
+CirPiGate::simulate() {
+
 }
 /*************************
 		CirPoGate
@@ -83,6 +93,11 @@ CirPoGate::addToSolver(SatSolverV* s) const
 	}
 	s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));	
 }
+
+void
+CirPoGate::simulate() {
+
+}
 /*************************
 		CirBufGate
 *************************/
@@ -107,6 +122,11 @@ CirBufGate::addToSolver(SatSolverV* s) const
 	}
 	s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));
 }
+
+void
+CirBufGate::simulate() {
+
+}
 /*************************
 		CirInvGate
 *************************/
@@ -130,6 +150,11 @@ CirInvGate::addToSolver(SatSolverV* s) const
 		std::cout << "add Inv CNF:" << std::endl;
 	}
 	s -> addEqCNF(_var, getFaninVar(0), !isFaninInv(0));
+}
+
+void
+CirInvGate::simulate() {
+
 }
 /*************************
 		CirAndGate
@@ -166,6 +191,11 @@ CirAndGate::addToSolver(SatSolverV* s) const
 		std::cout << "add And CNF:" << std::endl;
 	}
 	s -> addAndCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));	
+}
+
+void
+CirAndGate::simulate() {
+
 }
 /*************************
 		CirOrGate
@@ -204,6 +234,11 @@ CirOrGate::addToSolver(SatSolverV* s) const
 	}
 	s -> addOrCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));
 }
+
+void
+CirOrGate::simulate() {
+
+}
 /*************************
 		CirNandGate
 *************************/
@@ -227,6 +262,11 @@ CirNandGate::addToSolver(SatSolverV* s) const
 		std::cout << "add Nand CNF:" << std::endl;
 	}
 	s -> addOrCNF(_var, getFaninVar(0), !isFaninInv(0), getFaninVar(1), !isFaninInv(1));
+}
+
+void
+CirNandGate::simulate() {
+
 }
 /*************************
 		CirNorGate
@@ -252,6 +292,11 @@ CirNorGate::addToSolver(SatSolverV* s) const
 	}
 	s -> addAndCNF(_var, getFaninVar(0), !isFaninInv(0), getFaninVar(1), !isFaninInv(1));
 }
+
+void
+CirNorGate::simulate() {
+
+}
 /*************************
 		CirXorGate
 *************************/
@@ -276,6 +321,11 @@ CirXorGate::addToSolver(SatSolverV* s) const
 	}
 	s -> addXorCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));
 }
+
+void
+CirXorGate::simulate() {
+
+}
 /*************************
 		CirXnorGate
 *************************/
@@ -299,6 +349,11 @@ CirXnorGate::addToSolver(SatSolverV* s) const
 		std::cout << "add Xnor CNF:" << std::endl;
 	}
 	s -> addXnorCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));
+}
+
+void
+CirXnorGate::simulate() {
+
 }
 /*************************
 		CirErrorGate
@@ -326,6 +381,11 @@ CirErrorGate::addToSolver(SatSolverV* s) const
     if(_in.size() == 0) return;
     s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));
 }
+
+void
+CirErrorGate::simulate() {
+
+}
 /*************************
 		CirMuxGate
 *************************/
@@ -350,4 +410,9 @@ CirMuxGate::addToSolver(SatSolverV* s) const
 		std::cout << "add Mux CNF:" << std::endl;
 	}
 	s -> addMuxCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1), getFaninVar(2), isFaninInv(2));	
+}
+
+void
+CirMuxGate::simulate() {
+
 }

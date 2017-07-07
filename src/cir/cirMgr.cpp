@@ -184,13 +184,7 @@ CirMgr::test()
 	_s -> simplify();
 	bool eqCheck = solve();
 	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
-	//_G -> reportGateAll();
-	//_dupG -> reportGateAll();
-	//_F -> reportNetList();
-	//_F -> addToSolver(_s);
 
-	//tieGate(_F -> getGateByName("g1"), _dupF -> getGateByName("g1"));
-	//tieGate(_F -> getGateByName("g2"), _dupF -> getGateByName("g2"));
 /*
 	unsigned count = 0;
 	while( 1 ) {

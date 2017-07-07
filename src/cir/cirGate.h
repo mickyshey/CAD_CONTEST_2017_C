@@ -67,6 +67,7 @@ public:
 		_var	(0),
 		_costVar	(0),
         _weight (0),
+		_simV(false),
 		_ref	(0)	{}
 	virtual ~CirGate() {}
 
@@ -88,7 +89,6 @@ public:
 
 //	gate io
 	void setFaninSize(unsigned s) 					{ _in.resize(s); }
-	//void setFanin(CirGateV gateV, unsigned idx) 	{ if(idx >= _in.size()) _in.resize(idx+1); _in[idx] = gateV; }
 
 	//we should always setFaninSize first to ensure idx is within size
 	void setFanin(CirGateV gateV, unsigned idx) 	{ assert(idx < _in.size()); _in[idx] = gateV; }
@@ -99,7 +99,6 @@ public:
 	Var getFaninVar(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].getGate() -> _var; }
 	bool isFaninInv(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].isInv(); }
 	void setFanoutSize(unsigned s) 					{ _out.resize(s); }
-	//void setFanout(CirGateV gateV, unsigned idx) 	{ if(idx >= _out.size()) _out.resize(idx+1);	_out[idx] = gateV; }
 	void clearFanout()									{ _out.clear(); }
 	void setFanout(CirGateV gateV, unsigned idx) { assert(idx < _out.size()); _out[idx] = gateV; }
 	void pushBackFanout(CirGateV gateV) 			{ _out.push_back(gateV); }
@@ -110,6 +109,9 @@ public:
 	static void incRef() 	        { ++_globalRef; }
 	void setToRef() 				{ _ref = _globalRef; }
 	bool isRef() 					{ return _ref == _globalRef; }
+
+// simulation
+	virtual void simulate() = 0;
 
 //	report
 	virtual void report() const = 0;
@@ -124,6 +126,7 @@ protected:
     unsigned				_weight;
 	static unsigned 		_globalRef;
 	mutable unsigned		_ref;
+	bool						_simV;
 };
 
 #define CirGateType(T) class T : public CirGate \
@@ -134,6 +137,7 @@ public: \
 	const GateType getType() const;\
 	void report() const;\
 	void addToSolver(SatSolverV* s) const;\
+	void simulate();\
 };
 
 CirGateType(CirConstGate);
