@@ -29,7 +29,7 @@ class SatSolverV
 
       void reset();
       void assumeRelease();
-      void assumeProperty(const size_t& var, const bool& invert);
+      void assumeProperty(const Var& var, const bool& val);
       void assertProperty(const size_t& var, const bool& invert);
       //void assumeProperty(const V3NetId& id, const bool& invert, const uint32_t& depth);
       //void assertProperty(const V3NetId& id, const bool& invert, const uint32_t& depth);

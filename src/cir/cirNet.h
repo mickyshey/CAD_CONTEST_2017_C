@@ -66,8 +66,8 @@ public:
 
 //	in cirSat.cpp
 	//void reassignId() const;
-	void createVar(SatSolverV* s) const;
-	void addToSolver(SatSolverV* s) const;
+	void createVar(SatSolverV* s, int solver = 0) const;   // 0: setVar, 1: setCandVar
+	void addToSolver(SatSolverV* s, int solver = 0) const;   // 0: getVar, 1: getCandVar
 
 private:
 	string								_name;

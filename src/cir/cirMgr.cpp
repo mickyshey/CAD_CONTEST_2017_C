@@ -38,11 +38,39 @@ CirMgr::test()
 
 	//createMux4Candidates();
 	//assert(_F -> getPiNum() == _dupF -> getPiNum() + _candNameList.size());
-	//sortCandidate();
+	sortCandidate();
+	if( _debug ) {
+		std::cout << "report sortedCand: " << std::endl;
+		reportSortedCand();
+		//for( unsigned i = 0; i < _candNameList.size(); ++i )
+		//	std::cout << _candNameList[i] << std::endl;
+	}
+	createVar4CostSolver();
+
+	initCandSolver();
+	tiePi(_F, _G, 1);
+	tiePi(_dupF, _dupG, 1);
+	setUpImpVar();
+	addAllToCandSolver();
+	addXorConstraint(_F, _G, 1);
+	addConstConstraint(_F, 1);
+	addConstConstraint(_G, 1);
+	addErrorConstraint(_F, 0, 1);
+	addXorConstraint(_dupF, _dupG, 1);
+	addConstConstraint(_dupF, 1);
+	addConstConstraint(_dupG, 1);
+	addErrorConstraint(_dupF, 1, 1);
+	_candSolver -> assumeRelease();
+	assert(_F -> getGateByName("g1") -> getImpVar());
+	_candSolver -> assumeProperty(_F -> getGateByName("g1") -> getImpVar(), true);
+	assert(_F -> getGateByName("g2") -> getImpVar());
+	_candSolver -> assumeProperty(_F -> getGateByName("g2") -> getImpVar(), true);
+	bool candSAT = _candSolver -> assump_solve();
+	if( candSAT ) std::cout << "candSAT" << std::endl;
+	else std::cout << "candUNSAT" << std::endl;
 
 	//std::cout << "after create Mux " << std::endl;
 	//_F -> reportNetList();	
-	//reportSortedCand();
 
 /*
 	std::vector<bool> assign(_candNameList.size(), false);

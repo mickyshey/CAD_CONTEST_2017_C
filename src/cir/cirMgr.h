@@ -37,6 +37,7 @@ public:
 			_candNameList.clear();
 			_isClauseOn.clear();
 			_s = new SatSolverV; 
+         _candSolver = new SatSolverV;
 			_costSolver = new SatSolverV; }//_s -> init(); }
 	~CirMgr() {}//{ delete _F; delete _G; delete _patch; }
 
@@ -73,11 +74,11 @@ public:
 	void createVar(CirNet* n) const { n -> createVar(_s); }
 	void addToSolver(CirNet* n) const { n -> addToSolver(_s); }
 	void tieGate(CirGate* g1, CirGate* g2);
-	void tiePi(CirNet* f, CirNet* g);					// _F = _G, _dupF = _dupG
+	void tiePi(CirNet* f, CirNet* g, int solver = 0);	// _F = _G, _dupF = _dupG
 	void tieConst(CirNet* f, CirNet* g);
-    void addXorConstraint(CirNet* f, CirNet* g);		// _F ^ _G, _dupF ^ _dupG
-	void addErrorConstraint(CirNet* n, bool val);		// _F(t = 0), _dupF(t = 1)
-	void addConstConstraint(CirNet* n);
+    void addXorConstraint(CirNet* f, CirNet* g, int solver = 0);	// _F ^ _G, _dupF ^ _dupG
+	void addErrorConstraint(CirNet* n, bool val, int solver = 0);	// _F(t = 0), _dupF(t = 1)
+	void addConstConstraint(CirNet* n, int solver = 0);
 	void markOnsetClause(const ClauseId& cid);
 	void markOffsetClause(const ClauseId& cid);
     void buildVarMap(CirNet* ntk);
@@ -86,11 +87,14 @@ public:
     CirNet* buildItp(const string& fileName);
     void retrieveProof(Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId>& usedClause);
 	bool proveEQ(CirNet* f, CirNet* g);
+   void initCandSolver();
+   void setUpImpVar();
+   void addAllToCandSolver();
 
 
 // in cirCost.cpp
 	void sortCandidate();
-	void createVar4CostSolver(bool setMgr);
+	void createVar4CostSolver(bool setMgr = false);
 	void addCostConstraint(unsigned cost);
 	bool getMuxAssignment();
 	void updateIndices(std::vector<unsigned>& indices, unsigned& currCost);
@@ -112,8 +116,9 @@ private:
 	CirNet*								_dupF;
 	CirNet*								_dupG;
 	CirNet*								_patch;
-	SatSolverV*							_s;
+	SatSolverV*							_s;             // for gen patch
 	SatSolverV*							_costSolver;
+   SatSolverV*                   _candSolver;   // for gen valid cut
     CirNet*                                                         _out;
 	vector<string>						_candNameList;
 	vector<CirGate*>					_sortedCandGate;
@@ -129,7 +134,7 @@ private:
 	std::vector<Var>					_varsDup;
 
    // for debug
-   bool     _debug = false;
+   bool     _debug = true;
 
 };
 

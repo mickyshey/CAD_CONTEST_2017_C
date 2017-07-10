@@ -66,12 +66,14 @@ public:
 		_id 	(id),
 		_var	(0),
 		_costVar	(0),
+		_candVar	(0),
+      _impVar  (0),
         _weight (0),
 		_simV(false),
 		_ref	(0)	{}
 	virtual ~CirGate() {}
 
-	virtual void addToSolver(SatSolverV* s) const = 0;
+	virtual void addToSolver(SatSolverV* s, int solver = 0) const = 0;
 
 //	gate info
 	void setId(unsigned i) 			{ _id = i; }
@@ -80,6 +82,10 @@ public:
 	Var getVar()						{ return _var; }
 	void setCostVar(Var v)			{ _costVar = v; }
 	Var getCostVar()					{ return _costVar; }
+	void setCandVar(Var v)			{ _candVar = v; }
+	Var getCandVar()					{ return _candVar; }
+   void setImpVar(Var v)         { _impVar = v; }
+   Var getImpVar()               { return _impVar; }
 	const string& getName() 		{ return _name; }
     void setWeight(unsigned w)	{ _weight = w; }
 	unsigned getWeight()				{ return _weight; }
@@ -97,6 +103,7 @@ public:
 	CirGate* getFanin(unsigned idx) const			{ assert(idx < _in.size()); return _in[idx].getGate(); }
 	unsigned getFaninId(unsigned idx) const		{ assert(idx < _in.size()); return _in[idx].getGate() -> _id; }
 	Var getFaninVar(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].getGate() -> _var; }
+	Var getFaninCandVar(unsigned idx) const		{ assert(idx < _in.size()); return _in[idx].getGate() -> _candVar; }
 	bool isFaninInv(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].isInv(); }
 	void setFanoutSize(unsigned s) 					{ _out.resize(s); }
 	void clearFanout()									{ _out.clear(); }
@@ -121,6 +128,8 @@ protected:
 	unsigned				_id;
 	Var						_var;
 	Var						_costVar;
+	Var						_candVar;
+   Var                  _impVar;
 	GateVList				_in;
 	GateVList				_out;
     unsigned				_weight;
@@ -136,7 +145,7 @@ public: \
 	~T() {} \
 	const GateType getType() const;\
 	void report() const;\
-	void addToSolver(SatSolverV* s) const;\
+	void addToSolver(SatSolverV* s, int solver = 0) const;\
 	void simulate();\
 };
 

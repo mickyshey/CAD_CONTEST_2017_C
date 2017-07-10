@@ -28,8 +28,9 @@ CirConstGate::report() const
 }
 
 void
-CirConstGate::addToSolver(SatSolverV* s) const
+CirConstGate::addToSolver(SatSolverV* s, int solver) const
 {
+   assert(solver <= 1);
 	if( debug ) {
 		if( _name == "1'b0" ) std::cout << "add const0 CNF" << std::endl;
 		else std::cout << "add const1 CNF" << std::endl;
@@ -58,8 +59,9 @@ CirPiGate::report() const
 }
 
 void
-CirPiGate::addToSolver(SatSolverV* s) const
+CirPiGate::addToSolver(SatSolverV* s, int solver) const
 {
+   assert(solver <= 1);
 	if( debug ) {
 		std::cout << "add Pi CNF, do nothing" << std::endl;
 	}
@@ -85,13 +87,15 @@ CirPoGate::report() const
 }
 
 void
-CirPoGate::addToSolver(SatSolverV* s) const
+CirPoGate::addToSolver(SatSolverV* s, int solver) const
 {
+   assert(solver <= 1);
 	assert(_in.size() == 1);
 	if( debug ) {
 		std::cout << "add Po CNF:" << std::endl;
 	}
-	s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));	
+   if( solver == 0 ) s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));	
+   else if( solver == 1 ) s -> addEqCNF(_candVar, getFaninCandVar(0), isFaninInv(0));
 }
 
 void
@@ -114,13 +118,15 @@ CirBufGate::report() const
 }
 
 void
-CirBufGate::addToSolver(SatSolverV* s) const
+CirBufGate::addToSolver(SatSolverV* s, int solver) const
 {
+   assert(solver <= 1);
 	assert(_in.size() == 1);
 	if( debug ) {
 		std::cout << "add Buf CNF:" << std::endl;
 	}
-	s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));
+   if( solver == 0 ) s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));
+   else if( solver == 1 ) s -> addEqCNF(_candVar, getFaninCandVar(0), isFaninInv(0));
 }
 
 void
@@ -143,13 +149,15 @@ CirInvGate::report() const
 }
 
 void
-CirInvGate::addToSolver(SatSolverV* s) const
+CirInvGate::addToSolver(SatSolverV* s, int solver) const
 {
+   assert(solver <= 1);
 	assert(_in.size() == 1);
 	if( debug ) {
 		std::cout << "add Inv CNF:" << std::endl;
 	}
-	s -> addEqCNF(_var, getFaninVar(0), !isFaninInv(0));
+   if( solver == 0 ) s -> addEqCNF(_var, getFaninVar(0), !isFaninInv(0));
+   else if ( solver == 1 ) s -> addEqCNF(_candVar, getFaninCandVar(0), !isFaninInv(0));
 }
 
 void
@@ -172,8 +180,9 @@ CirAndGate::report() const
 }
 
 void
-CirAndGate::addToSolver(SatSolverV* s) const
+CirAndGate::addToSolver(SatSolverV* s, int solver) const
 {
+   assert(solver <= 1);
 /*	Lit outLit = mkLit(_id, false);
 	vec<Lit> c;
 	c.push(outLit);
@@ -190,7 +199,8 @@ CirAndGate::addToSolver(SatSolverV* s) const
 	if( debug ) {
 		std::cout << "add And CNF:" << std::endl;
 	}
-	s -> addAndCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));	
+   if( solver == 0 ) s -> addAndCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));	
+   else if( solver == 1 ) s -> addAndCNF(_candVar, getFaninCandVar(0), isFaninInv(0), getFaninCandVar(1), isFaninInv(1));	
 }
 
 void
@@ -213,8 +223,9 @@ CirOrGate::report() const
 }
 
 void
-CirOrGate::addToSolver(SatSolverV* s) const
+CirOrGate::addToSolver(SatSolverV* s,int solver) const
 {
+   assert(solver <= 1);
 /*
 	Lit outLit = mkLit(_id, false);
 	vec<Lit> c;
@@ -232,7 +243,8 @@ CirOrGate::addToSolver(SatSolverV* s) const
 	if( debug ) {
 		std::cout << "add Or CNF:" << std::endl;
 	}
-	s -> addOrCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));
+   if( solver == 0 ) s -> addOrCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));
+   else if( solver == 1 ) s -> addOrCNF(_candVar, getFaninCandVar(0), isFaninInv(0), getFaninCandVar(1), isFaninInv(1));
 }
 
 void
@@ -255,13 +267,15 @@ CirNandGate::report() const
 }
 
 void
-CirNandGate::addToSolver(SatSolverV* s) const
+CirNandGate::addToSolver(SatSolverV* s, int solver) const
 {
+   assert(solver <= 1);
 	assert(_in.size() == 2);
 	if( debug ) {
 		std::cout << "add Nand CNF:" << std::endl;
 	}
-	s -> addOrCNF(_var, getFaninVar(0), !isFaninInv(0), getFaninVar(1), !isFaninInv(1));
+   if( solver == 0 ) s -> addOrCNF(_var, getFaninVar(0), !isFaninInv(0), getFaninVar(1), !isFaninInv(1));
+   else if( solver == 1 ) s -> addOrCNF(_candVar, getFaninCandVar(0), !isFaninInv(0), getFaninCandVar(1), !isFaninInv(1));
 }
 
 void
@@ -284,13 +298,15 @@ CirNorGate::report() const
 }
 
 void
-CirNorGate::addToSolver(SatSolverV* s) const
+CirNorGate::addToSolver(SatSolverV* s, int solver) const
 {
+   assert(solver <= 1);
 	assert(_in.size() == 2);
 	if( debug ) {
 		std::cout << "add Nor CNF:" << std::endl;
 	}
-	s -> addAndCNF(_var, getFaninVar(0), !isFaninInv(0), getFaninVar(1), !isFaninInv(1));
+   if( solver == 0 ) s -> addAndCNF(_var, getFaninVar(0), !isFaninInv(0), getFaninVar(1), !isFaninInv(1));
+	else if( solver == 1 ) s -> addAndCNF(_candVar, getFaninCandVar(0), !isFaninInv(0), getFaninCandVar(1), !isFaninInv(1));
 }
 
 void
@@ -313,13 +329,15 @@ CirXorGate::report() const
 }
 
 void
-CirXorGate::addToSolver(SatSolverV* s) const
+CirXorGate::addToSolver(SatSolverV* s, int solver) const
 {
+   assert(solver <= 1);
 	assert(_in.size() == 2);
 	if( debug ) {
 		std::cout << "add Xor CNF:" << std::endl;
 	}
-	s -> addXorCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));
+	if( solver == 0 ) s -> addXorCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));
+	else if( solver == 1 ) s -> addXorCNF(_candVar, getFaninCandVar(0), isFaninInv(0), getFaninCandVar(1), isFaninInv(1));
 }
 
 void
@@ -342,13 +360,15 @@ CirXnorGate::report() const
 }
 
 void
-CirXnorGate::addToSolver(SatSolverV* s) const
+CirXnorGate::addToSolver(SatSolverV* s, int solver) const
 {
+   assert(solver <= 1);
 	assert(_in.size() == 2);
 	if( debug ) {
 		std::cout << "add Xnor CNF:" << std::endl;
 	}
-	s -> addXnorCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));
+	if( solver == 0 ) s -> addXnorCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1));
+	else if( solver == 1 ) s -> addXnorCNF(_candVar, getFaninCandVar(0), isFaninInv(0), getFaninCandVar(1), isFaninInv(1));
 }
 
 void
@@ -371,15 +391,17 @@ CirErrorGate::report() const
 }
 
 void
-CirErrorGate::addToSolver(SatSolverV* s) const
+CirErrorGate::addToSolver(SatSolverV* s, int solver) const
 {
+   assert(solver <= 1);
     assert(_in.size() < 2);
 	if( debug ) {
 		if( _in.size() == 0 ) std::cout << "add Error CNF: do nothing before patch" << std::endl;
 		else std::cout << "add Error CNF: after patching" << std::endl;
 	}
     if(_in.size() == 0) return;
-    s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));
+    if( solver == 0 ) s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));
+    else if( solver == 1 ) s -> addEqCNF(_candVar, getFaninCandVar(0), isFaninInv(0));
 }
 
 void
@@ -402,14 +424,16 @@ CirMuxGate::report() const
 }
 
 void
-CirMuxGate::addToSolver(SatSolverV* s) const
+CirMuxGate::addToSolver(SatSolverV* s, int solver) const
 {
 	// TODO
+   assert(solver <= 1);
 	assert(_in.size() == 3);
 	if( debug ) {
 		std::cout << "add Mux CNF:" << std::endl;
 	}
-	s -> addMuxCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1), getFaninVar(2), isFaninInv(2));	
+	if( solver == 0 ) s -> addMuxCNF(_var, getFaninVar(0), isFaninInv(0), getFaninVar(1), isFaninInv(1), getFaninVar(2), isFaninInv(2));	
+	else if( solver == 1 ) s -> addMuxCNF(_candVar, getFaninCandVar(0), isFaninInv(0), getFaninCandVar(1), isFaninInv(1), getFaninCandVar(2), isFaninInv(2));	
 }
 
 void

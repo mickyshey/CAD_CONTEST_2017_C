@@ -10,22 +10,24 @@
 using namespace std;
 
 void
-CirNet::createVar(SatSolverV* s) const
+CirNet::createVar(SatSolverV* s, int solver) const
 {
+	assert(solver <= 1);
 	buildTopoList();
 	for( unsigned i = 0; i < _topoList.size(); ++i ) {
 		Var v = s -> newVar();
-		_topoList[i] -> setVar(v);
+		if( solver == 0 ) _topoList[i] -> setVar(v);
+		else if( solver == 1 ) _topoList[i] -> setCandVar(v);
 	}
 }
 
 void
-CirNet::addToSolver(SatSolverV* s) const
+CirNet::addToSolver(SatSolverV* s, int solver) const
 {
 	buildTopoList();
 	for( unsigned i = 0; i < _topoList.size(); ++i ) {
 		//cout << "adding " << _topoList[i] -> getName() << endl;
-		_topoList[i] -> addToSolver(s);
+		_topoList[i] -> addToSolver(s, solver);
 	}
 }
 
@@ -67,8 +69,9 @@ CirMgr::tieGate(CirGate* g1, CirGate* g2)
 
 // make the var in _piList equal
 void
-CirMgr::tiePi(CirNet* f, CirNet* g)
+CirMgr::tiePi(CirNet* f, CirNet* g, int solver)
 {
+	assert(solver <= 1);
 	//assert(f -> getPiNum() == g -> getPiNum() + _candNameList.size());
 	// we should get pi from g instead of f
 	for( unsigned i = 0; i < g -> getPiNum(); ++i ) {
@@ -77,7 +80,8 @@ CirMgr::tiePi(CirNet* f, CirNet* g)
 		//std::cout << "f: " << fPi -> getName() << "(" << fPi -> getVar() << ")" << std::endl;
 		//std::cout << "before tie: " << std::endl;
 		//std::cout << "g: " << gPi -> getName() << "(" << gPi -> getVar() << ")" << std::endl;
-		gPi -> setVar(fPi -> getVar());
+		if( solver == 0 ) gPi -> setVar(fPi -> getVar());
+		else if( solver == 1 ) gPi -> setCandVar(fPi -> getCandVar());
 		//std::cout << "after tie: " << std::endl;
 		//std::cout << "g: " << gPi -> getName() << "(" << gPi -> getVar() << ")" << std::endl;
 	}
@@ -91,16 +95,24 @@ CirMgr::tieConst(CirNet* f, CirNet* g)
 }
 
 void
-CirMgr::addXorConstraint(CirNet* f, CirNet* g)
+CirMgr::addXorConstraint(CirNet* f, CirNet* g, int solver)
 {
+	assert(solver <= 1);
 	assert(f -> getPoNum() == g -> getPoNum());
 // test
 	if( f -> getPoNum() == 1 ) {
 		CirGate* fPo = f -> getPo(0);
 		CirGate* gPo = g -> getGateByName(fPo -> getName());
+		if( solver == 0 ) {
 		Var v = _s -> newVar();
 		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
 		_s -> addUnitCNF(v, 1);
+		}
+		else if( solver == 1 ) {
+		Var v = _candSolver -> newVar();
+		_candSolver -> addXorCNF(v, fPo -> getCandVar(), false, gPo -> getCandVar(), false);			// POs should not have bubbles !?
+		_candSolver -> addUnitCNF(v, 1);
+		}
 		return;
 	}
 // end of test
@@ -109,37 +121,57 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g)
 		CirGate* fPo = f -> getPo(i);
 		CirGate* gPo = g -> getGateByName(fPo -> getName());
 		//std::cout << "XORing: " << fPo -> getName() << "(" << fPo << ") and " << gPo -> getName() << "(" << gPo << ")" << std::endl;
-		Var v = _s -> newVar();
-		assert(_s -> _solver -> value(v) == l_Undef);
+		Var v;
+		if( solver == 0 ) {
+		v = _s -> newVar();
 		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
-		assert(_s -> _solver -> value(v) == l_Undef);
+		}
+		else if( solver == 1 ) {
+		v = _candSolver -> newVar();
+		_candSolver -> addXorCNF(v, fPo -> getCandVar(), false, gPo -> getCandVar(), false);			// POs should not have bubbles !?
+		}
 		// we first assert all Xors to be 1
 		// NO !! we should add an OR gate
 		// record these vars
 		Xors.push_back(v);
 	}
 	assert(Xors.size() == f -> getPoNum());
-	Var out = _s -> newVar();
-	unsigned numClauses = _s -> getNumClauses();
+	Var out;
+	if( solver == 0 ) {
+	out = _s -> newVar();
 	_s -> addOrCNF(out, Xors);
-	assert(_s -> getNumClauses() - numClauses == Xors.size() + 1);
 	_s -> addUnitCNF(out, 1);
+	}
+	else if( solver == 1 ) {
+	out = _candSolver -> newVar();
+	_candSolver -> addOrCNF(out, Xors);
+	_candSolver -> addUnitCNF(out, 1);
+	}
 }
 
 // for single error only
 void
-CirMgr::addErrorConstraint(CirNet* n, bool val)
+CirMgr::addErrorConstraint(CirNet* n, bool val, int solver)
 {
+	assert(solver <= 1);
 	assert(n -> getErrorNum() == 1);
 	CirGate* g = n -> getError(0);
-	_s -> addUnitCNF(g -> getVar(), val);
+	if( solver == 0 ) _s -> addUnitCNF(g -> getVar(), val);
+	else if( solver == 1 ) _candSolver -> addUnitCNF(g -> getCandVar(), val);
 }
 
 void
-CirMgr::addConstConstraint(CirNet* n)
+CirMgr::addConstConstraint(CirNet* n, int solver)
 {
+	assert(solver <= 1);
+	if( solver == 0 ) {
 	_s -> addUnitCNF(n -> getConst(0) -> getVar(), 0);
 	_s -> addUnitCNF(n -> getConst(1) -> getVar(), 1);
+	}
+	else if( solver == 1 ) {
+	_candSolver -> addUnitCNF(n -> getConst(0) -> getCandVar(), 0);
+	_candSolver -> addUnitCNF(n -> getConst(1) -> getCandVar(), 1);
+	}
 }
 
 void
@@ -560,3 +592,32 @@ CirMgr::proveEQ(CirNet* f, CirNet* g)
 	return !solve();
 }
 
+void
+CirMgr::initCandSolver()
+{
+	assert(_F); assert(_dupF); assert(_G); assert(_dupG);
+	_F -> createVar(_candSolver, 1); _G -> createVar(_candSolver, 1);
+	_dupF -> createVar(_candSolver, 1); _dupG -> createVar(_candSolver, 1);
+}
+
+void
+CirMgr::setUpImpVar()
+{
+	Lit impLit, FLit, dupFLit;
+	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+		Var v = _candSolver -> newVar();
+		_sortedCandGate[i] -> setImpVar(v);
+		impLit = mkLit(v, false);
+		FLit = mkLit(_sortedCandGate[i] -> getCandVar(), false);
+		dupFLit = mkLit(_dupF -> getGateByName(_sortedCandGate[i] -> getName()) -> getCandVar(), false);
+		_candSolver -> addTernary(~impLit, ~FLit, dupFLit);
+		_candSolver -> addTernary(~impLit, FLit, ~dupFLit);
+	}
+}
+
+void
+CirMgr::addAllToCandSolver()
+{
+	_F -> addToSolver(_candSolver, 1); _G -> addToSolver(_candSolver, 1);
+	_dupF -> addToSolver(_candSolver, 1); _dupG -> addToSolver(_candSolver, 1);
+}
