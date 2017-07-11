@@ -90,6 +90,9 @@ public:
    void initCandSolver();
    void setUpImpVar();
    void addAllToCandSolver();
+   void setUpCandSolver();
+   void assumeCut(vector<Lit>& Lit_vec_origin);
+   void generatePatch();
 
 
 // in cirCost.cpp

@@ -621,3 +621,157 @@ CirMgr::addAllToCandSolver()
 	_F -> addToSolver(_candSolver, 1); _G -> addToSolver(_candSolver, 1);
 	_dupF -> addToSolver(_candSolver, 1); _dupG -> addToSolver(_candSolver, 1);
 }
+
+void
+CirMgr::assumeCut(vector<Lit>& Lit_vec_origin)
+{
+   Var v;
+	_candSolver -> assumeRelease();
+   v = _F -> getGateByName("g1") -> getImpVar();
+	assert(v);
+	_candSolver -> assumeProperty(v, true);
+   Lit_vec_origin.push_back(mkLit(v, false));
+   v = _F -> getGateByName("g2") -> getImpVar();
+	assert(v);
+	_candSolver -> assumeProperty(v, true);
+   Lit_vec_origin.push_back(mkLit(v, false));
+}
+
+void
+CirMgr::setUpCandSolver()
+{
+	tiePi(_F, _G, 1);
+	tiePi(_dupF, _dupG, 1);
+	setUpImpVar();
+	addAllToCandSolver();
+	addXorConstraint(_F, _G, 1);
+	addConstConstraint(_F, 1);
+	addConstConstraint(_G, 1);
+	addErrorConstraint(_F, 0, 1);
+	addXorConstraint(_dupF, _dupG, 1);
+	addConstConstraint(_dupF, 1);
+	addConstConstraint(_dupG, 1);
+	addErrorConstraint(_dupF, 1, 1);
+}
+
+void
+CirMgr::generatePatch()
+{
+   _s -> reset();
+    createVar(_F);
+    createVar(_G);
+    createVar(_dupF);
+    createVar(_dupG);
+	if( _debug ) {
+		std::cout << "var of each gate: " << std::endl;
+		const GateList& topo = _F -> buildTopoList();
+		for( unsigned i = 0; i < topo.size(); ++i )
+			std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
+		std::cout << std::endl;
+		const GateList& topo1 = _G -> buildTopoList();
+		for( unsigned i = 0; i < topo1.size(); ++i )
+			std::cout << topo1[i] -> getName() << "(" << topo1[i] -> getVar() << ") ";
+		std::cout << std::endl;
+		const GateList& topo2 = _dupF -> buildTopoList();
+		for( unsigned i = 0; i < topo2.size(); ++i )
+			std::cout << topo2[i] -> getName() << "(" << topo2[i] -> getVar() << ") ";
+		std::cout << std::endl;
+		const GateList& topo3 = _dupG -> buildTopoList();
+		for( unsigned i = 0; i < topo3.size(); ++i )
+			std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
+		std::cout << std::endl;
+	}
+	
+	assert(_F -> getPiNum() == _dupF -> getPiNum());
+	tiePi(_F, _G);
+	assert(_dupF -> getPiNum() == _dupG -> getPiNum());
+	tiePi(_dupF, _dupG);
+
+// TODO
+	tieGate(_F -> getGateByName("g1"), _dupF -> getGateByName("g1"));
+	tieGate(_F -> getGateByName("g2"), _dupF -> getGateByName("g2"));
+   // remember to clear _var2Gate
+   _var2Gate.clear();
+	buildVarMap(_F -> getGateByName("g1"));
+	buildVarMap(_F -> getGateByName("g2"));
+
+	if( _debug ) {
+		std::cout << "report VarMap: " << std::endl;
+		VarMap::iterator it;
+		for( it = _var2Gate.begin(); it != _var2Gate.end(); ++it ) {
+			std::cout << "Var: " << it -> first << ", name: " << it -> second -> getName() << ", " << it -> second << std::endl;
+		}
+	}
+
+	unsigned numClauses = getNumClauses();
+	assert(numClauses == 0);
+	addToSolver(_F);
+	addToSolver(_G);
+
+	addXorConstraint(_F, _G);
+	addConstConstraint(_F);
+	addConstConstraint(_G);
+	addErrorConstraint(_F, 0);
+
+	/********************/
+	// mark onset clause 
+	/*******************/
+	for( unsigned i = numClauses; i < getNumClauses(); ++i ) markOnsetClause(i);
+	assert(_isClauseOn.size() == getNumClauses());
+	if( _debug ) {
+		std::cout << "after markON" << std::endl;
+		for( unsigned i = 0; i < _isClauseOn.size(); ++i ) {
+			std::cout << _isClauseOn[i];
+		}
+		std::cout << std::endl;
+	}
+
+	numClauses = getNumClauses();
+	addToSolver(_dupF);
+	addToSolver(_dupG);
+	addXorConstraint(_dupF, _dupG);
+	addConstConstraint(_dupF);
+	addConstConstraint(_dupG);
+	addErrorConstraint(_dupF, 1);
+
+	/********************/
+	// mark offset clause 
+	/*******************/
+	for( unsigned i = numClauses; i < getNumClauses(); ++i) markOffsetClause(i);
+	assert(_isClauseOn.size() == getNumClauses());
+	if( _debug ) {
+		std::cout << "after markOFF" << std::endl;
+		for( unsigned i = 0; i < _isClauseOn.size(); ++i ) {
+			std::cout << _isClauseOn[i];
+		}
+		std::cout << std::endl;
+	}
+
+	_s -> simplify();
+	bool isSat = solve();
+	cout << (isSat ? "SAT" : "UNSAT") << endl;
+	if( isSat ) return;
+	_patch = getItp();
+	if( _debug ) {
+		std::cout << "report patch: " << std::endl;
+		_patch -> reportNetList();
+		std::cout << "after patching..." << std::endl;
+		std::cout << "_F: " << std::endl;
+		_F -> reportNetList();
+		std::cout << "_G: " << std::endl;
+		_G -> reportNetList();
+	}
+
+	_s->reset();
+	createVar(_F);
+	createVar(_G);
+	tiePi(_F, _G);
+	addToSolver(_F);
+	addToSolver(_G);
+	addXorConstraint(_F, _G);
+   addConstConstraint(_F);
+   addConstConstraint(_G);
+	_s -> simplify();
+	bool eqCheck = solve();
+	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
+}

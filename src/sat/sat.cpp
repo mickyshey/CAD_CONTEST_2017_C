@@ -101,15 +101,11 @@ void SatSolverV::addOrCNF(Var out, const vector<Var>& Xors)
 	vec<Lit> longCla;		longCla.clear();
 	vec<Lit> shortCla; 	shortCla.clear();
 	Lit outLit = mkLit(out, false);
-	assert(_solver -> value(outLit) == l_Undef);
 	longCla.push(~outLit);
 	for( unsigned i = 0; i < Xors.size(); ++i ) {
-		assert(_solver -> value(outLit) == l_Undef);
 		shortCla.push(outLit);
-		assert(_solver -> value(Xors[i]) == l_Undef);
 		// var of Xors should have no inv
 		Lit inLit = mkLit(Xors[i], false);
-		assert(_solver -> value(inLit) == l_Undef);
 		shortCla.push(~inLit);
 		//assert(_solver -> value(inLit) == l_Undef);
 		assert(shortCla.size() == 2);
@@ -118,7 +114,6 @@ void SatSolverV::addOrCNF(Var out, const vector<Var>& Xors)
 		shortCla.clear();
 		longCla.push(inLit);
 	}
-	assert(longCla.size() == Xors.size() + 1);
 	_solver -> addClause(longCla);
 /*
 	std::cout << "long: ";
@@ -132,12 +127,6 @@ void SatSolverV::addOrCNF(Var out, const vector<Var>& Xors)
 
 void SatSolverV::addXorCNF(Var out, Var in0, bool inv0, Var in1, bool inv1)
 {
-	//std::cout << "out: " << out << std::endl;
-	//std::cout << "in0: " << in0 << std::endl;
-	//std::cout << "in1: " << in1 << std::endl;
-	assert(_solver -> value(out) == l_Undef);
-	assert(_solver -> value(in0) == l_Undef);
-	assert(_solver -> value(in1) == l_Undef);
   Lit outLit = mkLit(out, false);
   Lit in0Lit = mkLit(in0, inv0);
   Lit in1Lit = mkLit(in1, inv1);
