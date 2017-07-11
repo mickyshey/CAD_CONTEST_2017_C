@@ -627,6 +627,8 @@ CirMgr::assumeCut(vector<Lit>& Lit_vec_origin)
 {
    Var v;
 	_candSolver -> assumeRelease();
+
+// TODO
    v = _F -> getGateByName("g1") -> getImpVar();
 	assert(v);
 	_candSolver -> assumeProperty(v, true);
