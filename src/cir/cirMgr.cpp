@@ -36,7 +36,7 @@ CirMgr::test()
 		//	std::cout << _candNameList[i] << std::endl;
 	}
 	createVar4CostSolver();
-
+/*
 	initCandSolver();
 	setUpCandSolver();
 	vector<Lit> Lit_vec_origin;
@@ -53,7 +53,8 @@ CirMgr::test()
 	else std::cout << "candUNSAT" << std::endl;
 
 	if( !candSAT ) generatePatch();
-
+*/
+	generatePatch();
 /*
 	std::vector<bool> assign(_candNameList.size(), false);
 	_blockingClauses.push_back(assign);

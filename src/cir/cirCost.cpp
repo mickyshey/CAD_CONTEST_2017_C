@@ -30,7 +30,9 @@ CirMgr::createVar4CostSolver(bool setMgr)
 		_sortedCandGate[i] -> setCostVar(v);
 		if( setMgr ) _varsDup[i] = v;
 		_costVar2Gate.insert( std::pair<Var, CirGate*>(v, _sortedCandGate[i]) );
-		std::cout << "gate: " << _sortedCandGate[i] -> getName() << ", cost Var: " << _sortedCandGate[i] -> getCostVar() << std::endl;
+      if( _debug ) {
+		   std::cout << "gate: " << _sortedCandGate[i] -> getName() << ", cost Var: " << _sortedCandGate[i] -> getCostVar() << std::endl;
+      }
 	}
 	_muxAssignment.resize(_sortedCandGate.size());
 }

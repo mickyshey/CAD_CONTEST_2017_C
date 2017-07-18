@@ -137,7 +137,8 @@ private:
 	std::vector<Var>					_varsDup;
 
    // for debug
-   bool     _debug = true;
+   bool     _debug = false;
+   //bool     _debug = false;
 
 };
 

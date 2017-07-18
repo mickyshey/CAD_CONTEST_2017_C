@@ -344,7 +344,7 @@ CirMgr::buildItp(const string& fileName)
 										g2.flipInv();
                             }
                             // or
-                            cerr << "created OR gate w(" << w << ")"  << endl; // for debug
+                            //cerr << "created OR gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
                             g = CirGateV(ntk->createGate(Gate_Or, name), false);
@@ -388,7 +388,7 @@ CirMgr::buildItp(const string& fileName)
 									g1 = g;
                         } else {
                             // or
-                            cerr << "created OR gate w(" << w << ")"  << endl; // for debug
+                            //cerr << "created OR gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
                             g = CirGateV(ntk->createGate(Gate_Or, name), false);
@@ -411,7 +411,7 @@ CirMgr::buildItp(const string& fileName)
 									g1 = g;
                         } else {
                             // and
-                            cerr << "created AND gate w(" << w << ")"  << endl; // for debug
+                            //cerr << "created AND gate w(" << w << ")"  << endl; // for debug
 							std::string name = wireName + myToString(w);
 							w++;
                             g = CirGateV(ntk->createGate(Gate_And, name), false);
@@ -687,8 +687,15 @@ CirMgr::generatePatch()
 	assert(_F -> getPiNum() == _dupF -> getPiNum());
 	tiePi(_F, _G);
 	assert(_dupF -> getPiNum() == _dupG -> getPiNum());
-	tiePi(_dupF, _dupG);
+	//tiePi(_dupF, _dupG);
 
+	// for PI test
+	tiePi(_F, _dupF);
+	tiePi(_F, _dupG);
+	for( unsigned i = 0;  i < _F -> getPiNum(); ++i ) {
+		buildVarMap(_F -> getPi(i));
+	}
+/*
 // TODO
 	tieGate(_F -> getGateByName("g1"), _dupF -> getGateByName("g1"));
 	tieGate(_F -> getGateByName("g2"), _dupF -> getGateByName("g2"));
@@ -696,7 +703,7 @@ CirMgr::generatePatch()
    _var2Gate.clear();
 	buildVarMap(_F -> getGateByName("g1"));
 	buildVarMap(_F -> getGateByName("g2"));
-
+*/
 	if( _debug ) {
 		std::cout << "report VarMap: " << std::endl;
 		VarMap::iterator it;
