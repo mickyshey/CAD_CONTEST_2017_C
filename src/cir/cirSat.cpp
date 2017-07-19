@@ -718,8 +718,8 @@ CirMgr::generatePatch()
 	addToSolver(_G);
 
 	addXorConstraint(_F, _G);
-	addConstConstraint(_F);
-	addConstConstraint(_G);
+	//addConstConstraint(_F);
+	//addConstConstraint(_G);
 	addErrorConstraint(_F, 0);
 
 	/********************/
@@ -739,8 +739,8 @@ CirMgr::generatePatch()
 	addToSolver(_dupF);
 	addToSolver(_dupG);
 	addXorConstraint(_dupF, _dupG);
-	addConstConstraint(_dupF);
-	addConstConstraint(_dupG);
+	//addConstConstraint(_dupF);
+	//addConstConstraint(_dupG);
 	addErrorConstraint(_dupF, 1);
 
 	/********************/
@@ -771,6 +771,7 @@ CirMgr::generatePatch()
 		_G -> reportNetList();
 	}
 
+// verify patch validity
 	_s->reset();
 	createVar(_F);
 	createVar(_G);
@@ -778,8 +779,8 @@ CirMgr::generatePatch()
 	addToSolver(_F);
 	addToSolver(_G);
 	addXorConstraint(_F, _G);
-   addConstConstraint(_F);
-   addConstConstraint(_G);
+   //addConstConstraint(_F);
+   //addConstConstraint(_G);
 	_s -> simplify();
 	bool eqCheck = solve();
 	cout << (eqCheck ? "SAT" : "UNSAT") << endl;

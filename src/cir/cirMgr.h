@@ -63,6 +63,7 @@ public:
 	void createMux4Candidates();
     void writeToPatch(const string& fileName);
     void writeToOut(const string& fileName);
+   void simulate(CirNet* n) const { n -> simulate(); }
 
 //	in cirReport.cpp
 	void reportCandList() const;
@@ -138,7 +139,7 @@ private:
 
    // for debug
    bool     _debug = false;
-   //bool     _debug = false;
+   //bool     _debug = true;
 
 };
 

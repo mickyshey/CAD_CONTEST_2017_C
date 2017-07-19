@@ -69,7 +69,7 @@ public:
 		_candVar	(0),
       _impVar  (0),
         _weight (0),
-		_simV(false),
+		_simV(0),
 		_ref	(0)	{}
 	virtual ~CirGate() {}
 
@@ -78,14 +78,6 @@ public:
 //	gate info
 	void setId(unsigned i) 			{ _id = i; }
 	unsigned getId() 					{ return _id; }
-	void setVar(Var v)				{ _var = v; }
-	Var getVar()						{ return _var; }
-	void setCostVar(Var v)			{ _costVar = v; }
-	Var getCostVar()					{ return _costVar; }
-	void setCandVar(Var v)			{ _candVar = v; }
-	Var getCandVar()					{ return _candVar; }
-   void setImpVar(Var v)         { _impVar = v; }
-   Var getImpVar()               { return _impVar; }
 	const string& getName() 		{ return _name; }
     void setWeight(unsigned w)	{ _weight = w; }
 	unsigned getWeight()				{ return _weight; }
@@ -102,8 +94,6 @@ public:
 	unsigned getFaninSize() const						{ return _in.size(); }
 	CirGate* getFanin(unsigned idx) const			{ assert(idx < _in.size()); return _in[idx].getGate(); }
 	unsigned getFaninId(unsigned idx) const		{ assert(idx < _in.size()); return _in[idx].getGate() -> _id; }
-	Var getFaninVar(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].getGate() -> _var; }
-	Var getFaninCandVar(unsigned idx) const		{ assert(idx < _in.size()); return _in[idx].getGate() -> _candVar; }
 	bool isFaninInv(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].isInv(); }
 	void setFanoutSize(unsigned s) 					{ _out.resize(s); }
 	void clearFanout()									{ _out.clear(); }
@@ -112,6 +102,18 @@ public:
 	unsigned getFanoutSize() const					{ return _out.size(); }
 	CirGate* getFanout(unsigned idx) const			{ assert(idx < _out.size()); return _out[idx].getGate(); }
 
+// SAT
+	Var getFaninVar(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].getGate() -> _var; }
+	Var getFaninCandVar(unsigned idx) const		{ assert(idx < _in.size()); return _in[idx].getGate() -> _candVar; }
+	void setVar(Var v)				{ _var = v; }
+	Var getVar()						{ return _var; }
+	void setCostVar(Var v)			{ _costVar = v; }
+	Var getCostVar()					{ return _costVar; }
+	void setCandVar(Var v)			{ _candVar = v; }
+	Var getCandVar()					{ return _candVar; }
+   void setImpVar(Var v)         { _impVar = v; }
+   Var getImpVar()               { return _impVar; }
+
 //	dfs traversal
 	static void incRef() 	        { ++_globalRef; }
 	void setToRef() 				{ _ref = _globalRef; }
@@ -119,6 +121,8 @@ public:
 
 // simulation
 	virtual void simulate() = 0;
+	size_t getSimV() { return _simV; }
+	size_t getFaninSimV(unsigned idx) const { assert(idx < _in.size()); return _in[idx].getGate() -> _simV; }
 
 //	report
 	virtual void report() const = 0;
@@ -135,7 +139,7 @@ protected:
     unsigned				_weight;
 	static unsigned 		_globalRef;
 	mutable unsigned		_ref;
-	bool						_simV;
+	size_t						_simV;
 };
 
 #define CirGateType(T) class T : public CirGate \

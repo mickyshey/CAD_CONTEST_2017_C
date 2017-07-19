@@ -52,6 +52,7 @@ public:
 	//CirNet* constructNet();
     void sweep();
 	CirGate* createMux(CirGate* g_F, CirGate* g_dupF);
+   void simulate();
 
 //	in cirParse.cpp
 	bool parse(const string& filename);
@@ -63,6 +64,7 @@ public:
 	void reportNetList() const;
 	void reportNetListRec(CirGate* g, unsigned level) const;
 	void reportTopoList() const;
+   void reportSimV() const;
 
 //	in cirSat.cpp
 	//void reassignId() const;

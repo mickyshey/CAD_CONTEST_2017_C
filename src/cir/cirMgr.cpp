@@ -28,6 +28,7 @@ CirMgr::test()
 		_dupG -> reportNetList();
 	}
 
+/*
 	sortCandidate();
 	if( _debug ) {
 		std::cout << "report sortedCand: " << std::endl;
@@ -36,9 +37,14 @@ CirMgr::test()
 		//	std::cout << _candNameList[i] << std::endl;
 	}
 	createVar4CostSolver();
-/*
+*/
+
 	initCandSolver();
 	setUpCandSolver();
+
+	simulate(_F);
+	_F -> reportSimV();
+/*
 	vector<Lit> Lit_vec_origin;
 	assumeCut(Lit_vec_origin);
 	if( _debug ) {
@@ -55,6 +61,10 @@ CirMgr::test()
 	if( !candSAT ) generatePatch();
 */
 	generatePatch();
+
+
+
+
 /*
 	std::vector<bool> assign(_candNameList.size(), false);
 	_blockingClauses.push_back(assign);

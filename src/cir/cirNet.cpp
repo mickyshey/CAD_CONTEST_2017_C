@@ -260,3 +260,13 @@ CirNet::createMux(CirGate* g_F, CirGate* g_dupF)
 	
 	return mux;
 }
+
+void
+CirNet::simulate()
+{
+   // we perform simulation after createVar, meaning that we have _topoList constructed already
+   assert(_topoList.size());
+   for( unsigned i = 0; i < _topoList.size(); ++i ) {
+      _topoList[i] -> simulate();
+   }
+}
