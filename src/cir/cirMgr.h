@@ -33,7 +33,8 @@ public:
 			_G(NULL),
 			_dupF(NULL),
 			_dupG(NULL),
-			_patch(NULL) {
+			_patch(NULL),
+            _debug(false) {
 			_candNameList.clear();
 			_isClauseOn.clear();
 			_s = new SatSolverV; 
@@ -141,7 +142,7 @@ private:
 	std::vector<Var>					_varsDup;
 
    // for debug
-   bool     _debug = false;
+   bool     _debug; // will cause problem in CIC machine
    //bool     _debug = true;
 
 };
