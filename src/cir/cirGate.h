@@ -122,6 +122,7 @@ public:
 // simulation
 	virtual void simulate() = 0;
 	size_t getSimV() { return _simV; }
+	void setSimV(size_t s) { _simV = s; }
 	size_t getFaninSimV(unsigned idx) const { assert(idx < _in.size()); return _in[idx].getGate() -> _simV; }
 
 //	report

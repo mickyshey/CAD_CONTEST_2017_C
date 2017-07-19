@@ -52,7 +52,8 @@ public:
 	//CirNet* constructNet();
     void sweep();
 	CirGate* createMux(CirGate* g_F, CirGate* g_dupF);
-   void simulate();
+   void randSim();
+	void knownSim();
 
 //	in cirParse.cpp
 	bool parse(const string& filename);

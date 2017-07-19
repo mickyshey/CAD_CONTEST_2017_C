@@ -8,7 +8,7 @@ using namespace std;
 
 bool sortGateByWeight(CirGate* a, CirGate* b)
 {
-	return a -> getWeight() > b -> getWeight();
+	return a -> getWeight() < b -> getWeight();
 }
 
 void

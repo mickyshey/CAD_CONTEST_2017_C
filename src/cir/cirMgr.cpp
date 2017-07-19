@@ -28,8 +28,10 @@ CirMgr::test()
 		_dupG -> reportNetList();
 	}
 
+
+	sortCandidate();	// sort by increasing weight
+	reportSortedCand();
 /*
-	sortCandidate();
 	if( _debug ) {
 		std::cout << "report sortedCand: " << std::endl;
 		reportSortedCand();
@@ -42,8 +44,17 @@ CirMgr::test()
 	initCandSolver();
 	setUpCandSolver();
 
-	simulate(_F);
+	randSim(_F);
+	knownSim(_G, _F);
+	std::cout << "F simV: " << std::endl;
 	_F -> reportSimV();
+	std::cout << "G simV: " << std::endl;
+	_G -> reportSimV();
+	vector<size_t> t_1;
+	vector<size_t> t_0;
+	analyzeVec(t_1, t_0);
+	std::cout << "t1 size: " << t_1.size() << std::endl;
+	std::cout << "t0 size: " << t_0.size() << std::endl;
 /*
 	vector<Lit> Lit_vec_origin;
 	assumeCut(Lit_vec_origin);

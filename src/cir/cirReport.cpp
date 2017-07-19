@@ -41,23 +41,23 @@ CirNet::reportSimV() const
 {
 	cout << "PI:" << endl;
 	for( unsigned i = 0; i < _piList.size(); ++i )
-		cout << "[" << _piList[i] -> getName() << "], id: " << _piList[i] -> getId() << ", simV: " << std::bitset<64>(_piList[i] -> getSimV()) << std::endl;
+		cout << "[" << _piList[i] -> getName() << "], id: " << _piList[i] -> getId() << ", simV: " << std::bitset<32>(_piList[i] -> getSimV()) << std::endl;
 	std::cout << std::endl;
 	cout << "Error:" << endl;
 	for( unsigned i = 0; i < _errorList.size(); ++i )
-		cout << "[" << _errorList[i] -> getName() << "], id: " << _errorList[i] -> getId() << ", simV: " << std::bitset<64>(_errorList[i] -> getSimV()) << std::endl;
+		cout << "[" << _errorList[i] -> getName() << "], id: " << _errorList[i] -> getId() << ", simV: " << std::bitset<32>(_errorList[i] -> getSimV()) << std::endl;
 	std::cout << std::endl;
 	cout << "PO:" << endl;
 	for( unsigned i = 0; i < _poList.size(); ++i )
-		cout << "[" << _poList[i] -> getName() << "], id: " << _poList[i] -> getId() << ", simV " << std::bitset<64>(_poList[i] -> getSimV()) << ", in0: " << _poList[i] -> getFanin(0) -> getName() << ", cp: " << _poList[i] -> isFaninInv(0) << endl;
+		cout << "[" << _poList[i] -> getName() << "], id: " << _poList[i] -> getId() << ", simV " << std::bitset<32>(_poList[i] -> getSimV()) << ", in0: " << _poList[i] -> getFanin(0) -> getName() << ", cp: " << _poList[i] -> isFaninInv(0) << endl;
 	cout << endl;
 	cout << "Gates:" << endl;
 	for( unsigned i = 0; i < _gateList.size(); ++i ) {
 		if( _gateList[i] -> getType() == Gate_Buf || _gateList[i] -> getType() == Gate_Inv )
-			cout << "[" << _gateList[i] -> getName() << "], id: " << _gateList[i] -> getId() << ", simV: " << std::bitset<64>(_gateList[i] -> getSimV()) << ", in0: " << _gateList[i] -> getFanin(0) -> getName() << ", cp: " << _gateList[i] -> isFaninInv(0) << endl;
+			cout << "[" << _gateList[i] -> getName() << "], id: " << _gateList[i] -> getId() << ", simV: " << std::bitset<32>(_gateList[i] -> getSimV()) << ", in0: " << _gateList[i] -> getFanin(0) -> getName() << ", cp: " << _gateList[i] -> isFaninInv(0) << endl;
 		else {
 			CirGate* g = _gateList[i];
-			cout << "[" << g -> getName() << "], id: " << g -> getId() << ", simV: " << std::bitset<64>(_gateList[i] -> getSimV()) << ", in0: " << g -> getFanin(0) -> getName() << ", cp: " << g -> isFaninInv(0) << ", in1: " << g -> getFanin(1) -> getName() << ", cp: " << g -> isFaninInv(1) << endl;
+			cout << "[" << g -> getName() << "], id: " << g -> getId() << ", simV: " << std::bitset<32>(_gateList[i] -> getSimV()) << ", in0: " << g -> getFanin(0) -> getName() << ", cp: " << g -> isFaninInv(0) << ", in1: " << g -> getFanin(1) -> getName() << ", cp: " << g -> isFaninInv(1) << endl;
 			/*for( unsigned j = 0; j < g -> getFaninSize(); ++j )
 				cout << ", in" << j << ": " << g -> getFanin(j) -> getName();
 			cout << endl;*/

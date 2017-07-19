@@ -262,11 +262,22 @@ CirNet::createMux(CirGate* g_F, CirGate* g_dupF)
 }
 
 void
-CirNet::simulate()
+CirNet::randSim()
 {
    // we perform simulation after createVar, meaning that we have _topoList constructed already
    assert(_topoList.size());
    for( unsigned i = 0; i < _topoList.size(); ++i ) {
+      _topoList[i] -> simulate();
+   }
+}
+
+void
+CirNet::knownSim()
+{
+   // the one performing knownSim should always be golden, i.e. no Gate_Error
+   assert(_topoList.size());
+   for( unsigned i = 0; i < _topoList.size(); ++i ) {
+      if( _topoList[i] -> getType() == Gate_Pi ) continue;
       _topoList[i] -> simulate();
    }
 }

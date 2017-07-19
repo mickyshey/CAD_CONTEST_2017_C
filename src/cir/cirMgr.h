@@ -63,7 +63,11 @@ public:
 	void createMux4Candidates();
     void writeToPatch(const string& fileName);
     void writeToOut(const string& fileName);
-   void simulate(CirNet* n) const { n -> simulate(); }
+
+// in cirSim.cpp
+   void randSim(CirNet* n) const { n -> randSim(); }
+   void knownSim(CirNet* g, CirNet* f) const;
+   void analyzeVec(vector<size_t>& t_1, vector<size_t>& t_0);
 
 //	in cirReport.cpp
 	void reportCandList() const;
@@ -94,7 +98,6 @@ public:
    void setUpCandSolver();
    void assumeCut(vector<Lit>& Lit_vec_origin);
    void generatePatch();
-
 
 // in cirCost.cpp
 	void sortCandidate();

@@ -62,7 +62,7 @@ CirPiGate::addToSolver(SatSolverV* s, int solver) const
 
 void
 CirPiGate::simulate() {
-   for( unsigned i = 0; i < 64; ++i ) {
+   for( unsigned i = 0; i < 32; ++i ) {
       _simV = (_simV << 1) | (rand() & 1);
    }
 }
@@ -391,7 +391,7 @@ CirErrorGate::addToSolver(SatSolverV* s, int solver) const
 
 void
 CirErrorGate::simulate() {
-   for( unsigned i = 0; i < 64; ++i ) {
+   for( unsigned i = 0; i < 32; ++i ) {
       _simV = (_simV << 1) | (rand() & 1);
    }
 }
