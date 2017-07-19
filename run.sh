@@ -3,4 +3,4 @@ if [ "$#" -ne "1" ]; then
    exit 0;
 fi
 
-./mlllk testcase/unit$1/F.v tescase/unit$1/G.v testcase/unit$1/weight.txt patch.v out.v
+./mlllk testcase/unit$1/F.v testcase/unit$1/G.v testcase/unit$1/weight.txt patch.v out.v
