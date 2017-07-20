@@ -6,11 +6,14 @@
 #include <string>
 #include <map>
 #include <cstring>
+#include <ctime>
 
 #include "cir/cirNet.h"
 //#include "minisat/Solver.h"
 #include "sat/sat.h"
 #include "reader.h"
+
+#define CUT_CAND 10     // grab 10 candidate at a time
 
 using namespace std;
 
@@ -68,7 +71,8 @@ public:
 // in cirSim.cpp
    void randSim(CirNet* n) const { n -> randSim(); }
    void knownSim(CirNet* g, CirNet* f) const;
-   void analyzeVec(vector<size_t>& t_1, vector<size_t>& t_0);
+   void analyzeVec(vector<size_t>& t_1, vector<size_t>& t_0, unsigned startIdx);
+   bool checkValidCut(std::vector<size_t>& t_1, std::vector<size_t>& t_0);
 
 //	in cirReport.cpp
 	void reportCandList() const;

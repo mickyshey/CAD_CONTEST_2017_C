@@ -5,6 +5,7 @@
 #include <fstream>
 #include <cassert>
 #include <cmath>
+#include <bitset>
 
 #include "cir/cirMgr.h"
 
@@ -50,11 +51,16 @@ CirMgr::test()
 	_F -> reportSimV();
 	std::cout << "G simV: " << std::endl;
 	_G -> reportSimV();
-	vector<size_t> t_1;
-	vector<size_t> t_0;
-	analyzeVec(t_1, t_0);
+	std::vector<size_t> t_1; std::vector<size_t> t_0;
+	analyzeVec(t_1, t_0, 0);
 	std::cout << "t1 size: " << t_1.size() << std::endl;
+	for( unsigned i = 0 ; i < t_1.size(); ++i ) 
+		std::cout << std::bitset<32>(t_1[i]) << std::endl;
 	std::cout << "t0 size: " << t_0.size() << std::endl;
+	for( unsigned i = 0 ; i < t_0.size(); ++i ) 
+		std::cout << std::bitset<32>(t_0[i]) << std::endl;
+	if( checkValidCut(t_1, t_0) ) std::cout << "valid cut" << std::endl;
+	else std::cout << "invalid cut" << std::endl;
 /*
 	vector<Lit> Lit_vec_origin;
 	assumeCut(Lit_vec_origin);

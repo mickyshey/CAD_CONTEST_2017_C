@@ -659,6 +659,7 @@ CirMgr::setUpCandSolver()
 void
 CirMgr::generatePatch()
 {
+	clock_t start = clock();
    _s -> reset();
     createVar(_F);
     createVar(_G);
@@ -759,6 +760,7 @@ CirMgr::generatePatch()
 	_s -> simplify();
 	bool isSat = solve();
 	cout << (isSat ? "SAT" : "UNSAT") << endl;
+	std::cout << "time: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::endl;
 	if( isSat ) return;
 	_patch = getItp();
 	if( _debug ) {
