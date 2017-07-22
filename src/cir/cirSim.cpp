@@ -18,8 +18,8 @@ CirMgr::knownSim(CirNet* g, CirNet* f) const
 	g -> knownSim();
 }
 
-void
-CirMgr::analyzeVec(std::vector<size_t>& t_1, std::vector<size_t>& t_0, unsigned startIdx)
+unsigned
+CirMgr::analyzeVec(assignmentVec& t_1, assignmentVec& t_0, unsigned startIdx)
 {
 	unsigned endIdx = (startIdx + CUT_CAND >= _sortedCandGate.size() ? _sortedCandGate.size() : startIdx + CUT_CAND);
 	std::cout << "checking cand: " << startIdx << " ~ " << endIdx << std::endl;
@@ -68,10 +68,11 @@ CirMgr::analyzeVec(std::vector<size_t>& t_1, std::vector<size_t>& t_0, unsigned 
 			else t_1.push_back(assignment);
 		}
 	}
+	return endIdx - startIdx;			// size of potential cut
 }
 
 bool
-CirMgr::checkValidCut(std::vector<size_t>& t_1, std::vector<size_t>& t_0)
+CirMgr::checkValidCut(assignmentVec& t_1, assignmentVec& t_0)
 {
 	std::set<size_t> hash;
 	// insert all t_1 into hash
@@ -90,4 +91,39 @@ CirMgr::checkValidCut(std::vector<size_t>& t_1, std::vector<size_t>& t_0)
 		if( hash.find(t_0[i]) != hash.end() ) return false;
 	}
 	return true;
+}
+
+void
+CirMgr::generalizeCut(assignmentVec& t_1, assignmentVec& t_0, unsigned startIdx, unsigned potentialSize, idxVec& cutIdx)
+{
+	std::set<size_t> hash;
+	size_t filter = 0;
+	for( unsigned i = 0; i < potentialSize; ++i ) {
+		size_t tmpFilter = 0x1 << i;
+		filter |= tmpFilter;
+		std::cout << "filter: " << std::bitset<32>(filter) << std::endl;
+		// insert all filtered t_1 into hash
+		hash.clear();
+		for( unsigned j = 0; j < t_1.size(); ++j ) {
+			//std::cout << "before filtered: " << std::bitset<32>(t_1[j]) << std::endl;
+			//std::cout << "after filtered: " << std::bitset<32>(t_1[j] & ~filter) << std::endl;
+			hash.insert(t_1[j] & ~filter);
+		}
+		bool goodCut = true;
+		// check if any filtered assignment in t_0 found in hash
+		for( unsigned j = 0; j < t_0.size(); ++j ) {
+			//std::cout << "before filtered: " << std::bitset<32>(t_0[j]) << std::endl;
+			//std::cout << "after filtered: " << std::bitset<32>(t_0[j] & ~filter) << std::endl;
+			if( hash.find(t_0[j] & ~filter) != hash.end() ) { goodCut = false; break; }
+		}
+		if( goodCut ) {
+			std::cout << "pushing idx: " << startIdx + i << std::endl;
+			cutIdx.push_back(startIdx + i);
+		}
+		else {
+			std::cout << "bad idx" << std::endl;
+			filter ^= tmpFilter;
+			std::cout << "after recover: " << std::bitset<32>(filter) << std::endl;
+		}
+	}
 }

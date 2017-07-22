@@ -688,23 +688,29 @@ CirMgr::generatePatch()
 	assert(_F -> getPiNum() == _dupF -> getPiNum());
 	tiePi(_F, _G);
 	assert(_dupF -> getPiNum() == _dupG -> getPiNum());
-	//tiePi(_dupF, _dupG);
+	tiePi(_dupF, _dupG);
 
 	// for PI test
+/*
 	tiePi(_F, _dupF);
 	tiePi(_F, _dupG);
 	for( unsigned i = 0;  i < _F -> getPiNum(); ++i ) {
 		buildVarMap(_F -> getPi(i));
 	}
-/*
+*/
+
 // TODO
 	tieGate(_F -> getGateByName("g1"), _dupF -> getGateByName("g1"));
 	tieGate(_F -> getGateByName("g2"), _dupF -> getGateByName("g2"));
+	tieGate(_F -> getGateByName("g3"), _dupF -> getGateByName("g3"));
+	tieGate(_F -> getGateByName("y1"), _dupF -> getGateByName("y1"));
    // remember to clear _var2Gate
    _var2Gate.clear();
 	buildVarMap(_F -> getGateByName("g1"));
 	buildVarMap(_F -> getGateByName("g2"));
-*/
+	buildVarMap(_F -> getGateByName("g3"));
+	buildVarMap(_F -> getGateByName("y1"));
+
 	if( _debug ) {
 		std::cout << "report VarMap: " << std::endl;
 		VarMap::iterator it;

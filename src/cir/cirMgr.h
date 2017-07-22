@@ -17,7 +17,9 @@
 
 using namespace std;
 
-typedef map<Var, CirGate*> VarMap;
+typedef std::map<Var, CirGate*> VarMap;
+typedef std::vector<size_t> assignmentVec;
+typedef std::vector<unsigned> idxVec;
 
 enum VAR_GROUP
 {
@@ -71,8 +73,9 @@ public:
 // in cirSim.cpp
    void randSim(CirNet* n) const { n -> randSim(); }
    void knownSim(CirNet* g, CirNet* f) const;
-   void analyzeVec(vector<size_t>& t_1, vector<size_t>& t_0, unsigned startIdx);
-   bool checkValidCut(std::vector<size_t>& t_1, std::vector<size_t>& t_0);
+   unsigned analyzeVec(assignmentVec& t_1, assignmentVec& t_0, unsigned startIdx);
+   bool checkValidCut(assignmentVec& t_1, assignmentVec& t_0);
+   void generalizeCut(assignmentVec& t_1, assignmentVec& t_0, unsigned startIdx, unsigned potentialSize, idxVec& cutIdx);
 
 //	in cirReport.cpp
 	void reportCandList() const;

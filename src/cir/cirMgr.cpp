@@ -52,14 +52,23 @@ CirMgr::test()
 	std::cout << "G simV: " << std::endl;
 	_G -> reportSimV();
 	std::vector<size_t> t_1; std::vector<size_t> t_0;
-	analyzeVec(t_1, t_0, 0);
+	unsigned startIdx = 0;
+	unsigned potentialSize = analyzeVec(t_1, t_0, startIdx);
+	std::cout << "potential cut size: " << potentialSize << std::endl;
 	std::cout << "t1 size: " << t_1.size() << std::endl;
 	for( unsigned i = 0 ; i < t_1.size(); ++i ) 
 		std::cout << std::bitset<32>(t_1[i]) << std::endl;
 	std::cout << "t0 size: " << t_0.size() << std::endl;
 	for( unsigned i = 0 ; i < t_0.size(); ++i ) 
 		std::cout << std::bitset<32>(t_0[i]) << std::endl;
-	if( checkValidCut(t_1, t_0) ) std::cout << "valid cut" << std::endl;
+	if( checkValidCut(t_1, t_0) ) {
+		std::cout << "valid cut" << std::endl;
+		vector<unsigned> cutIdx;
+		generalizeCut(t_1, t_0, startIdx, potentialSize, cutIdx);
+		std::cout << "generalized Cut: " << std::endl;
+		for( unsigned i = 0; i < cutIdx.size(); ++i )
+			std::cout << _sortedCandGate[i] -> getName() << std::endl;
+	}
 	else std::cout << "invalid cut" << std::endl;
 /*
 	vector<Lit> Lit_vec_origin;
