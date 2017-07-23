@@ -18,11 +18,17 @@ CirMgr::knownSim(CirNet* g, CirNet* f) const
 	g -> knownSim();
 }
 
-unsigned
-CirMgr::analyzeVec(assignmentVec& t_1, assignmentVec& t_0, unsigned startIdx)
+void
+CirMgr::addCandIdx(idxVec& candIdx, unsigned startIdx, unsigned numToAdd)
 {
-	unsigned endIdx = (startIdx + CUT_CAND >= _sortedCandGate.size() ? _sortedCandGate.size() : startIdx + CUT_CAND);
-	std::cout << "checking cand: " << startIdx << " ~ " << endIdx << std::endl;
+	unsigned endIdx = (startIdx + numToAdd >= _sortedCandGate.size() ? _sortedCandGate.size() : startIdx + numToAdd);
+	std::cout << "adding cand: " << startIdx << " ~ " << endIdx << std::endl;
+	for( unsigned i = startIdx; i < endIdx; ++i ) candIdx.push_back(i);
+}
+
+void
+CirMgr::analyzeVec(assignmentVec& t_1, assignmentVec& t_0, idxVec& candIdx)
+{
 	// analyze the controlling value of the error's partner, assuming one error only
 	assert(_F -> getError(0) -> getFanoutSize() == 1 );
 	CirGate* errorOut = _F -> getError(0) -> getFanout(0);
@@ -54,7 +60,7 @@ CirMgr::analyzeVec(assignmentVec& t_1, assignmentVec& t_0, unsigned startIdx)
 		std::cout << "[" << i << "]: " << goodVec << ", error: " << (bool)(_F -> getError(0) -> getSimV() & filter) << std::endl;
 		// construct assignment for each candidate (assume all)
 		size_t assignment = 0;
-		for( unsigned j = startIdx; j < endIdx; ++j ) {		// startIdx, endIdx is the idx of _sortedCandGate
+		for( unsigned j = 0; j < candIdx.size(); ++j ) {		// startIdx, endIdx is the idx of _sortedCandGate
 			if( _sortedCandGate[j] -> getSimV() & filter ) assignment |= (0x1 << j);
 		}
 		std::cout << "assignment: " << std::bitset<32>(assignment) << std::endl;
@@ -68,7 +74,6 @@ CirMgr::analyzeVec(assignmentVec& t_1, assignmentVec& t_0, unsigned startIdx)
 			else t_1.push_back(assignment);
 		}
 	}
-	return endIdx - startIdx;			// size of potential cut
 }
 
 bool
@@ -94,11 +99,11 @@ CirMgr::checkValidCut(assignmentVec& t_1, assignmentVec& t_0)
 }
 
 void
-CirMgr::generalizeCut(assignmentVec& t_1, assignmentVec& t_0, unsigned startIdx, unsigned potentialSize, idxVec& cutIdx)
+CirMgr::generalizeCut(assignmentVec& t_1, assignmentVec& t_0, idxVec& candIdx, idxVec& cutIdx)
 {
 	std::set<size_t> hash;
 	size_t filter = 0;
-	for( unsigned i = 0; i < potentialSize; ++i ) {
+	for( unsigned i = 0; i < candIdx.size(); ++i ) {
 		size_t tmpFilter = 0x1 << i;
 		filter |= tmpFilter;
 		std::cout << "filter: " << std::bitset<32>(filter) << std::endl;
@@ -117,8 +122,8 @@ CirMgr::generalizeCut(assignmentVec& t_1, assignmentVec& t_0, unsigned startIdx,
 			if( hash.find(t_0[j] & ~filter) != hash.end() ) { goodCut = false; break; }
 		}
 		if( goodCut ) {
-			std::cout << "pushing idx: " << startIdx + i << std::endl;
-			cutIdx.push_back(startIdx + i);
+			std::cout << "pushing idx: " << candIdx[i] << std::endl;
+			cutIdx.push_back(candIdx[i]);
 		}
 		else {
 			std::cout << "bad idx" << std::endl;

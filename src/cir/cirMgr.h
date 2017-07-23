@@ -73,9 +73,10 @@ public:
 // in cirSim.cpp
    void randSim(CirNet* n) const { n -> randSim(); }
    void knownSim(CirNet* g, CirNet* f) const;
-   unsigned analyzeVec(assignmentVec& t_1, assignmentVec& t_0, unsigned startIdx);
+   void addCandIdx(idxVec& candIdx, unsigned startIdx, unsigned numToAdd);
+   void analyzeVec(assignmentVec& t_1, assignmentVec& t_0, idxVec& candIdx);
    bool checkValidCut(assignmentVec& t_1, assignmentVec& t_0);
-   void generalizeCut(assignmentVec& t_1, assignmentVec& t_0, unsigned startIdx, unsigned potentialSize, idxVec& cutIdx);
+   void generalizeCut(assignmentVec& t_1, assignmentVec& t_0, idxVec& candIdx, idxVec& cutIdx);
 
 //	in cirReport.cpp
 	void reportCandList() const;
