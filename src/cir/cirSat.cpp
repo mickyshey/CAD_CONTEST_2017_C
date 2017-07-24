@@ -224,7 +224,7 @@ CirMgr::buildItp(const string& fileName)
     CirGateV g2;
     int i, cid, tmp, idx, tmp_cid, w;
 	string wireName = "w";
-    //set<CirGate*> wireGate;
+    set<CirGate*> commonGate;
 
 	ntk -> createConst(0);
 	ntk -> createConst(1);
@@ -311,6 +311,7 @@ CirMgr::buildItp(const string& fileName)
                 if(_varGroup[idx >> 1] == COMMON) {
                     g = CirGateV((_var2Gate.find(idx >> 1))->second, false);
                     g1 = g;
+                    commonGate.insert(g.getGate());
                     //g1 = (_var2Gate.find(idx >> 1))->second;
                     if((idx & 1) == 1) {
 /*
@@ -331,6 +332,7 @@ CirMgr::buildItp(const string& fileName)
                         idx += tmp;
                         if(_varGroup[idx >> 1] == COMMON) {
                             g2 = CirGateV((_var2Gate.find(idx >> 1))->second, false);
+                            commonGate.insert(g2.getGate());
                             if((idx & 1) == 1) {
 /*
 								std::cout << "need to flip inv: " << std::endl;
@@ -350,8 +352,8 @@ CirMgr::buildItp(const string& fileName)
                             g = CirGateV(ntk->createGate(Gate_Or, name), false);
                             g.getGate()->pushBackFanin(g1);
                             g.getGate()->pushBackFanin(g2);
-									g1.getGate() -> pushBackFanout(g);
-									g2.getGate() -> pushBackFanout(g);
+                            g1.getGate() -> pushBackFanout(g);
+                            g2.getGate() -> pushBackFanout(g);
                             //wireGate.insert(g);
                             g1 = g;
                         }
@@ -385,7 +387,7 @@ CirMgr::buildItp(const string& fileName)
                             g1 = g;
                         } else if(g2 == CONST0) {
                             g = g1; // wtf in SoCV here???
-									g1 = g;
+							g1 = g;
                         } else {
                             // or
                             //cerr << "created OR gate w(" << w << ")"  << endl; // for debug
@@ -394,8 +396,8 @@ CirMgr::buildItp(const string& fileName)
                             g = CirGateV(ntk->createGate(Gate_Or, name), false);
                             g.getGate()->pushBackFanin(g1);
                             g.getGate()->pushBackFanin(g2);
-									g1.getGate() -> pushBackFanout(g);
-									g2.getGate() -> pushBackFanout(g);
+							g1.getGate() -> pushBackFanout(g);
+							g2.getGate() -> pushBackFanout(g);
                             //wireGate.insert(g);
                             g1 = g;
                         }
@@ -408,7 +410,7 @@ CirMgr::buildItp(const string& fileName)
                             g1 = g;
                         } else if(g2 == CONST1) {
                             g = g1;
-									g1 = g;
+							g1 = g;
                         } else {
                             // and
                             //cerr << "created AND gate w(" << w << ")"  << endl; // for debug
@@ -417,8 +419,8 @@ CirMgr::buildItp(const string& fileName)
                             g = CirGateV(ntk->createGate(Gate_And, name), false);
                             g.getGate()->pushBackFanin(g1);
                             g.getGate()->pushBackFanin(g2);
-									g1.getGate() -> pushBackFanout(g);
-									g2.getGate() -> pushBackFanout(g);
+							g1.getGate() -> pushBackFanout(g);
+							g2.getGate() -> pushBackFanout(g);
                             //wireGate.insert(g);
                             g1 = g;
                         }
@@ -439,17 +441,9 @@ CirMgr::buildItp(const string& fileName)
     //for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) {
     //    cerr << ntk -> getGate(i) -> getName() << endl;
     //}
-/*
-    for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) { // add pis to _piList
-        CirGate* wire = ntk -> getGate(i);
-        cerr << wire -> getName() << endl;
-        if(wire -> getType() == Gate_Const) continue;
-        for( unsigned j = 0; j < wire -> getFaninSize(); ++j ) {
-            CirGate* baseNode = wire -> getFanin(j);
-            if((baseNode -> getType() != Gate_Const) && (wireGate.find(baseNode) == wireGate.end())) ntk -> pushBackPIList(baseNode);
-        }
+    for(std::set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
+        ntk -> pushBackPIList(*it);
     }
-*/
     // FIXME: paste patch should be done outside this function
     CirGate* po = _F->getError(0);
 	//std::cout << "itp out: " << g -> getName() << std::endl;
