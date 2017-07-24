@@ -31,8 +31,8 @@ CirMgr::test()
 	}
 
 
-	sortCandidate();	// sort by increasing weight
-	reportSortedCand();
+	//sortCandidate();	// sort by increasing weight
+	//reportSortedCand();
 /*
 	if( _debug ) {
 		std::cout << "report sortedCand: " << std::endl;
@@ -43,6 +43,11 @@ CirMgr::test()
 	createVar4CostSolver();
 */
 
+
+/*************************************/
+// simulation based cut generalization
+/*************************************/
+/*
 	initCandSolver();
 	setUpCandSolver();
 
@@ -77,6 +82,11 @@ CirMgr::test()
 			std::cout << _sortedCandGate[i] -> getName() << std::endl;
 	}
 	else std::cout << "invalid cut" << std::endl;
+*/
+/*************************************/
+// simulation based cut generalization end
+/*************************************/
+
 /*
 	vector<Lit> Lit_vec_origin;
 	assumeCut(Lit_vec_origin);

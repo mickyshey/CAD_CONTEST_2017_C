@@ -12,7 +12,8 @@ CXX       = g++
 CCC       = gcc
 AR        = ar cr
 
-CFLAGS = -O3 $(PKGFLAG) -Wall -Wno-paretheses -Wno-unused-function -D_GLIBCXX_USE_CXX11_ABI=0
+#CFLAGS = -O3 $(PKGFLAG) -Wall -Wno-paretheses -Wno-unused-function -D_GLIBCXX_USE_CXX11_ABI=0
+CFLAGS = -O3 $(PKGFLAG) -DNDEBUG -Wall -D_GLIBCXX_USE_CXX11_ABI=0
 # CFLAGS = -O3 $(PKGFLAG) -DNDEBUG -DVERBOSE -Wall
 
 .PHONY: depend
