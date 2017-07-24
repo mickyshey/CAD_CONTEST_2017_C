@@ -68,7 +68,7 @@ public:
 	void test();
 	void createMux4Candidates();
     void writeToPatch(const string& fileName);
-    void writeToOut(const string& fileName);
+    void writeToOut(const string& fileName, const string& inputFile);
 
 // in cirSim.cpp
    void randSim(CirNet* n) const { n -> randSim(); }

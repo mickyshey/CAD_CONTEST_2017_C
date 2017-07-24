@@ -8,6 +8,7 @@
 #include <bitset>
 
 #include "cir/cirMgr.h"
+#include "util/parse.h";
 
 using namespace std;
 
@@ -213,14 +214,14 @@ CirMgr::writeToPatch(const string& fileName)
     for( unsigned i = 0; i < _patch -> getPoNum(); ++i ) {
         ofs << _patch -> getPo(i) -> getName() << ", ";
     }
-    for( unsigned i = 0; i < _patch -> getPiNum(); ++i ) {
-        ofs << _patch -> getPi(i) -> getName() << (i == max ? ");" : ", ");
+    for( unsigned i = 0; i < _F -> getPiNum(); ++i ) { // FIXME: PI is the valid cut we chose
+        ofs << _F -> getPi(i) -> getName() << (i == max ? ");" : ", ");
     }
     ofs << endl;
     // write input
     ofs << "input ";
-    for( unsigned i = 0; i < _patch -> getPiNum(); ++i ) {
-        ofs << _patch -> getPi(i) -> getName() << (i == max ? ";" : ", ");
+    for( unsigned i = 0; i < _F -> getPiNum(); ++i ) { // FIXME
+        ofs << _F -> getPi(i) -> getName() << (i == max ? ";" : ", ");
     }
     ofs << endl;
     // write output
@@ -270,10 +271,23 @@ CirMgr::writeToPatch(const string& fileName)
 }
 
 void
-CirMgr::writeToOut(const string& fileName)
+CirMgr::writeToOut(const string& fileName, const string& inpuFile)
 {
     std::ofstream ofs(fileName.c_str());
+    std::ifstream ifs(inpuFile.c_str()); // read the original F.v
+    std::string str;
+    std::vector<string> tokens;
     size_t max = _F -> getPiNum() - 1;
+    if(ifs.fail()) cerr << "fail to read F.v!!" << endl;
+    while(!ifs.eof()) {
+        str = readUntil(ifs, ';');
+        tokens = split(str, ";\t\n");
+        if(!tokens[0].compare("endmodule")) break;
+        ofs << str;
+    }
+    ofs << endl;
+    ifs.close();
+    /*
     // write header
     ofs << "module top (";
     for( unsigned i = 0; i < _F -> getPoNum(); ++i ) {
@@ -343,6 +357,7 @@ CirMgr::writeToOut(const string& fileName)
                 break;
         }
     }
+    */
     // write patch
     // FIXME: only single error, so only one patch...
     ofs << "patch p0 (";
