@@ -249,7 +249,8 @@ CirMgr::writeToPatch(const string& fileName)
        CirGate* g = _patch -> getGate(i);
        switch( g -> getType() ) {
            case Gate_And:
-               ofs << "and (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+               ofs << "and (" << g -> getName() << ", ";
+               ofs << (g->isFaninInv(0) ? "!":"") << g -> getFanin(0) -> getName() << ", " << (g->isFaninInv(1) ? "!":"") << g -> getFanin(1) -> getName() << ");" << endl;
                break;
            case Gate_Buf:
                ofs << "buf(" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ");" << endl;
@@ -258,7 +259,8 @@ CirMgr::writeToPatch(const string& fileName)
                ofs << "not(" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ");" << endl;
                break;
            case Gate_Or:
-               ofs << "or (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
+               ofs << "or (" << g -> getName() << ", ";
+               ofs << (g->isFaninInv(0) ? "!":"") <<  g -> getFanin(0) -> getName() << ", " << (g->isFaninInv(1) ? "!":"") <<  g -> getFanin(1) -> getName() << ");" << endl;
                break;
            case Gate_Nand:
                ofs << "nand (" << g -> getName() << ", " << g -> getFanin(0) -> getName() << ", " << g -> getFanin(1) -> getName() << ");" << endl;
