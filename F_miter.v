@@ -1,7 +1,15 @@
-module patch (w23, a, b, c);
-input a, b, c;
-output w23;
-wire w0, w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15, w16, w17, w18, w19, w20, w21, w22, w23;
+module top ( y1 , y2 , a , b , c );
+input a , b , c ;
+output y1 , y2 ;
+wire g1 , g2 , g3 ;
+wire t_0 , w0 , w1 , w2 , w3 , w4 , w5 , w6 , w7 , w8 , w9 , w10 , w11 , w12 , w13 , w14 , w15 , w16 , w17 , w18 , w19 , w20 , w21 , w22 , w23;
+
+and ( g1 , a , b );
+xor ( g2 , a , c );
+nor ( g3 , b , c );
+and ( y1 , g1 , g2 );
+or ( y2 , t_0 , g3 );
+buf ( t_0, w23 );
 or (w0, b, c);
 and (w1, a, a);
 or (w2, w1, c);

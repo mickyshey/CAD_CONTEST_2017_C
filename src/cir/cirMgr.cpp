@@ -224,14 +224,14 @@ CirMgr::writeToPatch(const string& fileName)
     for( unsigned i = 0; i < _patch -> getPoNum(); ++i ) {
         ofs << _patch -> getPo(i) -> getName() << ", ";
     }
-    for( unsigned i = 0; i < _F -> getPiNum(); ++i ) { // FIXME: PI is the valid cut we chose
-        ofs << _F -> getPi(i) -> getName() << (i == max ? ");" : ", ");
+    for( unsigned i = 0; i < _patch -> getPiNum(); ++i ) { // FIXME: PI is the valid cut we chose
+        ofs << _patch -> getPi(i) -> getName() << (i == max ? ");" : ", ");
     }
     ofs << endl;
     // write input
     ofs << "input ";
-    for( unsigned i = 0; i < _F -> getPiNum(); ++i ) { // FIXME
-        ofs << _F -> getPi(i) -> getName() << (i == max ? ";" : ", ");
+    for( unsigned i = 0; i < _patch -> getPiNum(); ++i ) { // FIXME
+        ofs << _patch -> getPi(i) -> getName() << (i == max ? ";" : ", ");
     }
     ofs << endl;
     // write output

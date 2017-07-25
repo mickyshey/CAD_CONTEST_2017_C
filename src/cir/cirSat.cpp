@@ -442,8 +442,10 @@ CirMgr::buildItp(const string& fileName)
     //    cerr << ntk -> getGate(i) -> getName() << endl;
     //}
     for(std::set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
+        CirGate* tmp = *it; cout << tmp -> getName() << "   ";
         ntk -> pushBackPIList(*it);
     }
+    cout << endl;
     // FIXME: paste patch should be done outside this function
     CirGate* po = _F->getError(0);
 	//std::cout << "itp out: " << g -> getName() << std::endl;
