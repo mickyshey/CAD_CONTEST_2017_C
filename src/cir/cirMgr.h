@@ -39,7 +39,7 @@ public:
 			_dupF(NULL),
 			_dupG(NULL),
 			_patch(NULL),
-            _debug(true) {
+            _debug(false) {
 			_candNameList.clear();
 			_isClauseOn.clear();
 			_s = new SatSolverV; 

@@ -314,17 +314,27 @@ CirMgr::buildItp(const string& fileName)
                     commonGate.insert(g.getGate());
                     //g1 = (_var2Gate.find(idx >> 1))->second;
                     if((idx & 1) == 1) {
-/*
-								std::cout << "need to flip inv: " << std::endl;
-								std::cout << "fanout size: " << g2 -> getFanoutSize() << std::endl;
-                        for(int j = 0; j < g -> getFanoutSize(); j++) {
-                            CirGateV tmpG = CirGateV(g -> getFanout(j));
-                            tmpG.flipInv();
-                            g -> setFanout(tmpG, j);
+
+                        //std::cout << "need to flip inv: " << std::endl;
+                        //std::cout << g.getGate() << "   " << g1.getGate() << std::endl;
+                        std::string name = wireName + myToString(w);
+                        w++;
+                        g = CirGateV(ntk->createGate(Gate_Inv, name), false);
+                        g.getGate()->pushBackFanin(g1);
+                        //cout << g1.getGate() -> getFanoutSize() << endl;
+                        for(int j = 0; j < g1.getGate() -> getFanoutSize(); j++) {
+                            //cout << j << " " << g1.getGate() -> getFanout(j) -> getName() << endl;
+                            CirGateV tmpG = CirGateV(g1.getGate() -> getFanout(j));
+                            //cout << "tmpG: " << tmpG.getGate() << endl;
+                            g.getGate() -> pushBackFanout(tmpG);
                         }
-*/
-							g.flipInv();
-							g1.flipInv();
+                        g1.getGate() -> clearFanout();
+                        g1.getGate() -> pushBackFanout(g);
+                        assert(g1.getGate()->getFanoutSize() == 1);
+                        g1 = g;
+
+					    // g.flipInv();
+						// g1.flipInv();
                     }
                     while(1) {
                         tmp = rdr.get64();
@@ -334,16 +344,22 @@ CirMgr::buildItp(const string& fileName)
                             g2 = CirGateV((_var2Gate.find(idx >> 1))->second, false);
                             commonGate.insert(g2.getGate());
                             if((idx & 1) == 1) {
-/*
-								std::cout << "need to flip inv: " << std::endl;
-								std::cout << "fanout size: " << g2 -> getFanoutSize() << std::endl;
-                                for(int j = 0; j < g2 -> getFanoutSize(); j++) {
-                                    CirGateV tmpG = CirGateV(g2 -> getFanout(j));
-                                    tmpG.flipInv();
-                                    g2 -> setFanout(tmpG, j);
+                                
+                                //std::cout << "need to flip g2" << endl;
+                                std::string name = wireName + myToString(w);
+                                w++;
+                                CirGateV invG = CirGateV(ntk->createGate(Gate_Inv, name), false);
+                                invG.getGate()->pushBackFanin(g2);
+                                for(int j = 0; j < g2.getGate() -> getFanoutSize(); j++) {
+                                    CirGateV tmpG = CirGateV(g2.getGate() -> getFanout(j));
+                                    invG.getGate() -> pushBackFanout(tmpG);
                                 }
-*/
-										g2.flipInv();
+                                g2.getGate() -> clearFanout();
+                                g2.getGate() -> pushBackFanout(invG);
+                                assert(g2.getGate()->getFanoutSize() == 1);
+                                g2 = invG;
+							    // g2.flipInv();
+
                             }
                             // or
                             //cerr << "created OR gate w(" << w << ")"  << endl; // for debug
@@ -442,10 +458,10 @@ CirMgr::buildItp(const string& fileName)
     //    cerr << ntk -> getGate(i) -> getName() << endl;
     //}
     for(std::set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
-        CirGate* tmp = *it; cout << tmp -> getName() << "   ";
+        //CirGate* tmp = *it; cout << tmp -> getName() << "   ";
         ntk -> pushBackPIList(*it);
     }
-    cout << endl;
+    //cout << endl;
     // FIXME: paste patch should be done outside this function
     CirGate* po = _F->getError(0);
 	//std::cout << "itp out: " << g -> getName() << std::endl;
@@ -789,4 +805,5 @@ CirMgr::generatePatch()
 	_s -> simplify();
 	bool eqCheck = solve();
 	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
+
 }
