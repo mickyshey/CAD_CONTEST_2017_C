@@ -791,7 +791,7 @@ CirMgr::generatePatch()
 		std::cout << "_G: " << std::endl;
 		_G -> reportNetList();
 	}
-
+/*
 // verify patch validity
 	_s->reset();
 	createVar(_F);
@@ -805,5 +805,5 @@ CirMgr::generatePatch()
 	_s -> simplify();
 	bool eqCheck = solve();
 	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
-
+*/
 }
