@@ -791,6 +791,7 @@ CirMgr::generatePatch()
 		std::cout << "_G: " << std::endl;
 		_G -> reportNetList();
 	}
+	std::cout << "time: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::endl;
 /*
 // verify patch validity
 	_s->reset();

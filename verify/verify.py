@@ -149,7 +149,7 @@ def miter_f(patchFile, outFile):
 
 def main():
   if len(sys.argv) != 3:
-    print "Usage: " + sys.argv[0] + " <out.v> <patch.v>"
+    print( "Usage: " + sys.argv[0] + " <out.v> <patch.v>")
     return
   miter_f(sys.argv[1], sys.argv[2])
 
