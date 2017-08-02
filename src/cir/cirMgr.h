@@ -106,7 +106,9 @@ public:
    void addAllToCandSolver();
    void setUpCandSolver();
    void assumeCut(vector<Lit>& Lit_vec_origin);
+	void assumeCut(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin);
    void generatePatch();
+	void UNSATGeneralizationWithUNSATCore(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin, idxVec& generalizedCut);
 
 // in cirCost.cpp
 	void sortCandidate();

@@ -28,6 +28,7 @@ CirNet::addToSolver(SatSolverV* s, int solver) const
 	for( unsigned i = 0; i < _topoList.size(); ++i ) {
 		//cout << "adding " << _topoList[i] -> getName() << endl;
 		_topoList[i] -> addToSolver(s, solver);
+		//std::cout << "curr # clauses: " << s -> getNumClauses() << std::endl;
 	}
 }
 
@@ -610,6 +611,7 @@ CirMgr::initCandSolver()
 	assert(_F); assert(_dupF); assert(_G); assert(_dupG);
 	_F -> createVar(_candSolver, 1); _G -> createVar(_candSolver, 1);
 	_dupF -> createVar(_candSolver, 1); _dupG -> createVar(_candSolver, 1);
+	std::cout << "# vars in cand solver: " << _candSolver -> nVars() << std::endl;
 }
 
 void
@@ -625,6 +627,7 @@ CirMgr::setUpImpVar()
 		_candSolver -> addTernary(~impLit, ~FLit, dupFLit);
 		_candSolver -> addTernary(~impLit, FLit, ~dupFLit);
 	}
+	//std::cout << "curr # clauses: " << _candSolver -> getNumClauses() << std::endl;
 }
 
 void
@@ -632,6 +635,7 @@ CirMgr::addAllToCandSolver()
 {
 	_F -> addToSolver(_candSolver, 1); _G -> addToSolver(_candSolver, 1);
 	_dupF -> addToSolver(_candSolver, 1); _dupG -> addToSolver(_candSolver, 1);
+	//std::cout << "curr # clauses: " << _candSolver -> getNumClauses() << std::endl;
 }
 
 void
@@ -643,12 +647,26 @@ CirMgr::assumeCut(vector<Lit>& Lit_vec_origin)
 // TODO
    v = _F -> getGateByName("g1") -> getImpVar();
 	assert(v);
-	_candSolver -> assumeProperty(v, true);
+	_candSolver -> assumeProperty(v, false);
    Lit_vec_origin.push_back(mkLit(v, false));
    v = _F -> getGateByName("g2") -> getImpVar();
 	assert(v);
-	_candSolver -> assumeProperty(v, true);
+	_candSolver -> assumeProperty(v, false);
    Lit_vec_origin.push_back(mkLit(v, false));
+}
+
+void
+CirMgr::assumeCut(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin)
+{
+   Var v;
+	_candSolver -> assumeRelease();
+
+	for( unsigned i = 0;  i < cutIdx.size(); ++i ) {
+		//std::cout << "assuming " << _sortedCandGate[cutIdx[i]] -> getName() << std::endl;
+		v = _sortedCandGate[cutIdx[i]] -> getImpVar(); assert(v);
+		_candSolver -> assumeProperty(v, false);
+		Lit_vec_origin.push_back(mkLit(v, false));
+	}
 }
 
 void
@@ -659,12 +677,12 @@ CirMgr::setUpCandSolver()
 	setUpImpVar();
 	addAllToCandSolver();
 	addXorConstraint(_F, _G, 1);
-	addConstConstraint(_F, 1);
-	addConstConstraint(_G, 1);
+	//addConstConstraint(_F, 1);
+	//addConstConstraint(_G, 1);
 	addErrorConstraint(_F, 0, 1);
 	addXorConstraint(_dupF, _dupG, 1);
-	addConstConstraint(_dupF, 1);
-	addConstConstraint(_dupG, 1);
+	//addConstConstraint(_dupF, 1);
+	//addConstConstraint(_dupG, 1);
 	addErrorConstraint(_dupF, 1, 1);
 }
 
@@ -696,6 +714,7 @@ CirMgr::generatePatch()
 			std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
 		std::cout << std::endl;
 	}
+	std::cout << "# vars in patch solver: " << _s -> nVars() << std::endl;
 	
 	assert(_F -> getPiNum() == _dupF -> getPiNum());
 	tiePi(_F, _G);
@@ -775,6 +794,7 @@ CirMgr::generatePatch()
 		}
 		std::cout << std::endl;
 	}
+	std::cout << "# clauses in patch solver: " << _s -> getNumClauses() << std::endl;
 
 	_s -> simplify();
 	bool isSat = solve();
@@ -807,4 +827,23 @@ CirMgr::generatePatch()
 	bool eqCheck = solve();
 	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
 */
+}
+
+void
+CirMgr::UNSATGeneralizationWithUNSATCore(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin, idxVec& generalizedCut)
+{
+	std::cout << "start UNSAT Gen" << std::endl;
+	std::vector<Lit> Lit_vec_new;
+	Lit_vec_new.resize(cutIdx.size());
+	for( unsigned i = 0; i < cutIdx.size(); ++i ) {
+		Lit_vec_new[i] = Lit(0);
+	}
+
+	//if( _debug ) {
+		std::cout << "conflict size: " << _candSolver -> _solver -> conflict.size() << std::endl;
+		for( unsigned i = 0; i < _candSolver -> _solver -> conflict.size(); ++i ) {
+			std::cout << var(_candSolver -> _solver -> conflict[i]) << " ";
+		}
+		std::cout << std::endl;
+	//}
 }

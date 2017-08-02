@@ -30,8 +30,14 @@ void
 CirConstGate::addToSolver(SatSolverV* s, int solver) const
 {
    assert(solver <= 1);
-	if( _name == "1'b0" ) s -> addUnitCNF(_var, false);
-	else s -> addUnitCNF(_var, true);
+	if( _name == "1'b0" ) {
+      if( solver == 0 ) s -> addUnitCNF(_var, false);
+      else if( solver == 1 ) s -> addUnitCNF(_candVar, false);
+   }
+	else {
+      if( solver == 0 ) s -> addUnitCNF(_var, true);
+      else if( solver == 1 ) s -> addUnitCNF(_candVar, true);
+   }
 }
 
 void

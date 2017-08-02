@@ -44,9 +44,9 @@ void SatSolverV::reset()
 
 void SatSolverV::assumeRelease() { _assump.clear(); }
 
-void SatSolverV::assumeProperty(const Var& var, const bool& val)
+void SatSolverV::assumeProperty(const Var& var, const bool& inv)
 {
-   _assump.push(mkLit(var, !val));
+   _assump.push(mkLit(var, inv));
 }
 
 void SatSolverV::assertProperty(const size_t& var, const bool& invert)

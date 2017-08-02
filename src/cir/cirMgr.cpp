@@ -31,7 +31,7 @@ CirMgr::test()
 	}
 
 
-	//sortCandidate();	// sort by increasing weight
+	sortCandidate();	// sort by increasing weight
 	//reportSortedCand();
 /*
 	if( _debug ) {
@@ -47,10 +47,13 @@ CirMgr::test()
 /*************************************/
 // simulation based cut generalization
 /*************************************/
-/*
+
 	initCandSolver();
 	setUpCandSolver();
-
+	std::vector<size_t> t_1, t_0;
+	std::vector<unsigned> candIdx;
+	std::vector<unsigned> cutIdx;
+/*
 	randSim(_F);
 	knownSim(_G, _F);
 	if( _debug ) {
@@ -59,8 +62,6 @@ CirMgr::test()
 		std::cout << "G simV: " << std::endl;
 		_G -> reportSimV();
 	}
-	std::vector<size_t> t_1, t_0;
-	std::vector<unsigned> candIdx;
 	unsigned startIdx = 0;
 	addCandIdx(candIdx, startIdx, 10);
 	analyzeVec(t_1, t_0, candIdx);
@@ -75,7 +76,6 @@ CirMgr::test()
 	}
 	if( checkValidCut(t_1, t_0) ) {
 		std::cout << "valid cut" << std::endl;
-		vector<unsigned> cutIdx;
 		generalizeCut(t_1, t_0, candIdx, cutIdx);
 		std::cout << "generalized Cut: " << std::endl;
 		for( unsigned i = 0; i < cutIdx.size(); ++i )
@@ -84,25 +84,31 @@ CirMgr::test()
 	else std::cout << "invalid cut" << std::endl;
 */
 /*************************************/
-// simulation based cut generalization end
-/*************************************/
+   for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) cutIdx.push_back(i);
 
-/*
 	vector<Lit> Lit_vec_origin;
-	assumeCut(Lit_vec_origin);
+	//assumeCut(Lit_vec_origin);
+   //assumeCut(candIdx, Lit_vec_origin);
+   assumeCut(cutIdx, Lit_vec_origin);
 	if( _debug ) {
 		std::cout << "report Lit_vec_origin: " << std::endl;
 		for( unsigned i = 0; i < Lit_vec_origin.size(); ++i ) {
 			std::cout << var(Lit_vec_origin[i]) << "(" << sign(Lit_vec_origin[i]) << ")" << std::endl;
 		}
 	}
+   std::cout << "# clauses in cand solver: " << _candSolver -> getNumClauses() << std::endl;
 	_candSolver -> simplify();
 	bool candSAT = _candSolver -> assump_solve();
 	if( candSAT ) std::cout << "candSAT" << std::endl;
-	else std::cout << "candUNSAT" << std::endl;
+	else {
+      std::cout << "candUNSAT" << std::endl;
+      idxVec generalizedCut;
+      UNSATGeneralizationWithUNSATCore(candIdx, Lit_vec_origin, generalizedCut);
+      //UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
+   }
 
-	if( !candSAT ) generatePatch();
-*/
+	//if( !candSAT ) generatePatch();
+
 	generatePatch();
 
 
