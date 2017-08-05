@@ -832,18 +832,45 @@ CirMgr::generatePatch()
 void
 CirMgr::UNSATGeneralizationWithUNSATCore(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin, idxVec& generalizedCut)
 {
-	std::cout << "start UNSAT Gen" << std::endl;
 	std::vector<Lit> Lit_vec_new;
 	Lit_vec_new.resize(cutIdx.size());
+
+	assert(cutIdx.size() == Lit_vec_origin.size());
+	assert(cutIdx.size() == Lit_vec_new.size());
 	for( unsigned i = 0; i < cutIdx.size(); ++i ) {
 		Lit_vec_new[i] = Lit(0);
 	}
 
-	//if( _debug ) {
+	if( _debug ) {
 		std::cout << "conflict size: " << _candSolver -> _solver -> conflict.size() << std::endl;
 		for( unsigned i = 0; i < _candSolver -> _solver -> conflict.size(); ++i ) {
 			std::cout << var(_candSolver -> _solver -> conflict[i]) << " ";
 		}
 		std::cout << std::endl;
-	//}
+	}
+	
+	// find which lit is in unsat core and generalize the cube
+
+ 	for (unsigned i = 0; i < Lit_vec_origin.size(); ++i) {
+ 	  for (int j = 0; j < _candSolver -> _solver -> conflict.size(); ++j) {
+ 	      if (var(Lit_vec_origin[i]) == var(_candSolver -> _solver -> conflict[j])) {
+ 	        Lit_vec_new[i] = Lit_vec_origin[i];
+ 	        break;
+			}
+ 	  }
+ 	}
+
+
+	for( unsigned i = 0; i < Lit_vec_new.size(); ++i ) {
+		if( Lit_vec_new[i] == Lit(0) ) continue;
+		generalizedCut.push_back(cutIdx[i]);
+	}
+
+	if( _debug ) {
+		std::cout << "generalized cut: " << std::endl;
+		for( unsigned i = 0; i < generalizedCut.size(); ++i ) {
+			std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << std::endl;
+		}
+	}
+
 }

@@ -103,8 +103,11 @@ CirMgr::test()
 	else {
       std::cout << "candUNSAT" << std::endl;
       idxVec generalizedCut;
-      UNSATGeneralizationWithUNSATCore(candIdx, Lit_vec_origin, generalizedCut);
-      //UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
+      UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
+		std::cout << "after UNSATGen: " << std::endl;
+		for( unsigned i = 0; i < generalizedCut.size(); ++i ) {
+			std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << std::endl;
+		}
    }
 
 	//if( !candSAT ) generatePatch();
