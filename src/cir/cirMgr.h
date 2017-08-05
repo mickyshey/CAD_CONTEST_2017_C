@@ -67,6 +67,7 @@ public:
 // in cirMgr.cpp
 	void test();
 	void createMux4Candidates();
+	void removeInvBuf();
     void writeToPatch(const string& fileName);
     void writeToOut(const string& fileName, const string& inputFile);
 
@@ -108,6 +109,7 @@ public:
    void assumeCut(vector<Lit>& Lit_vec_origin);
 	void assumeCut(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin);
    void generatePatch();
+	void generatePatch(idxVec& cutIdx);
 	void UNSATGeneralizationWithUNSATCore(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin, idxVec& generalizedCut);
 
 // in cirCost.cpp
@@ -153,7 +155,6 @@ private:
 
    // for debug
    bool     _debug; // will cause problem in CIC machine
-   //bool     _debug = true;
 
 };
 

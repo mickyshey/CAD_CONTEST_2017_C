@@ -16,6 +16,8 @@ void
 CirMgr::test()
 {
 
+	removeInvBuf();
+
     _dupF = dupNet(_F);
     _dupG = dupNet(_G);
 	
@@ -50,9 +52,10 @@ CirMgr::test()
 
 	initCandSolver();
 	setUpCandSolver();
-	std::vector<size_t> t_1, t_0;
-	std::vector<unsigned> candIdx;
-	std::vector<unsigned> cutIdx;
+	assignmentVec t_1, t_0;
+	idxVec candIdx;
+	idxVec cutIdx;
+   idxVec generalizedCut;
 /*
 	randSim(_F);
 	knownSim(_G, _F);
@@ -102,9 +105,9 @@ CirMgr::test()
 	if( candSAT ) std::cout << "candSAT" << std::endl;
 	else {
       std::cout << "candUNSAT" << std::endl;
-      idxVec generalizedCut;
+		std::cout << "before UNSATGen, size: " << cutIdx.size() << std::endl;
       UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
-		std::cout << "after UNSATGen: " << std::endl;
+		std::cout << "after UNSATGen, size: " << generalizedCut.size() << std::endl;
 		for( unsigned i = 0; i < generalizedCut.size(); ++i ) {
 			std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << std::endl;
 		}
@@ -112,7 +115,8 @@ CirMgr::test()
 
 	//if( !candSAT ) generatePatch();
 
-	generatePatch();
+	//generatePatch();
+	generatePatch(generalizedCut);
 
 
 
@@ -222,6 +226,12 @@ CirMgr::miterCkt(CirNet* f, CirNet* g)
         out << "module top(";
 
 }*/
+
+void
+CirMgr::removeInvBuf()
+{
+
+}
 
 void
 CirMgr::writeToPatch(const string& fileName)
