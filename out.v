@@ -84,5 +84,5 @@ not ( n67 , n20 );
 or ( n68 , n66 , n67 );
 or ( n69 , n58 , n20 );
 nand ( n70 , n68 , n69 );
-patch p0 (.w98(t_0), .n29(n29), .n31(n31), .n33(n33), .n36(n36));
+patch p0 (.w92(t_0), .n29(n29), .n31(n31), .n33(n33), .n36(n36));
 endmodule

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <unordered_set>
 
 #include "cir/cirGate.h"
 //#include "minisat/sat.h"
@@ -45,7 +46,7 @@ public:
 	const GateList& buildTopoList() const;			// from PI to PO --> from PO to PI?? 
 	void buildTopoListRec(CirGate* g) const;
     const GateList& dfsFromGate(CirGate* g) const;
-    void dfsFromGateRec(CirGate* g, GateList& list) const;
+    void dfsFromGateRec(CirGate* g, GateList& list, std::unordered_set<std::string>& nameHash) const;
     const GateList& totGateList() const;
     void pushBackPOList(CirGate* g)                 { _poList.push_back(g); }
     void pushBackPIList(CirGate* g)                 { _piList.push_back(g); }

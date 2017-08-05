@@ -6,6 +6,7 @@
 #include <cassert>
 #include <cmath>
 #include <bitset>
+#include <unordered_set>
 
 #include "cir/cirMgr.h"
 #include "util/parse.h";
@@ -108,9 +109,11 @@ CirMgr::test()
 		std::cout << "before UNSATGen, size: " << cutIdx.size() << std::endl;
       UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
 		std::cout << "after UNSATGen, size: " << generalizedCut.size() << std::endl;
+/*
 		for( unsigned i = 0; i < generalizedCut.size(); ++i ) {
 			std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << std::endl;
 		}
+*/
    }
 
 	//if( !candSAT ) generatePatch();
@@ -230,7 +233,10 @@ CirMgr::miterCkt(CirNet* f, CirNet* g)
 void
 CirMgr::removeInvBuf()
 {
-
+	//_F -> removeInvBuf(_candNameList);
+	
+	// _G could be stored as aig, and utilize fraig to simplify netlist
+	//_G -> removeInvBuf();
 }
 
 void

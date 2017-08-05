@@ -161,38 +161,51 @@ CirNet::buildTopoListRec(CirGate* g) const
 const GateList&
 CirNet::dfsFromGate(CirGate* g) const
 {
+	std::cout << "using dfsFromGate ..." << std::endl;
+/*
     CirGate::incRef();
     GateList list;
     dfsFromGateRec(g, list);
     return list;
+*/
 }
 void
-CirNet::dfsFromGateRec(CirGate* g, GateList& list) const
+CirNet::dfsFromGateRec(CirGate* g, GateList& list, std::unordered_set<std::string>& nameHash) const
 {
     if( g -> isRef() ) return;
     g -> setToRef();
     for( unsigned i = 0; i < g -> getFaninSize(); ++i )
-        dfsFromGateRec(g -> getFanin(i), list);
+        dfsFromGateRec(g -> getFanin(i), list, nameHash);
     list.push_back(g);
+	nameHash.insert(g -> getName());	
 }
 
 const GateList&
 CirNet::totGateList() const
 {
+	std::unordered_set<std::string> nameHash;
     CirGate::incRef();
 	_const0 -> setToRef();
 	_const1 -> setToRef();
     _totGateList.push_back(_const0);
     _totGateList.push_back(_const1);
-    for( unsigned i = 0; i < _poList.size(); ++i )
-        dfsFromGateRec(_poList[i], _totGateList);
+	
+	nameHash.insert(_const0 -> getName());
+	nameHash.insert(_const1 -> getName());
+    for( unsigned i = 0; i < _poList.size(); ++i ) dfsFromGateRec(_poList[i], _totGateList, nameHash);
     for( std::map<string, CirGate*>::const_iterator it = _name2GateMap.begin(); it != _name2GateMap.end(); ++it ) {
+/*
         bool find = false;
         CirGate* g = it -> second;
         for( unsigned i = 0; i < _totGateList.size(); ++i ) {
            if(g == _totGateList[i]) find = true;
         }
         if(!find) dfsFromGateRec(g, _totGateList);
+*/
+		std::string name = it -> first;
+		if( nameHash.find(name) == nameHash.end() ) {
+			dfsFromGateRec(it -> second, _totGateList, nameHash);
+		}
     }
     return _totGateList;
 }

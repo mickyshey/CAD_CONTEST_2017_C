@@ -13,23 +13,37 @@ void
 CirNet::createVar(SatSolverV* s, int solver) const
 {
 	assert(solver <= 1);
+	totGateList();
+	for( unsigned i = 0; i < _totGateList.size(); ++i ) {
+		Var v = s -> newVar();
+		if( solver == 0 ) _totGateList[i] -> setVar(v);
+		else if( solver == 1 ) _totGateList[i] -> setCandVar(v);
+	}
+/*
 	buildTopoList();
 	for( unsigned i = 0; i < _topoList.size(); ++i ) {
 		Var v = s -> newVar();
 		if( solver == 0 ) _topoList[i] -> setVar(v);
 		else if( solver == 1 ) _topoList[i] -> setCandVar(v);
 	}
+*/
 }
 
 void
 CirNet::addToSolver(SatSolverV* s, int solver) const
 {
+	totGateList();
+	for( unsigned i = 0; i < _totGateList.size(); ++i ) {
+		_totGateList[i] -> addToSolver(s, solver);
+	}
+/*
 	buildTopoList();
 	for( unsigned i = 0; i < _topoList.size(); ++i ) {
 		//cout << "adding " << _topoList[i] -> getName() << endl;
 		_topoList[i] -> addToSolver(s, solver);
 		//std::cout << "curr # clauses: " << s -> getNumClauses() << std::endl;
 	}
+*/
 }
 
 void
@@ -697,19 +711,20 @@ CirMgr::generatePatch()
     createVar(_dupG);
 	if( _debug ) {
 		std::cout << "var of each gate: " << std::endl;
-		const GateList& topo = _F -> buildTopoList();
+		const GateList& topo = _F -> totGateList();
+		//const GateList& topo = _F -> buildTopoList();
 		for( unsigned i = 0; i < topo.size(); ++i )
 			std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
 		std::cout << std::endl;
-		const GateList& topo1 = _G -> buildTopoList();
+		const GateList& topo1 = _G -> totGateList();
 		for( unsigned i = 0; i < topo1.size(); ++i )
 			std::cout << topo1[i] -> getName() << "(" << topo1[i] -> getVar() << ") ";
 		std::cout << std::endl;
-		const GateList& topo2 = _dupF -> buildTopoList();
+		const GateList& topo2 = _dupF -> totGateList();
 		for( unsigned i = 0; i < topo2.size(); ++i )
 			std::cout << topo2[i] -> getName() << "(" << topo2[i] -> getVar() << ") ";
 		std::cout << std::endl;
-		const GateList& topo3 = _dupG -> buildTopoList();
+		const GateList& topo3 = _dupG -> totGateList();
 		for( unsigned i = 0; i < topo3.size(); ++i )
 			std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
 		std::cout << std::endl;
@@ -840,19 +855,19 @@ CirMgr::generatePatch(idxVec& cutIdx)
     createVar(_dupG);
 	if( _debug ) {
 		std::cout << "var of each gate: " << std::endl;
-		const GateList& topo = _F -> buildTopoList();
+		const GateList& topo = _F -> totGateList();
 		for( unsigned i = 0; i < topo.size(); ++i )
 			std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
 		std::cout << std::endl;
-		const GateList& topo1 = _G -> buildTopoList();
+		const GateList& topo1 = _G -> totGateList();
 		for( unsigned i = 0; i < topo1.size(); ++i )
 			std::cout << topo1[i] -> getName() << "(" << topo1[i] -> getVar() << ") ";
 		std::cout << std::endl;
-		const GateList& topo2 = _dupF -> buildTopoList();
+		const GateList& topo2 = _dupF -> totGateList();
 		for( unsigned i = 0; i < topo2.size(); ++i )
 			std::cout << topo2[i] -> getName() << "(" << topo2[i] -> getVar() << ") ";
 		std::cout << std::endl;
-		const GateList& topo3 = _dupG -> buildTopoList();
+		const GateList& topo3 = _dupG -> totGateList();
 		for( unsigned i = 0; i < topo3.size(); ++i )
 			std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
 		std::cout << std::endl;

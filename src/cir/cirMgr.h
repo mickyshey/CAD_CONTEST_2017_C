@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <unordered_map>
 #include <cstring>
 #include <ctime>
 
@@ -17,7 +18,7 @@
 
 using namespace std;
 
-typedef std::map<Var, CirGate*> VarMap;
+typedef std::unordered_map<Var, CirGate*> VarMap;
 typedef std::vector<size_t> assignmentVec;
 typedef std::vector<unsigned> idxVec;
 
@@ -143,7 +144,7 @@ private:
 	vector<string>						_candNameList;
 	vector<CirGate*>					_sortedCandGate;
 	vector<bool>						_muxAssignment;
-	map<Var, CirGate*>	                _costVar2Gate;
+	VarMap	                _costVar2Gate;
 
 	vector<bool>						_isClauseOn;
 	vector<bool>						_isClauseOnDup;
