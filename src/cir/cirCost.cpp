@@ -123,20 +123,34 @@ CirMgr::getCut(idxVec& cutIdx)
 }
 
 void
-CirMgr::addBlockingAssignment(const std::vector<bool>& assign)
+CirMgr::addBlockingCut(idxVec& cutIdx, bool isSat)
 {
-	assert(assign.size() == _sortedCandGate.size());
-	std::cout << "add blocking assignment: ";
-	for( unsigned i = 0; i < assign.size(); ++i )
-		std::cout << assign[i] << " ";
-	std::cout << std::endl;
+	for( unsigned i = 0 ; i < cutIdx.size(); ++i ) {
+		for( unsigned j = i + 1; j < cutIdx.size(); ++j ) {
+			assert(cutIdx[i] < cutIdx[j]);
+		}
+	}
+
 	vec<Lit> clause; clause.clear();
-	for( unsigned i = 0; i < assign.size(); ++i ) {
-		Lit l = mkLit(_sortedCandGate[i] -> getCostVar(), false);
-		if( assign[i] ) clause.push(~l);
-		else clause.push(l);
+	if( isSat ) {
+		unsigned idx = 0;
+		for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+			if( i == cutIdx[idx] ) { ++idx; continue; }
+			std::cout << "adding: " << i << std::endl;
+			Var v = _sortedCandGate[i] -> getCostVar();
+			Lit l = mkLit(v, false);
+			clause.push(l);
+		}
+	}
+	else {
+		for( unsigned i = 0; i < cutIdx.size(); ++i ) {
+			Var v = _sortedCandGate[cutIdx[i]] -> getCostVar();
+			Lit l = mkLit(v, false);
+			clause.push(~l);
+		}
 	}
 	_costSolver -> addClause(clause);
+
 }
 
 void
@@ -186,7 +200,9 @@ CirMgr::getCost(idxVec& cutIdx)
 void
 CirMgr::addAllBlockings()
 {
+/*
 	for( unsigned i = 0; i < _blockingClauses.size(); ++i ) {
 		addBlockingAssignment(_blockingClauses[i]);
 	}
+*/
 }

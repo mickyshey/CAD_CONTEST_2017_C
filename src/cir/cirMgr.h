@@ -120,7 +120,7 @@ public:
 	void addCostConstraint(unsigned cost);
 	bool getCut(idxVec& cutIdx);
 	void updateIndices(std::vector<unsigned>& indices, unsigned& currCost);
-	void addBlockingAssignment(const std::vector<bool>& assign);
+	void addBlockingCut(idxVec& cutIdx, bool isSat);
 	unsigned getTotalCost();
    unsigned getCost(idxVec& cutIdx);
 	void addAllBlockings();

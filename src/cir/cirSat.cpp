@@ -678,6 +678,7 @@ void
 CirMgr::assumeCut(vector<Lit>& Lit_vec_origin)
 {
    Var v;
+	Lit_vec_origin.clear();
 	_candSolver -> assumeRelease();
 
 // TODO

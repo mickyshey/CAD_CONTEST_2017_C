@@ -57,6 +57,11 @@ CirMgr::test()
 	idxVec cutIdx;
    idxVec generalizedCut;
 /*
+	for( unsigned i = 0; i < _sortedCandGate.size(); ++i )
+		std::cout << _sortedCandGate[i] -> getCandVar() << " ";
+	std::cout << std::endl;
+*/
+/*
 	randSim(_F);
 	knownSim(_G, _F);
 	if( _debug ) {
@@ -88,17 +93,34 @@ CirMgr::test()
 */
 /*************************************/
 
+	vector<Lit> Lit_vec_origin;
+/*************************************/
+// cutSolver cut generalization
+/*************************************/
 	getCut(cutIdx);
 	for( unsigned i = 0; i < cutIdx.size(); ++i )
 		std::cout << _sortedCandGate[cutIdx[i]] -> getName() << std::endl;
+	addBlockingCut(cutIdx, true);
+	getCut(cutIdx);
+	for( unsigned i = 0; i < cutIdx.size(); ++i )
+		std::cout << _sortedCandGate[cutIdx[i]] -> getName() << std::endl;
+/*
+	assumeCut(cutIdx, Lit_vec_origin);
+	_candSolver -> simplify();
+	if( _candSolver -> assump_solve() ) {
 
+	}
+	else {
+      UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
+		
+	}
+*/
+
+/*************************************/
 
 	cutIdx.clear();
    for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) cutIdx.push_back(i);
 
-	vector<Lit> Lit_vec_origin;
-	//assumeCut(Lit_vec_origin);
-   //assumeCut(candIdx, Lit_vec_origin);
    assumeCut(cutIdx, Lit_vec_origin);
 	if( _debug ) {
 		std::cout << "report Lit_vec_origin: " << std::endl;
