@@ -22,20 +22,19 @@ CirMgr::test()
     _dupF = dupNet(_F);
     _dupG = dupNet(_G);
 	
-	if( _debug ) {
+	//if( _debug ) {
 		std::cout << "report F: " << std::endl;
 		_F -> reportNetList();
 		std::cout << "report G: " << std::endl;
 		_G -> reportNetList();
-		std::cout << "report _dupF: " << std::endl;
-		_dupF -> reportNetList();
-		std::cout << "report _dupG: " << std::endl;
-		_dupG -> reportNetList();
-	}
+		//std::cout << "report _dupF: " << std::endl;
+		//_dupF -> reportNetList();
+		//std::cout << "report _dupG: " << std::endl;
+		//_dupG -> reportNetList();
+	//}
 
 
 	sortCandidate();	// sort by increasing weight
-	//reportSortedCand();
 /*
 	if( _debug ) {
 		std::cout << "report sortedCand: " << std::endl;
@@ -117,9 +116,10 @@ CirMgr::test()
    }
 
 	//if( !candSAT ) generatePatch();
+	if( !candSAT ) generatePatch(generalizedCut);
 
 	//generatePatch();
-	generatePatch(generalizedCut);
+	//generatePatch(generalizedCut);
 
 
 
@@ -233,10 +233,19 @@ CirMgr::miterCkt(CirNet* f, CirNet* g)
 void
 CirMgr::removeInvBuf()
 {
-	//_F -> removeInvBuf(_candNameList);
+	//std::cout << "before removement, size: " << _candNameList.size() << std::endl;
+	_F -> removeInvBuf(_candNameList);
+	//std::cout << "after removement, size: " << _candNameList.size() << std::endl;
+
+	
 	
 	// _G could be stored as aig, and utilize fraig to simplify netlist
-	//_G -> removeInvBuf();
+	std::vector<std::string> tmp;
+	//std::cout << "before G_remove " << std::endl;
+	//_G -> reportNetList();
+	_G -> removeInvBuf(tmp);
+	//std::cout << "after G_remove " << std::endl;
+	//_G -> reportNetList();
 }
 
 void

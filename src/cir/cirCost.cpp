@@ -16,6 +16,7 @@ CirMgr::sortCandidate()
 {
 	_sortedCandGate.resize(_candNameList.size());
 	for( unsigned i = 0; i < _candNameList.size(); ++i ) {
+      assert(_F -> getGateByName(_candNameList[i]));
 		_sortedCandGate[i] = _F -> getGateByName(_candNameList[i]);
 	}
 	std::sort(_sortedCandGate.begin(), _sortedCandGate.end(), sortGateByWeight);

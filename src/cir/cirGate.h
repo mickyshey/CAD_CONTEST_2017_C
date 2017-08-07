@@ -45,7 +45,7 @@ public:
 	
 	CirGate* getGate() const 	{ return (CirGate*)(_gateV & PTR_MASK); }
 	//CirGate* getGate() const 	{ return (CirGate*)(_gateV & ~(size_t)INV_MASK); }
-	bool isInv() const 			{ return _gateV & (size_t)INV_MASK; }
+	bool isInv() const 			{ return (bool)(_gateV & (size_t)INV_MASK); }
 	void setInv() 				{ _gateV |= (size_t)INV_MASK; }
 	void flipInv() 				{ _gateV ^= (size_t)INV_MASK; }
 	bool operator != (CirGateV gateV) { return ((*this).getGate() != gateV.getGate()) || ((*this).isInv() != gateV.isInv()); }
@@ -87,19 +87,24 @@ public:
 
 //	gate io
 	void setFaninSize(unsigned s) 					{ _in.resize(s); }
+	void reserveFaninSize(unsigned s)				{ _in.reserve(s); }
 
 	//we should always setFaninSize first to ensure idx is within size
 	void setFanin(CirGateV gateV, unsigned idx) 	{ assert(idx < _in.size()); _in[idx] = gateV; }
 	void pushBackFanin(CirGateV gateV) 				{ _in.push_back(gateV); }
 	unsigned getFaninSize() const						{ return _in.size(); }
+	CirGateV getFaninV(unsigned idx) const			{ assert(idx < _in.size()); return _in[idx]; }
 	CirGate* getFanin(unsigned idx) const			{ assert(idx < _in.size()); return _in[idx].getGate(); }
 	unsigned getFaninId(unsigned idx) const		{ assert(idx < _in.size()); return _in[idx].getGate() -> _id; }
 	bool isFaninInv(unsigned idx) const				{ assert(idx < _in.size()); return _in[idx].isInv(); }
 	void setFanoutSize(unsigned s) 					{ _out.resize(s); }
+	void reserveFanoutSize(unsigned s)				{ _out.reserve(s); }
 	void clearFanout()									{ _out.clear(); }
+	void eraseFanout(unsigned idx)					{ _out.erase(_out.begin() + idx); }
 	void setFanout(CirGateV gateV, unsigned idx) { assert(idx < _out.size()); _out[idx] = gateV; }
 	void pushBackFanout(CirGateV gateV) 			{ _out.push_back(gateV); }
 	unsigned getFanoutSize() const					{ return _out.size(); }
+	CirGateV getFanoutV(unsigned idx) const			{ assert(idx < _out.size()); return _out[idx]; }
 	CirGate* getFanout(unsigned idx) const			{ assert(idx < _out.size()); return _out[idx].getGate(); }
 
 // SAT

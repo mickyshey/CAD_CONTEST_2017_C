@@ -18,10 +18,12 @@ CirMgr::dupNet(CirNet* n) const
     for( unsigned i = 2; i < totalList.size(); ++i ) {
         CirGate* g = totalList[i];
         CirGate* dupG = newNet -> createGate(g -> getType(), g -> getName(), g -> getId());
+         dupG -> reserveFaninSize(g -> getFaninSize());
         for( unsigned j = 0; j < g -> getFaninSize(); ++j ) {
             CirGate* in = g -> getFanin(j);
             CirGate* dupIn = newNet -> getGateByName(in -> getName());
-            dupG -> pushBackFanin(CirGateV(dupIn, false));
+            dupG -> pushBackFanin(CirGateV(dupIn, g -> isFaninInv(j)));
+				// we do not maintain the bubble of fanout, still ok so far ...
             dupIn -> pushBackFanout(CirGateV(dupG, false));
         }
     }
