@@ -1,5 +1,5 @@
 # ignore binary
-mlllk
+rpgen
 # ignore object files
 *.o
 # ignore libraries
@@ -11,5 +11,10 @@ mlllk
 # ignore temporary files
 *.tmp
 *.out
+# ignore bin files
+bin/rpgen
+# ignore output files
+out.v
+patch.v
 # ignore tags
 src/tags

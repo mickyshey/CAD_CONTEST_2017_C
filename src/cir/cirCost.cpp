@@ -23,19 +23,23 @@ CirMgr::sortCandidate()
 }
 
 void
-CirMgr::createVar4CostSolver(bool setMgr)
+CirMgr::createVar4CostSolver()
 {
-	if( setMgr ) _varsDup.resize(_sortedCandGate.size());
+	vec<Lit> clause; clause.clear();
 	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
 		Var v = _costSolver -> newVar();
 		_sortedCandGate[i] -> setCostVar(v);
-		if( setMgr ) _varsDup[i] = v;
-		_costVar2Gate.insert( std::pair<Var, CirGate*>(v, _sortedCandGate[i]) );
+
+		// block all zero's here !!!
+		Lit l = mkLit(v, false);
+		clause.push(l);
+		//_costVar2Gate.insert( std::pair<Var, CirGate*>(v, _sortedCandGate[i]) );
       if( _debug ) {
 		   std::cout << "gate: " << _sortedCandGate[i] -> getName() << ", cost Var: " << _sortedCandGate[i] -> getCostVar() << std::endl;
       }
 	}
-	_muxAssignment.resize(_sortedCandGate.size());
+
+	_costSolver -> addClause(clause);
 }
 
 void
@@ -43,40 +47,6 @@ CirMgr::addCostConstraint(unsigned cost)
 {
 	vec<Lit> clause;	
 	cout << "adding cost constraint: <= " << cost << endl;
-/*
-	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
-		unsigned sum = 0;
-		for( unsigned j = i; j < _sortedCandGate.size(); ++j ) {
-			sum += _sortedCandGate[j] -> getWeight();
-			cout << "current sum: " << sum << endl;
-			if( sum > cost ) {
-				// add constraint to solver
-				cout << "exceed cost, add constraint ..." << endl;
-				unsigned last = j;
-				while( last < _sortedCandGate.size() ) {
-					cout << "add constraint: " << i << " ~ " << (j - 1) << " plus: " << last << endl;
-					clause.clear();
-					// add all var befor the breaking point
-					for( unsigned k = i; k <= j - 1; ++k ) {
-						Lit l = mkLit(_sortedCandGate[k] -> getCostVar(), false);
-						//cout << "var: " << _sortedCandGate[k] -> getCostVar() << ", lit: " << l << endl;
-						clause.push(~l);	
-					}
-					Lit l = mkLit(_sortedCandGate[last] -> getCostVar(), false);
-					clause.push(~l);
-					_costSolver -> addClause(clause);
-					++last;
-				}
-				break;
-			}
-			if( j == _sortedCandGate.size() - 1 ) {
-				// no more combination of candidates could exceed the cost, return
-				cout << "no more combinations could exceed the cost ..." << endl;
-				return;
-			}
-		}
-	}
-*/
 	std::vector<unsigned> indices;
 	indices.push_back(0);
 	unsigned currCost = _sortedCandGate[0] -> getWeight();
@@ -132,22 +102,22 @@ CirMgr::updateIndices(std::vector<unsigned>& indices, unsigned& currCost)
 }
 
 bool
-CirMgr::getMuxAssignment()
+CirMgr::getCut(idxVec& cutIdx)
 {
-	assert(_muxAssignment.size() == _sortedCandGate.size());
+	cutIdx.clear(); //cutIdx.reserve(_sortedCandGate.size());
 	if(_costSolver -> solve()) {
-		//cout << "get an assignment ..." << endl;
+		cout << "get an assignment ..." << endl;
 		for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
 			Var v = _sortedCandGate[i] -> getCostVar();
 			//std::cout << "for var: " << v << ", assignment: " << _costSolver -> getDataValue(v) << std::endl;
 			//_muxAssignment[i] = _costSolver -> getDataValue(_sortedCandGate[i] -> getCostVar());
 			//std::cout << "for var: " << v << ", assignment: " << _costSolver -> getAssignment(v) << std::endl;
-			_muxAssignment[i] = _costSolver -> getAssignment(_sortedCandGate[i] -> getCostVar());
+			if( _costSolver -> getAssignment(v) ) cutIdx.push_back(i);
 		}
 		return true;
 	}
 	else {
-		//cout << "no valid assignment ..." << endl;
+		cout << "no valid assignment ..." << endl;
 		return false;
 	}
 }
@@ -199,6 +169,16 @@ CirMgr::getTotalCost()
 	unsigned cost = 0;
 	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
 		cost += _sortedCandGate[i] -> getWeight();
+	}
+	return cost;
+}
+
+unsigned
+CirMgr::getCost(idxVec& cutIdx)
+{
+	unsigned cost = 0;
+	for( unsigned i = 0; i < cutIdx.size(); ++i ) {
+		cost += _sortedCandGate[cutIdx[i]] -> getWeight();
 	}
 	return cost;
 }

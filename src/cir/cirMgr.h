@@ -87,6 +87,7 @@ public:
 
 //	in cirSat.cpp
 	bool solve() { return _s -> solve(); }
+   void createVarAll() const;
 	void createVar(CirNet* n) const { n -> createVar(_s); }
 	void addToSolver(CirNet* n) const { n -> addToSolver(_s); }
 	void tieGate(CirGate* g1, CirGate* g2);
@@ -115,12 +116,13 @@ public:
 
 // in cirCost.cpp
 	void sortCandidate();
-	void createVar4CostSolver(bool setMgr = false);
+	void createVar4CostSolver();
 	void addCostConstraint(unsigned cost);
-	bool getMuxAssignment();
+	bool getCut(idxVec& cutIdx);
 	void updateIndices(std::vector<unsigned>& indices, unsigned& currCost);
 	void addBlockingAssignment(const std::vector<bool>& assign);
 	unsigned getTotalCost();
+   unsigned getCost(idxVec& cutIdx);
 	void addAllBlockings();
 	void tieGateWithAssignment(const std::vector<bool>& assign);
 	void restoreTiedGates();

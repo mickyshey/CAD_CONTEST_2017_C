@@ -220,21 +220,17 @@ CirNet::removeInvBuf(std::vector<std::string>& nameList)
 {
 	std::unordered_set<std::string> nameHash;
 	if( nameList.size() ) {
-		std::cout << "handling candNameList ..." << std::endl;
 		for( unsigned i = 0; i < nameList.size(); ++i ) {
 			nameHash.insert(nameList[i]);
 		}
 	}
 
 	totGateList();
-	//std::cout << "tot size: " << _totGateList.size() << std::endl;
 	unsigned count = 0;
 	for( unsigned i = 0; i < _totGateList.size(); ++i ) {
 		const GateType type = _totGateList[i] -> getType();
-		//if( type == Gate_Buf ) {
 		if( type == Gate_Inv || type == Gate_Buf ) {
-
-			if( _totGateList[i] -> getName() == "n318" || _totGateList[i] -> getName() == "n117" ) {
+/*
 			std::cout << "simplifing: " << _totGateList[i] -> getName() << std::endl;
 			std::cout << "fanout info: " << std::endl;
 			for( unsigned j = 0; j < _totGateList[i] -> getFanoutSize(); ++j ) {
@@ -248,8 +244,7 @@ CirNet::removeInvBuf(std::vector<std::string>& nameList)
 			for( unsigned j = 0; j < tmpIn -> getFanoutSize(); ++j )
 				std::cout << tmpIn -> getFanout(j) -> getName() << " ";
 			std::cout << std::endl;
-			}
-
+*/
 			assert(_totGateList[i] -> getFaninSize() == 1 );
 			if( nameList.size() && _totGateList[i] -> getWeight() ) {
 				assert(nameHash.find(_totGateList[i] -> getName()) != nameHash.end());
@@ -260,13 +255,11 @@ CirNet::removeInvBuf(std::vector<std::string>& nameList)
 				// delete the name in nameHash
 				nameHash.erase(nameHash.find(_totGateList[i] -> getName()));
 			}
-			// update the connection 
 
+			// update the connection 
 			CirGateV inV = _totGateList[i] -> getFaninV(0);
 			// flipInv if gateType is Gate_Inv
 			if( type == Gate_Inv ) inV.flipInv();
-			//if( type == Gate_Inv ) { inV.flipInv(); outV.flipInv(); }
-
 			CirGate* in = inV.getGate();
 			// delete the fanout pointing to _totGateList[i]
 			for( unsigned j = 0; j < in -> getFanoutSize(); ++j ) {
@@ -284,23 +277,8 @@ CirNet::removeInvBuf(std::vector<std::string>& nameList)
 					assert(out -> getFanin(inIdx) == _totGateList[i]);
 				}
 				assert(!out -> isFaninInv(inIdx));
-				if( out -> getName() == "n338" || out -> getName() == "n318" ) {
-					cout << "gate name: " << _totGateList[i] -> getName() << endl;
-					cout << "out name: " << out -> getName() << ", before" << endl;
-					cout << in -> getName() << "(" << inV.isInv() << ")" << endl;
-					cout << in -> getName() << "(" << _totGateList[i] -> isFaninInv(0) << ")" << endl;
-					cout << out -> getFanin(inIdx) -> getName() << "(" << out -> isFaninInv(inIdx) << ")" << endl;
-				}
-
 				out -> setFanin(inV, inIdx);
 				in -> pushBackFanout(CirGateV(out, false));
-				//in -> pushBackFanout(outV);
-				if( out -> getName() == "n338" || out -> getName() == "n318") {
-					cout << "after" << endl;
-					cout << in -> getName() << "(" << inV.isInv() << ")" << endl;
-					cout << in -> getName() << "(" << _totGateList[i] -> isFaninInv(0) << ")" << endl;
-					cout << out -> getFanin(inIdx) -> getName() << "(" << out -> isFaninInv(inIdx) << ")" << endl;
-				}
 			} 
 			// delete the gate
 			assert(_name2GateMap.find(_totGateList[i] -> getName()) != _name2GateMap.end());

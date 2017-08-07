@@ -22,16 +22,16 @@ CirMgr::test()
     _dupF = dupNet(_F);
     _dupG = dupNet(_G);
 	
-	//if( _debug ) {
+	if( _debug ) {
 		std::cout << "report F: " << std::endl;
 		_F -> reportNetList();
 		std::cout << "report G: " << std::endl;
 		_G -> reportNetList();
-		//std::cout << "report _dupF: " << std::endl;
-		//_dupF -> reportNetList();
-		//std::cout << "report _dupG: " << std::endl;
-		//_dupG -> reportNetList();
-	//}
+		std::cout << "report _dupF: " << std::endl;
+		_dupF -> reportNetList();
+		std::cout << "report _dupG: " << std::endl;
+		_dupG -> reportNetList();
+	}
 
 
 	sortCandidate();	// sort by increasing weight
@@ -42,8 +42,8 @@ CirMgr::test()
 		//for( unsigned i = 0; i < _candNameList.size(); ++i )
 		//	std::cout << _candNameList[i] << std::endl;
 	}
-	createVar4CostSolver();
 */
+	createVar4CostSolver();
 
 
 /*************************************/
@@ -87,6 +87,13 @@ CirMgr::test()
 	else std::cout << "invalid cut" << std::endl;
 */
 /*************************************/
+
+	getCut(cutIdx);
+	for( unsigned i = 0; i < cutIdx.size(); ++i )
+		std::cout << _sortedCandGate[cutIdx[i]] -> getName() << std::endl;
+
+
+	cutIdx.clear();
    for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) cutIdx.push_back(i);
 
 	vector<Lit> Lit_vec_origin;
@@ -106,8 +113,10 @@ CirMgr::test()
 	else {
       std::cout << "candUNSAT" << std::endl;
 		std::cout << "before UNSATGen, size: " << cutIdx.size() << std::endl;
+		std::cout << "cost: " << getCost(cutIdx) << std::endl;
       UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
 		std::cout << "after UNSATGen, size: " << generalizedCut.size() << std::endl;
+		std::cout << "cost: " << getCost(generalizedCut) << std::endl;
 /*
 		for( unsigned i = 0; i < generalizedCut.size(); ++i ) {
 			std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << std::endl;

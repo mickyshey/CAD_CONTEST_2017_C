@@ -10,11 +10,28 @@
 using namespace std;
 
 void
+CirMgr::createVarAll() const
+{
+   _s -> reset();
+	// IMPORTANT !! we first create var for candidates
+	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+		Var v = _s -> newVar();
+		_sortedCandGate[i] -> setVar(v);
+	}
+    createVar(_F);
+    createVar(_G);
+    createVar(_dupF);
+    createVar(_dupG);
+}
+
+void
 CirNet::createVar(SatSolverV* s, int solver) const
 {
 	assert(solver <= 1);
 	totGateList();
 	for( unsigned i = 0; i < _totGateList.size(); ++i ) {
+		// IMPORTANT !! we first create var for candidates
+		if( _totGateList[i] -> getWeight() ) continue;
 		Var v = s -> newVar();
 		if( solver == 0 ) _totGateList[i] -> setVar(v);
 		else if( solver == 1 ) _totGateList[i] -> setCandVar(v);
@@ -623,6 +640,11 @@ void
 CirMgr::initCandSolver()
 {
 	assert(_F); assert(_dupF); assert(_G); assert(_dupG);
+	// INPORTANT !! we first create var for candidates
+	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+		Var v = _candSolver -> newVar();
+		_sortedCandGate[i] -> setCandVar(v);
+	}
 	_F -> createVar(_candSolver, 1); _G -> createVar(_candSolver, 1);
 	_dupF -> createVar(_candSolver, 1); _dupG -> createVar(_candSolver, 1);
 	std::cout << "# vars in cand solver: " << _candSolver -> nVars() << std::endl;
@@ -704,11 +726,7 @@ void
 CirMgr::generatePatch()
 {
 	clock_t start = clock();
-   _s -> reset();
-    createVar(_F);
-    createVar(_G);
-    createVar(_dupF);
-    createVar(_dupG);
+   createVarAll();
 	if( _debug ) {
 		std::cout << "var of each gate: " << std::endl;
 		const GateList& topo = _F -> totGateList();
@@ -816,6 +834,7 @@ CirMgr::generatePatch()
 	cout << (isSat ? "SAT" : "UNSAT") << endl;
 	std::cout << "time: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::endl;
 	if( isSat ) return;
+   std::cout << "generating patch ..." << std::endl;
 	_patch = getItp();
 	if( _debug ) {
 		std::cout << "report patch: " << std::endl;
@@ -848,11 +867,7 @@ void
 CirMgr::generatePatch(idxVec& cutIdx)
 {
 	clock_t start = clock();
-   _s -> reset();
-    createVar(_F);
-    createVar(_G);
-    createVar(_dupF);
-    createVar(_dupG);
+   createVarAll();
 	if( _debug ) {
 		std::cout << "var of each gate: " << std::endl;
 		const GateList& topo = _F -> totGateList();
@@ -955,6 +970,7 @@ CirMgr::generatePatch(idxVec& cutIdx)
 	cout << (isSat ? "SAT" : "UNSAT") << endl;
 	std::cout << "time: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::endl;
 	if( isSat ) return;
+   std::cout << "generating patch ..." << std::endl;
 	_patch = getItp();
 	if( _debug ) {
 		std::cout << "report patch: " << std::endl;
@@ -968,8 +984,14 @@ CirMgr::generatePatch(idxVec& cutIdx)
 	std::cout << "time: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::endl;
 
 // verify patch validity
+/*
 	std::cout << "checking patch validity ..." << std::endl;
 	_s->reset();
+	// IMPORTANT !! we first create var for candidates
+	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+		Var v = _s -> newVar();
+		_sortedCandGate[i] -> setVar(v);
+	}
 	createVar(_F);
 	createVar(_G);
 	tiePi(_F, _G);
@@ -981,7 +1003,7 @@ CirMgr::generatePatch(idxVec& cutIdx)
 	_s -> simplify();
 	bool eqCheck = solve();
 	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
-
+*/
 }
 
 void
