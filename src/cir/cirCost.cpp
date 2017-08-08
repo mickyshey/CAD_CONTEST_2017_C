@@ -132,23 +132,31 @@ CirMgr::addBlockingCut(idxVec& cutIdx, bool isSat)
 	}
 
 	vec<Lit> clause; clause.clear();
+	
+	//std::cout << "adding: ";
 	if( isSat ) {
 		unsigned idx = 0;
 		for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
-			if( i == cutIdx[idx] ) { ++idx; continue; }
-			std::cout << "adding: " << i << std::endl;
+			if( i == (idx >= cutIdx.size() ? _sortedCandGate.size() : cutIdx[idx]) ) { ++idx; continue; }
 			Var v = _sortedCandGate[i] -> getCostVar();
+			//std::cout << _sortedCandGate[i] -> getName() << " ";
 			Lit l = mkLit(v, false);
 			clause.push(l);
 		}
+		assert(cutIdx.size() + clause.size() == _sortedCandGate.size());
 	}
 	else {
 		for( unsigned i = 0; i < cutIdx.size(); ++i ) {
 			Var v = _sortedCandGate[cutIdx[i]] -> getCostVar();
+			//std::cout << "!" << _sortedCandGate[cutIdx[i]] -> getName() << " ";
 			Lit l = mkLit(v, false);
 			clause.push(~l);
 		}
+		assert(cutIdx.size() == clause.size());
 	}
+
+	//std::cout << std::endl;
+
 	_costSolver -> addClause(clause);
 
 }

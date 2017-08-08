@@ -139,8 +139,8 @@ private:
 	CirNet*								_dupF;
 	CirNet*								_dupG;
 	CirNet*								_patch;
-	SatSolverV*							_s;             // for gen patch
-	SatSolverV*							_costSolver;
+	SatSolverV*							_s;            // for gen patch
+	SatSolverV*							_costSolver;   // for finding random cut
    SatSolverV*                   _candSolver;   // for gen valid cut
     CirNet*                                                         _out;
 	vector<string>						_candNameList;
@@ -153,6 +153,7 @@ private:
     vector<VAR_GROUP>                                       _varGroup;
     VarMap                                                  _var2Gate;
 	std::vector<std::vector<bool> >		_blockingClauses;
+   idxVec                       _bestCut;
 	// for restore
 	std::vector<Var>					_varsDup;
 

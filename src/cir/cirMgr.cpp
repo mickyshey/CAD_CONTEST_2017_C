@@ -7,6 +7,7 @@
 #include <cmath>
 #include <bitset>
 #include <unordered_set>
+#include <ctime>
 
 #include "cir/cirMgr.h"
 #include "util/parse.h";
@@ -94,16 +95,57 @@ CirMgr::test()
 /*************************************/
 
 	vector<Lit> Lit_vec_origin;
+	bool candSAT;
 /*************************************/
 // cutSolver cut generalization
 /*************************************/
-	getCut(cutIdx);
-	for( unsigned i = 0; i < cutIdx.size(); ++i )
-		std::cout << _sortedCandGate[cutIdx[i]] -> getName() << std::endl;
-	addBlockingCut(cutIdx, true);
-	getCut(cutIdx);
-	for( unsigned i = 0; i < cutIdx.size(); ++i )
-		std::cout << _sortedCandGate[cutIdx[i]] -> getName() << std::endl;
+	unsigned bestCost = 1e10;	
+	clock_t startTime = clock();
+
+	while( 1 ) {
+		if( !getCut(cutIdx) ) {
+			std::cout << "all solution space explored ..." << std::endl;
+			break;
+		}
+		if( (double)(clock() - startTime) / CLOCKS_PER_SEC >= 120 ) {
+			std::cout << "time out ..." << std::endl;
+			break;
+		}
+	
+		std::cout << "current cut: " << std::endl;
+		for( unsigned i = 0; i < cutIdx.size(); ++i )
+			std::cout << _sortedCandGate[cutIdx[i]] -> getName() << " ";
+		std::cout << std::endl;
+
+		assumeCut(cutIdx, Lit_vec_origin);
+		_candSolver -> simplify();
+		candSAT = _candSolver -> assump_solve();
+		if( candSAT ) {
+			std::cout << "invalid cut ..." << std::endl;
+			addBlockingCut(cutIdx, true);
+		}
+		else {
+			std::cout << "valid cut ..." << std::endl;
+	      UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
+
+			std::cout << "UNSATgeneralized cut: " << std::endl;
+			for( unsigned i = 0; i < cutIdx.size(); ++i )
+				std::cout << _sortedCandGate[cutIdx[i]] -> getName() << " ";
+			std::cout << std::endl;
+
+			unsigned currCost = getCost(generalizedCut);
+			std::cout << "bestCost: " << bestCost << std::endl;
+			std::cout << "currCost: " << currCost << std::endl;
+			addBlockingCut(generalizedCut, false);
+			if( currCost < bestCost ) {
+				_bestCut.swap(generalizedCut);
+				bestCost = currCost;
+				assert(getCost(_bestCut) == bestCost);
+			}
+		}
+	}
+	generatePatch(_bestCut);
+	return;
 /*
 	assumeCut(cutIdx, Lit_vec_origin);
 	_candSolver -> simplify();
@@ -130,7 +172,7 @@ CirMgr::test()
 	}
    std::cout << "# clauses in cand solver: " << _candSolver -> getNumClauses() << std::endl;
 	_candSolver -> simplify();
-	bool candSAT = _candSolver -> assump_solve();
+	candSAT = _candSolver -> assump_solve();
 	if( candSAT ) std::cout << "candSAT" << std::endl;
 	else {
       std::cout << "candUNSAT" << std::endl;

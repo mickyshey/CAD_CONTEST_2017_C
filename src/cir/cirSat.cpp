@@ -696,6 +696,7 @@ void
 CirMgr::assumeCut(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin)
 {
    Var v;
+	Lit_vec_origin.clear();
 	_candSolver -> assumeRelease();
 
 	for( unsigned i = 0;  i < cutIdx.size(); ++i ) {
@@ -985,7 +986,7 @@ CirMgr::generatePatch(idxVec& cutIdx)
 	std::cout << "time: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::endl;
 
 // verify patch validity
-/*
+
 	std::cout << "checking patch validity ..." << std::endl;
 	_s->reset();
 	// IMPORTANT !! we first create var for candidates
@@ -1004,12 +1005,14 @@ CirMgr::generatePatch(idxVec& cutIdx)
 	_s -> simplify();
 	bool eqCheck = solve();
 	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
-*/
+
 }
 
 void
 CirMgr::UNSATGeneralizationWithUNSATCore(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin, idxVec& generalizedCut)
 {
+	generalizedCut.clear();
+
 	std::vector<Lit> Lit_vec_new;
 	Lit_vec_new.resize(cutIdx.size());
 
