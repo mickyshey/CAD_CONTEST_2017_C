@@ -69,6 +69,8 @@ public:
 	void test();
 	void createMux4Candidates();
 	void removeInvBuf();
+   void removeCandFromFanoutCone();
+   void removeCandFromFanoutConeRec(CirGate* g, std::unordered_set<std::string>& nameHash);
     void writeToPatch(const string& fileName);
     void writeToOut(const string& fileName, const string& inputFile);
 
@@ -84,6 +86,8 @@ public:
 	void reportCandList() const;
 	void reportSortedCand() const;
 	void reportMuxAssignment() const;
+   void reportFanoutCone(CirGate* g) const;
+   void reportFanoutConeRec(CirGate* g, unsigned level) const;
 
 //	in cirSat.cpp
 	bool solve() { return _s -> solve(); }
@@ -113,6 +117,7 @@ public:
    void generatePatch();
 	void generatePatch(idxVec& cutIdx);
 	void UNSATGeneralizationWithUNSATCore(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin, idxVec& generalizedCut);
+   void SATGeneralization(idxVec& cutIdx);
 
 // in cirCost.cpp
 	void sortCandidate();

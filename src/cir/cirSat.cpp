@@ -987,7 +987,7 @@ CirMgr::generatePatch(idxVec& cutIdx)
 
 // verify patch validity
 
-	std::cout << "checking patch validity ..." << std::endl;
+	std::cerr << "checking patch validity ..." << std::endl;
 	_s->reset();
 	// IMPORTANT !! we first create var for candidates
 	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
@@ -1054,4 +1054,13 @@ CirMgr::UNSATGeneralizationWithUNSATCore(idxVec& cutIdx, std::vector<Lit>& Lit_v
 		}
 	}
 
+}
+
+void
+CirMgr::SATGeneralization(idxVec& generalizedCut)
+{
+	generalizedCut.clear();
+	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+
+	}
 }

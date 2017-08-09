@@ -19,6 +19,7 @@ CirMgr::test()
 {
 
 	removeInvBuf();
+	removeCandFromFanoutCone();
 
     _dupF = dupNet(_F);
     _dupG = dupNet(_G);
@@ -36,14 +37,12 @@ CirMgr::test()
 
 
 	sortCandidate();	// sort by increasing weight
-/*
+
 	if( _debug ) {
 		std::cout << "report sortedCand: " << std::endl;
 		reportSortedCand();
-		//for( unsigned i = 0; i < _candNameList.size(); ++i )
-		//	std::cout << _candNameList[i] << std::endl;
 	}
-*/
+
 	createVar4CostSolver();
 
 
@@ -122,7 +121,10 @@ CirMgr::test()
 		candSAT = _candSolver -> assump_solve();
 		if( candSAT ) {
 			std::cout << "invalid cut ..." << std::endl;
+			SATGeneralization(generalizedCut);			
+
 			addBlockingCut(cutIdx, true);
+			//addBlockingCut(cutIdx, true);
 		}
 		else {
 			std::cout << "valid cut ..." << std::endl;
@@ -306,19 +308,50 @@ CirMgr::miterCkt(CirNet* f, CirNet* g)
 void
 CirMgr::removeInvBuf()
 {
-	//std::cout << "before removement, size: " << _candNameList.size() << std::endl;
 	_F -> removeInvBuf(_candNameList);
-	//std::cout << "after removement, size: " << _candNameList.size() << std::endl;
 
-	
 	
 	// _G could be stored as aig, and utilize fraig to simplify netlist
 	std::vector<std::string> tmp;
-	//std::cout << "before G_remove " << std::endl;
-	//_G -> reportNetList();
 	_G -> removeInvBuf(tmp);
-	//std::cout << "after G_remove " << std::endl;
-	//_G -> reportNetList();
+}
+
+void
+CirMgr::removeCandFromFanoutCone()
+{
+	std::unordered_set<std::string> nameHash;
+	for( unsigned i = 0; i < _candNameList.size(); ++i ) {
+		nameHash.insert(_candNameList[i]);
+	}
+
+	// we first deal with single error, directly remove all candidates in fanout cone
+	//std::cout << "report fanout cone of error: " << std::endl;
+	//reportFanoutCone(_F -> getError(0));
+
+	CirGate::incRef();
+	removeCandFromFanoutConeRec(_F -> getError(0), nameHash);
+	
+	std::vector<std::string> tmpList;
+	tmpList.reserve(nameHash.size());
+	std::unordered_set<std::string>::iterator it;
+	for( it = nameHash.begin(); it != nameHash.end(); ++it ) tmpList.push_back(*it);
+	nameHash.clear();
+	_candNameList.swap(tmpList);
+	tmpList.clear();
+}
+
+void
+CirMgr::removeCandFromFanoutConeRec(CirGate* g, std::unordered_set<std::string>& nameHash)
+{
+	if( g -> isRef() ) return;
+	g -> setToRef();
+	if( nameHash.find(g -> getName()) != nameHash.end() ) {
+		//std::cout << "removing " << g -> getName() << std::endl;
+		g -> setWeight(0);
+		nameHash.erase(nameHash.find(g -> getName()));
+	}
+	for( unsigned i = 0; i < g -> getFanoutSize(); ++i )
+		removeCandFromFanoutConeRec(g -> getFanout(i), nameHash);
 }
 
 void

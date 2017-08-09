@@ -132,3 +132,33 @@ CirMgr::reportMuxAssignment() const
 	}
 	cout << endl;
 }
+
+void
+CirMgr::reportFanoutCone(CirGate* g) const
+{
+	CirGate::incRef();
+	reportFanoutConeRec(g, 0);
+}
+
+void
+CirMgr::reportFanoutConeRec(CirGate* g, unsigned level) const
+{
+	for( unsigned i = 0; i < level; ++i ) cout << "  ";
+	cout << "[" << level << "]";
+	g -> report();
+	// print out inv
+/*
+	std::cout << ", fanout size: " << g -> getFanoutSize();
+	for( unsigned i = 0; i < g -> getFaninSize(); ++i ) {
+		std::cout << ", inv" << i << ": " << g -> isFaninInv(i) << " ";
+	}
+*/
+	// print out address
+	//std::cout << ", " << g;
+	if( g -> isRef() ) { cout << " (*)" << endl; return; }
+	cout << endl;
+	g -> setToRef();
+	for( unsigned i = 0; i < g -> getFanoutSize(); ++i )
+		reportFanoutConeRec(g -> getFanout(i), level + 1);
+	
+}
