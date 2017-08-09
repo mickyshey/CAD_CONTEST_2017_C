@@ -1061,6 +1061,10 @@ CirMgr::SATGeneralization(idxVec& generalizedCut)
 {
 	generalizedCut.clear();
 	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
-
+		Var v = _sortedCandGate[i] -> getCandVar();
+		Var dupV = (_dupF -> getGateByName(_sortedCandGate[i] -> getName())) -> getCandVar();
+		if( _candSolver -> getAssignment(v) == _candSolver -> getAssignment(dupV) ) {
+			generalizedCut.push_back(i);
+		}
 	}
 }

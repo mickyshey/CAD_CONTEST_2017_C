@@ -123,16 +123,42 @@ CirMgr::test()
 			std::cout << "invalid cut ..." << std::endl;
 			SATGeneralization(generalizedCut);			
 
-			addBlockingCut(cutIdx, true);
+			/************************/
+			// assert everything in cutIdx is in generalizedCut
+			for( unsigned i = 0; i < cutIdx.size(); ++i ) {
+				bool isFound = false;
+				for( unsigned j = 0; j < generalizedCut.size(); ++j ) {
+					if( cutIdx[i] == generalizedCut[j] ) { isFound = true; break; }
+				}	
+				assert(isFound);
+			}
+			// end of assertion
+			/************************/
+			std::cout << "SATgeneralized cut: " << std::endl;
+			for( unsigned i = 0; i < generalizedCut.size(); ++i )
+				std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << " ";
+			std::cout << std::endl;
 			//addBlockingCut(cutIdx, true);
+			addBlockingCut(generalizedCut, true);
 		}
 		else {
 			std::cout << "valid cut ..." << std::endl;
 	      UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
 
+			/************************/
+			// assert everything in generalizedCut is in cutIdx
+			for( unsigned i = 0; i < generalizedCut.size(); ++i ) {
+				bool isFound = false;
+				for( unsigned j = 0; j < cutIdx.size(); ++j ) {
+					if( generalizedCut[i] == cutIdx[j] ) { isFound = true; break; }
+				}	
+				assert(isFound);
+			}
+			// end of assertion
+			/************************/
 			std::cout << "UNSATgeneralized cut: " << std::endl;
-			for( unsigned i = 0; i < cutIdx.size(); ++i )
-				std::cout << _sortedCandGate[cutIdx[i]] -> getName() << " ";
+			for( unsigned i = 0; i < generalizedCut.size(); ++i )
+				std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << " ";
 			std::cout << std::endl;
 
 			unsigned currCost = getCost(generalizedCut);
