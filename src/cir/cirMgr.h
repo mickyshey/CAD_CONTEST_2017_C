@@ -40,6 +40,7 @@ public:
 			_dupF(NULL),
 			_dupG(NULL),
 			_patch(NULL),
+         _allExplored(false),
             _debug(false) {
 			_candNameList.clear();
 			_isClauseOn.clear();
@@ -118,12 +119,13 @@ public:
 	void generatePatch(idxVec& cutIdx);
 	void UNSATGeneralizationWithUNSATCore(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin, idxVec& generalizedCut);
    void SATGeneralization(idxVec& cutIdx);
+   void getCutWithDecisionOrdered(bool zeroFirst, unsigned& bestCost);
 
 // in cirCost.cpp
 	void sortCandidate();
 	void createVar4CostSolver();
 	void addCostConstraint(unsigned cost);
-	bool getCut(idxVec& cutIdx);
+	bool getCut(idxVec& cutIdx, bool zeroFirst);
 	void updateIndices(std::vector<unsigned>& indices, unsigned& currCost);
 	void addBlockingCut(idxVec& cutIdx, bool isSat);
 	unsigned getTotalCost();
@@ -131,6 +133,7 @@ public:
 	void addAllBlockings();
 	void tieGateWithAssignment(const std::vector<bool>& assign);
 	void restoreTiedGates();
+   void cutTest(idxVec& cutIdx);
 
 //      in cirProof.cpp
 	void checkValidPatch();
@@ -158,6 +161,7 @@ private:
     vector<VAR_GROUP>                                       _varGroup;
     VarMap                                                  _var2Gate;
 	std::vector<std::vector<bool> >		_blockingClauses;
+   bool                          _allExplored;
    idxVec                       _bestCut;
 	// for restore
 	std::vector<Var>					_varsDup;

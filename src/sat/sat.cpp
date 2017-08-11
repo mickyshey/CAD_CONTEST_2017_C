@@ -51,7 +51,7 @@ void SatSolverV::assumeProperty(const Var& var, const bool& inv)
 
 void SatSolverV::assertProperty(const size_t& var, const bool& invert)
 {
-   _solver->addUnit(mkLit(getOriVar(var), invert ^ isNegFormula(var)));
+   //_solver->addUnit(mkLit(getOriVar(var), invert ^ isNegFormula(var)));
 }
 
 void SatSolverV::addUnitCNF(Var var, bool val)
@@ -191,15 +191,15 @@ void SatSolverV::assertProperty(const V3NetId& id, const bool& invert, const uin
 */
 const bool SatSolverV::simplify() { return _solver->simplifyDB(); }
 
-const bool SatSolverV::solve()
+const bool SatSolverV::solve(bool zeroFirst)
 {
-   _solver->solve();
+   _solver->solve(zeroFirst);
    return _solver->okay();
 }
 
-const bool SatSolverV::assump_solve()
+const bool SatSolverV::assump_solve(bool zeroFirst)
 {
-   bool result = _solver->solve(_assump);
+   bool result = _solver->solve(_assump, zeroFirst);
    return result;
 }
 /*

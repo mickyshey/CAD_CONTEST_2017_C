@@ -34,7 +34,7 @@ class SatSolverV
       //void assumeProperty(const V3NetId& id, const bool& invert, const uint32_t& depth);
       //void assertProperty(const V3NetId& id, const bool& invert, const uint32_t& depth);
       const bool simplify();
-      const bool solve(bool zeroFirst = true);
+      const bool solve(bool zeroFirst);
       const bool assump_solve(bool zeroFirst = true);
       int getNumClauses() const { return _solver->nRootCla(); }
 		int nVars() const { return _solver -> nVars(); }

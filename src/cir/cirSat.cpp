@@ -1068,3 +1068,97 @@ CirMgr::SATGeneralization(idxVec& generalizedCut)
 		}
 	}
 }
+
+void
+CirMgr::getCutWithDecisionOrdered(bool zeroFirst, unsigned& bestCost)
+{
+	idxVec cutIdx;
+   idxVec generalizedCut;
+	vector<Lit> Lit_vec_origin;
+	bool candSAT;
+	clock_t startTime = clock();
+	while( 1 ) {
+		if( !getCut(cutIdx, zeroFirst) ) {
+			std::cout << "all solution space explored ..." << std::endl;
+			_allExplored = true;
+			break;
+		}
+		if( (double)(clock() - startTime) / CLOCKS_PER_SEC >= 120 ) {
+			// some case still can't find a valid cut in 600s, should set a time limit to change cut generalization method
+			std::cout << "time out ..." << std::endl;
+			break;
+		}
+		if( _debug ) {	
+			std::cout << "current cut: " << std::endl;
+			for( unsigned i = 0; i < cutIdx.size(); ++i )
+				std::cout << _sortedCandGate[cutIdx[i]] -> getName() << " ";
+			std::cout << std::endl;
+		}
+
+		assumeCut(cutIdx, Lit_vec_origin);
+		_candSolver -> simplify();
+		candSAT = _candSolver -> assump_solve();
+		if( candSAT ) {
+			//std::cout << "SAT" << "\r" << std::flush;
+			SATGeneralization(generalizedCut);			
+
+			/************************/
+			// assert everything in cutIdx is in generalizedCut
+			for( unsigned i = 0; i < cutIdx.size(); ++i ) {
+				bool isFound = false;
+				for( unsigned j = 0; j < generalizedCut.size(); ++j ) {
+					if( cutIdx[i] == generalizedCut[j] ) { isFound = true; break; }
+				}	
+				assert(isFound);
+			}
+			// end of assertion
+			/************************/
+			if( _debug ) {
+				std::cout << "SATgeneralized cut: " << std::endl;
+				unsigned idx = 0;
+				for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+					if( i == (idx >= generalizedCut.size() ? _sortedCandGate.size() : generalizedCut[idx]) ) { ++idx; continue; }
+					std::cout << _sortedCandGate[i] -> getName() << " ";
+				}
+/*
+				for( unsigned i = 0; i < generalizedCut.size(); ++i )
+					std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << " ";
+*/
+				std::cout << std::endl;
+			}
+			addBlockingCut(generalizedCut, true);
+		}
+		else {
+			//std::cout << "UNSAT" << "\r" << std::flush;
+	      UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
+
+			/************************/
+			// assert everything in generalizedCut is in cutIdx
+			for( unsigned i = 0; i < generalizedCut.size(); ++i ) {
+				bool isFound = false;
+				for( unsigned j = 0; j < cutIdx.size(); ++j ) {
+					if( generalizedCut[i] == cutIdx[j] ) { isFound = true; break; }
+				}	
+				assert(isFound);
+			}
+			// end of assertion
+			/************************/
+			if( _debug ) {
+				std::cout << "UNSATgeneralized cut: " << std::endl;
+				for( unsigned i = 0; i < generalizedCut.size(); ++i )
+					std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << " ";
+				std::cout << std::endl;
+			}
+
+			unsigned currCost = getCost(generalizedCut);
+			//std::cout << "bestCost: " << bestCost << std::endl;
+			std::cout << "currCost: " << currCost << "\r" << std::flush;
+			addBlockingCut(generalizedCut, false);
+			if( currCost < bestCost ) {
+				_bestCut.swap(generalizedCut);
+				bestCost = currCost;
+				assert(getCost(_bestCut) == bestCost);
+			}
+		}
+	}
+}

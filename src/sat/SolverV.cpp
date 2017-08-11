@@ -712,7 +712,10 @@ lbool SolverV::search(int nof_conflicts, int nof_learnts, const SearchParams& pa
                 return l_True;
             }
 
-            check(assume(~Lit(next)));
+            if( _zeroFirst )
+               check(assume(~Lit(next)));
+            else
+               check(assume(Lit(next)));
         }
     }
 }
@@ -764,8 +767,11 @@ void SolverV::claRescaleActivity()
 |    A list of assumptions (unit clauses coded as literals). Pre-condition: The assumptions must
 |    not contain both 'x' and '~x' for any variable 'x'.
 |________________________________________________________________________________________________@*/
-bool SolverV::solve(const vec<Lit>& assumps)
+bool SolverV::solve(const vec<Lit>& assumps, bool zeroFirst)
 {
+   // MODIFICATION FOR CAD_CONTEST_2017
+   _zeroFirst = zeroFirst;
+   // END OF MODIFICATION
    /*
    cout << "Clauses" << endl;
     for ( unsigned i = 0 ; i < clauses[14]->size() ; ++i )

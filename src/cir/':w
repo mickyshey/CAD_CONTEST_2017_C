@@ -140,9 +140,7 @@ CirMgr::test()
    while( 1 ) {
       if( loopCount >= 1 ) break;
       if( _allExplored ) break;
-      getCutWithDecisionOrdered(true, bestCost);	// zeroFirst
-		if( _allExplored ) break;
-      getCutWithDecisionOrdered(false, bestCost);	// oneFirst
+      getCutWithDecisionOrdered(true, bestCost);
       ++loopCount;
    }
    std::cout << "bestCost: " << getCost(_bestCut) << std::endl;

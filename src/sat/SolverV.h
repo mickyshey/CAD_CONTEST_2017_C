@@ -134,6 +134,7 @@ public:
              , _conflictNum     (-1)
              , _aborted         (0)
              , root_cla_count   (0) // MODIFICATION FOR SoCV
+				 , _zeroFirst		  (false) // MODIFICATION FOR CAD_CONTEST_2017
              , default_params   (SearchParams(0.95, 0.999, 0.02))
              , expensive_ccmin  (true)
              , proof            (NULL)
@@ -160,6 +161,9 @@ public:
    bool     _aborted;
    // MODIFICATION FOR SoCV
    int      root_cla_count;
+
+	// MODIFICATION FOR CAD_CONTEST_2017
+	bool		_zeroFirst;
 
 
     // Helpers: (semi-internal)
@@ -198,8 +202,8 @@ public:
     bool    simplifyDB();
     lbool   solveLimited(const vec<Lit>& assumps, int64_t nConflicts);
     lbool   solveLimited(int64_t nConflicts) { vec<Lit> tmp; return solveLimited(nConflicts); }
-    bool    solve(const vec<Lit>& assumps);
-    bool    solve() { vec<Lit> tmp; return solve(tmp); }
+    bool    solve(const vec<Lit>& assumps, bool zeroFirst = true);
+    bool    solve(bool zeroFirst = true) { vec<Lit> tmp; return solve(tmp, zeroFirst); }
 
     double      progress_estimate;  // Set by 'search()'.
     vec<lbool>  model;              // If problem is satisfiable, this vector contains the model (if any).

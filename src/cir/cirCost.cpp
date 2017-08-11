@@ -102,22 +102,19 @@ CirMgr::updateIndices(std::vector<unsigned>& indices, unsigned& currCost)
 }
 
 bool
-CirMgr::getCut(idxVec& cutIdx)
+CirMgr::getCut(idxVec& cutIdx, bool zeroFirst)
 {
 	cutIdx.clear(); //cutIdx.reserve(_sortedCandGate.size());
-	if(_costSolver -> solve()) {
-		cout << "get an assignment ..." << endl;
+	if(_costSolver -> solve(zeroFirst)) {
+		//cout << "get an assignment ..." << endl;
 		for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
 			Var v = _sortedCandGate[i] -> getCostVar();
-			//std::cout << "for var: " << v << ", assignment: " << _costSolver -> getDataValue(v) << std::endl;
-			//_muxAssignment[i] = _costSolver -> getDataValue(_sortedCandGate[i] -> getCostVar());
-			//std::cout << "for var: " << v << ", assignment: " << _costSolver -> getAssignment(v) << std::endl;
 			if( _costSolver -> getAssignment(v) ) cutIdx.push_back(i);
 		}
 		return true;
 	}
 	else {
-		cout << "no valid assignment ..." << endl;
+		//cout << "no valid assignment ..." << endl;
 		return false;
 	}
 }
@@ -125,12 +122,13 @@ CirMgr::getCut(idxVec& cutIdx)
 void
 CirMgr::addBlockingCut(idxVec& cutIdx, bool isSat)
 {
+/*
 	for( unsigned i = 0 ; i < cutIdx.size(); ++i ) {
 		for( unsigned j = i + 1; j < cutIdx.size(); ++j ) {
 			assert(cutIdx[i] < cutIdx[j]);
 		}
 	}
-
+*/
 	vec<Lit> clause; clause.clear();
 	
 	//std::cout << "adding: ";
@@ -213,4 +211,34 @@ CirMgr::addAllBlockings()
 		addBlockingAssignment(_blockingClauses[i]);
 	}
 */
+}
+
+void
+CirMgr::cutTest(idxVec& cutIdx)
+{
+	std::cout << "making assumption: " << std::endl;
+	unsigned idx = 0;
+	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+		Var v = _sortedCandGate[i] -> getCostVar();
+		if( i == (idx >= cutIdx.size() ? _sortedCandGate.size() : cutIdx[idx]) ) {
+			++idx;
+			std::cout << _sortedCandGate[i] -> getName() << " ";
+			_costSolver -> assumeProperty(v, false);
+		}
+		else {
+			_costSolver -> assumeProperty(v, true);
+		}
+	}
+	std::cout << std::endl;
+	bool cutSAT = _costSolver -> assump_solve();
+	std::cout << "cutSAT: " << (cutSAT ? "SAT" : "UNSAT") << std::endl;
+	if( cutSAT ) {
+		for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+			Var v = _sortedCandGate[i] -> getCostVar();
+			if( _costSolver -> getAssignment(v) )
+				std::cout << _sortedCandGate[i] -> getName() << " ";
+		}
+		std::cout << std::endl;
+	}
+	
 }
