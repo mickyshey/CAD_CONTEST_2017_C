@@ -136,140 +136,23 @@ CirMgr::test()
 */
 /******************/
 
+	std::cout << "size of cand: " << _sortedCandGate.size() << std::endl;
    unsigned loopCount = 0;
    while( 1 ) {
       if( loopCount >= 1 ) break;
       if( _allExplored ) break;
       getCutWithDecisionOrdered(true, bestCost);	// zeroFirst
+		std::cout << std::endl << "curr bestCost: " << bestCost << std::endl;
 		if( _allExplored ) break;
       getCutWithDecisionOrdered(false, bestCost);	// oneFirst
+		std::cout << std::endl << "curr bestCost: " << bestCost << std::endl;
       ++loopCount;
    }
    std::cout << "bestCost: " << getCost(_bestCut) << std::endl;
    generatePatch(_bestCut);
    return;
 
-	clock_t startTime = clock();
-	while( 1 ) {
-		if( !getCut(cutIdx, true) ) {
-			std::cout << "all solution space explored ..." << std::endl;
-			break;
-		}
-		if( (double)(clock() - startTime) / CLOCKS_PER_SEC >= 120 ) {
-			// some case still can't find a valid cut in 600s, should set a time limit to change cut generalization method
-			std::cout << "time out ..." << std::endl;
-			break;
-		}
-		if( _debug ) {	
-			std::cout << "current cut: " << std::endl;
-			for( unsigned i = 0; i < cutIdx.size(); ++i )
-				std::cout << _sortedCandGate[cutIdx[i]] -> getName() << " ";
-			std::cout << std::endl;
-		}
-
-		assumeCut(cutIdx, Lit_vec_origin);
-		_candSolver -> simplify();
-		candSAT = _candSolver -> assump_solve();
-		if( candSAT ) {
-			//std::cout << "SAT" << "\r" << std::flush;
-			SATGeneralization(generalizedCut);			
-
-			/************************/
-			// assert everything in cutIdx is in generalizedCut
-			for( unsigned i = 0; i < cutIdx.size(); ++i ) {
-				bool isFound = false;
-				for( unsigned j = 0; j < generalizedCut.size(); ++j ) {
-					if( cutIdx[i] == generalizedCut[j] ) { isFound = true; break; }
-				}	
-				assert(isFound);
-			}
-			// end of assertion
-			/************************/
-			if( _debug ) {
-				std::cout << "SATgeneralized cut: " << std::endl;
-				unsigned idx = 0;
-				for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
-					if( i == (idx >= generalizedCut.size() ? _sortedCandGate.size() : generalizedCut[idx]) ) { ++idx; continue; }
-					std::cout << _sortedCandGate[i] -> getName() << " ";
-				}
-/*
-				for( unsigned i = 0; i < generalizedCut.size(); ++i )
-					std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << " ";
-*/
-				std::cout << std::endl;
-			}
-			addBlockingCut(generalizedCut, true);
-		}
-		else {
-			//std::cout << "UNSAT" << "\r" << std::flush;
-	      UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
-
-			/************************/
-			// assert everything in generalizedCut is in cutIdx
-			//assert(cutIdx.size() == generalizedCut.size());
-			for( unsigned i = 0; i < generalizedCut.size(); ++i ) {
-				bool isFound = false;
-				for( unsigned j = 0; j < cutIdx.size(); ++j ) {
-					if( generalizedCut[i] == cutIdx[j] ) { isFound = true; break; }
-				}	
-				assert(isFound);
-			}
-			// end of assertion
-			/************************/
-			if( _debug ) {
-				std::cout << "UNSATgeneralized cut: " << std::endl;
-				for( unsigned i = 0; i < generalizedCut.size(); ++i )
-					std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << " ";
-				std::cout << std::endl;
-			}
-
-			unsigned currCost = getCost(generalizedCut);
-			//std::cout << "bestCost: " << bestCost << std::endl;
-			std::cout << "currCost: " << currCost << "\r" << std::flush;
-			addBlockingCut(generalizedCut, false);
-			if( currCost < bestCost ) {
-				_bestCut.swap(generalizedCut);
-				bestCost = currCost;
-				assert(getCost(_bestCut) == bestCost);
-			}
-		}
-	}
-	std::cout << "best Cost: " << bestCost << std::endl;
-	generatePatch(_bestCut);
-	return;
-
 /*************************************/
-
-	cutIdx.clear();
-   for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) cutIdx.push_back(i);
-
-   assumeCut(cutIdx, Lit_vec_origin);
-	if( _debug ) {
-		std::cout << "report Lit_vec_origin: " << std::endl;
-		for( unsigned i = 0; i < Lit_vec_origin.size(); ++i ) {
-			std::cout << var(Lit_vec_origin[i]) << "(" << sign(Lit_vec_origin[i]) << ")" << std::endl;
-		}
-	}
-   std::cout << "# clauses in cand solver: " << _candSolver -> getNumClauses() << std::endl;
-	_candSolver -> simplify();
-	candSAT = _candSolver -> assump_solve();
-	if( candSAT ) std::cout << "candSAT" << std::endl;
-	else {
-      std::cout << "candUNSAT" << std::endl;
-		std::cout << "before UNSATGen, size: " << cutIdx.size() << std::endl;
-		std::cout << "cost: " << getCost(cutIdx) << std::endl;
-      UNSATGeneralizationWithUNSATCore(cutIdx, Lit_vec_origin, generalizedCut);
-		std::cout << "after UNSATGen, size: " << generalizedCut.size() << std::endl;
-		std::cout << "cost: " << getCost(generalizedCut) << std::endl;
-/*
-		for( unsigned i = 0; i < generalizedCut.size(); ++i ) {
-			std::cout << _sortedCandGate[generalizedCut[i]] -> getName() << std::endl;
-		}
-*/
-   }
-
-	if( !candSAT ) generatePatch(generalizedCut);
-
 }
 
 void

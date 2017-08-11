@@ -4,6 +4,8 @@
 
 #include "cir/cirMgr.h"
 
+#define CUT_SIZE 40
+
 using namespace std;
 
 bool sortGateByWeight(CirGate* a, CirGate* b)
@@ -111,6 +113,15 @@ CirMgr::getCut(idxVec& cutIdx, bool zeroFirst)
 			Var v = _sortedCandGate[i] -> getCostVar();
 			if( _costSolver -> getAssignment(v) ) cutIdx.push_back(i);
 		}
+/*
+		if( cutIdx.size() > CUT_SIZE ) {
+			idxVec tmpCut; tmpCut.reserve(CUT_SIZE);
+			for( unsigned i = 0; i < CUT_SIZE; ++i ) tmpCut.push_back(cutIdx[i]);
+			cutIdx.swap(tmpCut);
+			tmpCut.clear();
+		}
+		assert(cutIdx.size() <= CUT_SIZE);
+*/
 		return true;
 	}
 	else {
@@ -147,8 +158,9 @@ CirMgr::addBlockingCut(idxVec& cutIdx, bool isSat)
 		for( unsigned i = 0; i < cutIdx.size(); ++i ) {
 			Var v = _sortedCandGate[cutIdx[i]] -> getCostVar();
 			//std::cout << "!" << _sortedCandGate[cutIdx[i]] -> getName() << " ";
-			Lit l = mkLit(v, false);
-			clause.push(~l);
+			Lit l = mkLit(v, true);
+			clause.push(l);
+			//clause.push(~l);
 		}
 		assert(cutIdx.size() == clause.size());
 	}

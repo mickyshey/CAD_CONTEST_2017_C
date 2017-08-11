@@ -3,6 +3,7 @@
 #include <cassert>
 #include <queue>
 #include <set>
+#include <iomanip>
 
 #include "cir/cirMgr.h"
 #include "util/parse.h"
@@ -1059,12 +1060,78 @@ CirMgr::UNSATGeneralizationWithUNSATCore(idxVec& cutIdx, std::vector<Lit>& Lit_v
 void
 CirMgr::SATGeneralization(idxVec& generalizedCut)
 {
+/*
 	generalizedCut.clear();
 	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
 		Var v = _sortedCandGate[i] -> getCandVar();
 		Var dupV = (_dupF -> getGateByName(_sortedCandGate[i] -> getName())) -> getCandVar();
 		if( _candSolver -> getAssignment(v) == _candSolver -> getAssignment(dupV) ) {
 			generalizedCut.push_back(i);
+		}
+	}
+	return;	
+*/
+	// more aggressive method
+	clock_t start = clock();
+	generalizedCut.clear();
+	unsigned count = 0;
+	unsigned loopCount = 0;
+	while( 1 ) {
+		++loopCount;
+		//std::cout << "loop count: " << loopCount << std::endl;
+		if( loopCount > 8 ) {
+			//std::cout << "final generalized cut size: " << generalizedCut.size() << std::endl;
+			//std::cout << "time for SAT gen: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::flush;
+			return;
+		}
+		bool assignSAT = true;
+		idxVec tmpCut;
+		_candSolver -> assumeRelease();
+		for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+			Var v = _sortedCandGate[i] -> getCandVar();
+			Var dupV = (_dupF -> getGateByName(_sortedCandGate[i] -> getName())) -> getCandVar();
+			if( _candSolver -> getAssignment(v) == _candSolver -> getAssignment(dupV) ) {
+				tmpCut.push_back(i);
+				Var impVar = _sortedCandGate[i] -> getImpVar();
+				_candSolver -> assumeProperty(impVar, false);
+			}
+		}
+		assert(tmpCut.size() >= generalizedCut.size());
+		//std::cout << "size of generalized cut: " << generalizedCut.size() << std::endl;
+		//std::cout << "size of tmp cut: " << tmpCut.size() << std::endl;
+		if( generalizedCut.size() == tmpCut.size() ) {
+			++count;
+			//std::cout << "count: " << count << std::endl;
+			if( count >= 30 ) {
+				std::cout << "final generalized cut size: " << generalizedCut.size() << std::endl;
+				std::cout << "time for SAT gen: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::flush;
+				//std::cout << "\r" << setw(50) << "\rtime for SAT gen: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::flush;
+				return;
+			}
+		}	
+		else {
+			count = 0;
+			generalizedCut.swap(tmpCut);
+			tmpCut.clear();
+		}
+		
+		// block the current assignment
+		vec<Lit> clause;
+		for( unsigned i = 0; i < _F -> getPiNum(); ++i ) {
+			Var v = _F -> getPi(i) -> getCandVar();
+			Var dupV = (_dupF -> getGateByName(_F -> getPi(i) -> getName())) -> getCandVar();
+			clause.push(mkLit(v, _candSolver -> getAssignment(v)));
+			clause.push(mkLit(dupV, _candSolver -> getAssignment(dupV)));
+		}
+		assert(clause.size() == (_F -> getPiNum()) * 2);
+		_candSolver -> addClause(clause);
+		clock_t solveStart = clock();
+		assignSAT = _candSolver -> assump_solve();
+		//std::cout << "time for solve: " << (double)(clock() - solveStart) / CLOCKS_PER_SEC << std::endl;
+		if( !assignSAT ) {
+			//std::cout << "no more SAT assignment ..." << std::endl;
+			//std::cout << "final generalized cut size: " << generalizedCut.size() << std::endl;
+			return;
 		}
 	}
 }
@@ -1078,14 +1145,14 @@ CirMgr::getCutWithDecisionOrdered(bool zeroFirst, unsigned& bestCost)
 	bool candSAT;
 	clock_t startTime = clock();
 	while( 1 ) {
+		if( (double)(clock() - startTime) / CLOCKS_PER_SEC >= 60 ) {
+			// some case still can't find a valid cut in 600s, should set a time limit to change cut generalization method
+			std::cout << setw(50) << "\rtime out ..."  << std::endl;
+			break;
+		}
 		if( !getCut(cutIdx, zeroFirst) ) {
 			std::cout << "all solution space explored ..." << std::endl;
 			_allExplored = true;
-			break;
-		}
-		if( (double)(clock() - startTime) / CLOCKS_PER_SEC >= 120 ) {
-			// some case still can't find a valid cut in 600s, should set a time limit to change cut generalization method
-			std::cout << "time out ..." << std::endl;
 			break;
 		}
 		if( _debug ) {	
@@ -1094,10 +1161,49 @@ CirMgr::getCutWithDecisionOrdered(bool zeroFirst, unsigned& bestCost)
 				std::cout << _sortedCandGate[cutIdx[i]] -> getName() << " ";
 			std::cout << std::endl;
 		}
-
+/*
+		if( cutIdx.size() >= 500 ) {
+			//std::cout << "size: " << cutIdx.size() << std::endl;
+			idxVec tmpCut;
+			unsigned cutCount = 0;
+			for( unsigned i = 0; i < 400; ++i ) tmpCut.push_back(cutIdx[i]);
+			while( 1 ) {
+				for( unsigned i = 400 + cutCount * 50; i < 400 + (cutCount + 1) * 50; ++i ) {
+					tmpCut.push_back(cutIdx[i]);
+				}
+				std::cout << "tmp size: " << tmpCut.size() << std::endl;
+				assert(tmpCut.size() == 400 + (cutCount + 1) * 50);
+				assumeCut(tmpCut, Lit_vec_origin);
+				_candSolver -> simplify();
+				candSAT = _candSolver -> assump_solve();
+				if( candSAT ) {
+					SATGeneralization(generalizedCut);			
+					addBlockingCut(generalizedCut, true);
+					++cutCount;
+				}
+				else {
+			      UNSATGeneralizationWithUNSATCore(tmpCut, Lit_vec_origin, generalizedCut);
+					unsigned currCost = getCost(generalizedCut);
+					//std::cout << "bestCost: " << bestCost << std::endl;
+					std::cout << "\r" << setw(50) << "\rcurrCost: " << currCost << std::flush;
+					//std::cout << std::endl << "currCost: " << currCost << std::endl;
+					addBlockingCut(generalizedCut, false);
+					if( currCost < bestCost ) {
+						_bestCut.swap(generalizedCut);
+						bestCost = currCost;
+						assert(getCost(_bestCut) == bestCost);
+					}
+					break;
+				}
+			}
+			continue;
+		}
+*/
 		assumeCut(cutIdx, Lit_vec_origin);
 		_candSolver -> simplify();
+		clock_t candStart = clock();
 		candSAT = _candSolver -> assump_solve();
+		//std::cout << "\r" << setw(50) << "\rtime for solving: " << (double)(clock() - candStart) / CLOCKS_PER_SEC << std::flush; 
 		if( candSAT ) {
 			//std::cout << "SAT" << "\r" << std::flush;
 			SATGeneralization(generalizedCut);			
@@ -1152,7 +1258,8 @@ CirMgr::getCutWithDecisionOrdered(bool zeroFirst, unsigned& bestCost)
 
 			unsigned currCost = getCost(generalizedCut);
 			//std::cout << "bestCost: " << bestCost << std::endl;
-			std::cout << "currCost: " << currCost << "\r" << std::flush;
+			std::cout << "\r" << setw(50) << "\rcurrCost: " << currCost << std::flush;
+			//std::cout << std::endl << "currCost: " << currCost << std::endl;
 			addBlockingCut(generalizedCut, false);
 			if( currCost < bestCost ) {
 				_bestCut.swap(generalizedCut);
