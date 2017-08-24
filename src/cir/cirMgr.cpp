@@ -156,6 +156,225 @@ CirMgr::test()
 }
 
 void
+CirMgr::testRM()
+{
+    removeInvBuf();
+    removeCandFromFanoutCone();
+
+	sortCandidate();	// sort by increasing weight
+
+	if( _debug ) {
+		std::cout << "report sortedCand: " << std::endl;
+		reportSortedCand();
+	}
+
+    _s -> reset();
+ 
+    // map var to gate in _F
+    _var2Gate.clear();
+
+    unsigned numClauses = _s -> getNumClauses();
+    assert( numClauses == 0 );
+
+    _rmOut.clear(); // clear the output var of RM
+    // create var for candidate first (modify later?)
+    for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+        Var v = _s -> newVar();
+        _sortedCandGate[i] -> setVar(v);
+    }
+
+    formulaRM(_F, _G, 0);
+    
+    for( unsigned i = 0; i < _F -> getPiNum(); ++i ) {
+        std::string name = _F -> getPi(i) -> getName();
+        buildVarMap(_F -> getGateByName(name));
+    }
+
+    if(_debug) {
+        for( auto it = _var2Gate.begin(); it != _var2Gate.end(); ++it ) {
+            cerr << " " << it -> first << ":" << it -> second;
+        }
+        cerr << endl;
+    }
+
+    // add error constraints for the first iteration
+    vector<bool> rv; // recitify vector
+    for( unsigned i = 0; i < _F -> getErrorNum(); ++i ) {
+        CirGate* t = _F -> getError(i);
+        Var v = t -> getVar();
+        cout << "add error " << t -> getName() << "(" << v << ")" << "...\n";
+        _s -> addUnitCNF(v, 0);
+        //_s -> assumeProperty(v, 1);
+        rv.push_back(false);
+    }
+    // mark all errors onset
+    for( unsigned i = 0; i < _F -> getErrorNum(); ++i ) {
+        CirGate* t = _F -> getError(i);
+        for( unsigned j = numClauses; j < _s -> getNumClauses(); ++j ) {
+            markMultiOnsetClause(j, t -> getName());
+        }
+    }
+    numClauses = _s -> getNumClauses(); // update numClauses
+    _rvset.push_back(rv);
+
+    // print rv0
+    for( unsigned i = 0; i < _rvset.size(); ++i ) {
+        vector<bool> tmp = _rvset[i];
+        for( unsigned j = 0; j < tmp.size(); ++j ) {
+            cout << tmp[j] << " ";
+        }
+        cout << endl;
+    }
+
+    // set up RM solver
+    _rmSolver -> reset();
+    formulaRM(_F, _G, 1);
+    _rmSolver -> simplify();
+    
+    // start rm loop
+    int count = 0;
+    while(1) {
+        cout << "loop " << count << endl;
+        ++count;
+        //if( count == 3 ) break;
+        std::cout << "# clauses in _s: " << _s -> getNumClauses() << endl;
+        //bool result = _s -> assump_solve();
+        _s -> simplify();
+        bool result = _s -> solve();
+        rv.clear(); // clear the previous rv
+        if(!result) {
+            cerr << "UNSAT: ";
+            /*
+            vector<bool> internal = _rvset.back();
+            for( unsigned i = 0; i < internal.size(); ++i ) {
+                cout << internal[i] << " ";
+            }
+            cout << endl;
+            */
+            _patch = new CirNet;
+            _patch -> setName("patch");
+            // insert base nodes of _patch PI, which is all PIs now
+            for( unsigned i = 0; i < _F -> getPiNum(); ++i ) {
+                CirGate* g = _F -> getPi(i);
+                CirGate* dupG = _patch -> createGate(g -> getType(), g -> getName(), g -> getId());
+            }
+            for( unsigned i = 0; i < _F -> getErrorNum(); ++i ) {
+                CirNet* tmpPatch = new CirNet;
+                tmpPatch = getItp(_F -> getError(i) -> getName());
+                //tmpPatch -> reportNetList();
+                miterNet(tmpPatch, _patch);
+            }
+            break;
+        } else {
+            cout << "SAT" << endl;
+            cout << "ouput SAT assignment of RM: ";
+            for(unsigned i = 0; i < _rmOut.size(); ++i ) {
+                std::cout << _s -> getAssignment(_rmOut[i]) << " ";
+            }
+            cout << endl;
+            _rmSolver -> assumeRelease();
+            // get sat assignment of input value
+            cout << "assume pi: ";
+            for( unsigned i = 0; i < _F -> getPiNum(); ++i ) {
+                Var v = _F -> getPi(i) -> getRMVar();
+                Var sv = _F -> getPi(i) -> getVar(); // v and sv will be the same idx
+                bool val = _s -> getAssignment(sv);
+                cout << val;
+                _rmSolver -> assumeProperty(v, !val);
+            }
+            cout << endl;
+            bool assumeResult = _rmSolver -> assump_solve();
+            cout << (assumeResult ? "assumpSAT" : "assumpUNSAT") << endl;
+            if(!assumeResult) {
+                break;
+            } else {
+                CirNet* dupF = dupNet(_F);
+                CirNet* dupG = dupNet(_G);
+                formulaRM(dupF, dupG, 0);
+                
+                assert(dupF -> getPiNum() == _F -> getPiNum());
+                assert(dupG -> getPiNum() == _G -> getPiNum());
+                for(unsigned k = 0; k < dupF -> getPiNum(); ++k) {
+                     CirGate* g = dupF -> getPi(k);
+                     CirGate* g_old = _F -> getGateByName(g -> getName());
+                     CirGate* f = dupG -> getGateByName(g -> getName());
+                     CirGate* f_old = _G -> getGateByName(g -> getName());
+                     //cerr << g -> getName() << "(" << g -> getVar() << ") " << g_old -> getName() << "(" << g_old -> getVar() << endl;
+                     assert(g -> getVar() == g_old -> getVar());
+                     assert(g_old -> getVar() == f -> getVar());
+                     assert(g_old -> getVar() == f_old -> getVar());
+                }
+                /*
+                std::cout << "var of each gate: " << std::endl;
+                const GateList& topo = _F -> totGateList();
+                for( unsigned i = 0; i < topo.size(); ++i )
+                    std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
+                std::cout << std::endl;
+                const GateList& topo1 = _G -> totGateList();
+                for( unsigned i = 0; i < topo1.size(); ++i )
+                    std::cout << topo1[i] -> getName() << "(" << topo1[i] -> getVar() << ") ";
+                std::cout << std::endl;
+                const GateList& topo2 = dupF -> totGateList();
+                for( unsigned i = 0; i < topo2.size(); ++i )
+                    std::cout << topo2[i] -> getName() << "(" << topo2[i] -> getVar() << ") ";
+                std::cout << std::endl;
+                const GateList& topo3 = dupG -> totGateList();
+                for( unsigned i = 0; i < topo3.size(); ++i )
+                    std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
+                std::cout << std::endl;
+                */
+                // get sat assignment of error
+                for( unsigned i = 0; i < _F -> getErrorNum(); ++i ) {
+                   CirGate* t = _F -> getError(i);
+                   Var v = t -> getRMVar();
+                   bool val = _rmSolver -> getAssignment(v);
+                   cout << t -> getName() << "(" << val << ") ";
+                   CirGate* t_new = dupF -> getGateByName(t -> getName());
+                   Var v_new = t_new -> getVar();
+                   _s -> addUnitCNF(v_new, val);
+                   rv.push_back(val);
+                }
+                _rvset.push_back(rv);
+                cout << endl;
+                // mark on/offset clauses
+                for( unsigned i = 0; i < _F -> getErrorNum(); ++i ) {
+                    CirGate* t = _F -> getError(i);
+                    Var v = t -> getRMVar();
+                    bool val = _rmSolver -> getAssignment(v);
+                    for( unsigned j = numClauses; j < _s -> getNumClauses(); ++j ) {
+                        if( val == 0 ) {
+                            markMultiOnsetClause(j, t -> getName());
+                        } else if( val == 1 ) {
+                            markMultiOffsetClause(j, t -> getName());
+                        }
+                    }
+                }
+                numClauses = _s -> getNumClauses();
+                /*
+                // add error constraint with t = v*
+                for( unsigned i = 0; i < dupF -> getErrorNum(); ++i ) {
+                    CirGate* t = dupF -> getError(i);
+                    cout << "add error " << t -> getName() << " var: " << t -> getVar() << " w/ "  << rv[i] << "...\n";
+                    Var v = t -> getVar();
+                    _s -> addUnitCNF(v, rv[i]);
+                }
+                */
+                //cout << "dupF: \n";
+                //dupF -> reportGateAll();
+                //_s -> assumeRelease();
+                //Var conjuntionV = _s -> newVar();
+                //_s -> addAndCNF(conjuntionV, _rmOut);
+                //_s -> assumeProperty(conjuntionV, 0);
+                _rcset.push_back(dupF);
+                _rcset.push_back(dupG);
+            }
+        }
+    }
+    return;
+    
+}
+
+void
 CirMgr::createMux4Candidates()
 {
 	assert(_F && _G && _dupF && _dupG && _candNameList.size());
@@ -239,18 +458,23 @@ CirMgr::writeToPatch(const string& fileName)
     for( unsigned i = 0; i < _patch -> getPoNum(); ++i ) {
         ofs << _patch -> getPo(i) -> getName() << ", ";
     }
-    for( unsigned i = 0; i < _patch -> getPiNum(); ++i ) { // FIXME: PI is the valid cut we chose
+    for( unsigned i = 0; i < _patch -> getPiNum(); ++i ) { 
         ofs << _patch -> getPi(i) -> getName() << (i == max ? ");" : ", ");
     }
     ofs << endl;
     // write input
     ofs << "input ";
-    for( unsigned i = 0; i < _patch -> getPiNum(); ++i ) { // FIXME
+    for( unsigned i = 0; i < _patch -> getPiNum(); ++i ) {
         ofs << _patch -> getPi(i) -> getName() << (i == max ? ";" : ", ");
     }
     ofs << endl;
     // write output
-    ofs << "output " << _patch -> getPo(0) -> getName() << ";" << endl;
+    max = _patch -> getPoNum() - 1;
+    ofs << "output ";
+    for( unsigned i = 0; i < _patch -> getPoNum(); ++i ) {
+        ofs << _patch -> getPo(i) -> getName() << (i == max ? ";" : ", ");
+    }
+    ofs << endl;
     // write wire
     max = _patch -> getGateNum() - 1;
     ofs << "wire ";
@@ -388,7 +612,10 @@ CirMgr::writeToOut(const string& fileName, const string& inpuFile)
     // write patch
     // FIXME: only single error, so only one patch...
     ofs << "patch p0 (";
-    ofs << "." << _patch -> getPo(0) -> getName() << "(" << _F -> getError(0) -> getName() << "), ";
+    for( unsigned i = 0; i < _patch -> getPoNum(); ++i ) {
+        ofs << "." << _patch -> getPo(i) -> getName() << "(" << _F -> getError(i) -> getName() << "), ";
+    }
+    //ofs << "." << _patch -> getPo(0) -> getName() << "(" << _F -> getError(0) -> getName() << "), ";
     max = _patch -> getPiNum() - 1;
     for(unsigned i = 0; i < _patch -> getPiNum(); ++i ) {
         ofs << "." << _patch -> getPi(i) -> getName() << "(" << _patch -> getPi(i)  -> getName() << ")" << (i == max ? ");" : ", ");

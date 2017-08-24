@@ -28,7 +28,7 @@ CirMgr::createVarAll() const
 void
 CirNet::createVar(SatSolverV* s, int solver) const
 {
-	assert(solver <= 1);
+	assert(solver <= 2);
 	totGateList();
 	for( unsigned i = 0; i < _totGateList.size(); ++i ) {
 		// IMPORTANT !! we first create var for candidates
@@ -36,6 +36,7 @@ CirNet::createVar(SatSolverV* s, int solver) const
 		Var v = s -> newVar();
 		if( solver == 0 ) _totGateList[i] -> setVar(v);
 		else if( solver == 1 ) _totGateList[i] -> setCandVar(v);
+		else if( solver == 2 ) _totGateList[i] -> setRMVar(v);
 	}
 /*
 	buildTopoList();
@@ -104,7 +105,7 @@ CirMgr::tieGate(CirGate* g1, CirGate* g2)
 void
 CirMgr::tiePi(CirNet* f, CirNet* g, int solver)
 {
-	assert(solver <= 1);
+	assert(solver <= 2);
 	//assert(f -> getPiNum() == g -> getPiNum() + _candNameList.size());
 	// we should get pi from g instead of f
 	for( unsigned i = 0; i < g -> getPiNum(); ++i ) {
@@ -115,6 +116,7 @@ CirMgr::tiePi(CirNet* f, CirNet* g, int solver)
 		//std::cout << "g: " << gPi -> getName() << "(" << gPi -> getVar() << ")" << std::endl;
 		if( solver == 0 ) gPi -> setVar(fPi -> getVar());
 		else if( solver == 1 ) gPi -> setCandVar(fPi -> getCandVar());
+		else if( solver == 2 ) gPi -> setRMVar(fPi -> getRMVar());
 		//std::cout << "after tie: " << std::endl;
 		//std::cout << "g: " << gPi -> getName() << "(" << gPi -> getVar() << ")" << std::endl;
 	}
@@ -130,22 +132,28 @@ CirMgr::tieConst(CirNet* f, CirNet* g)
 void
 CirMgr::addXorConstraint(CirNet* f, CirNet* g, int solver)
 {
-	assert(solver <= 1);
+	assert(solver <= 2);
 	assert(f -> getPoNum() == g -> getPoNum());
 // test
 	if( f -> getPoNum() == 1 ) {
 		CirGate* fPo = f -> getPo(0);
 		CirGate* gPo = g -> getGateByName(fPo -> getName());
 		if( solver == 0 ) {
-		Var v = _s -> newVar();
-		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
-		_s -> addUnitCNF(v, 1);
+		    Var v = _s -> newVar();
+            _s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
+		    _s -> addUnitCNF(v, 1);
+            _rmOut.push_back(v);
 		}
 		else if( solver == 1 ) {
-		Var v = _candSolver -> newVar();
-		_candSolver -> addXorCNF(v, fPo -> getCandVar(), false, gPo -> getCandVar(), false);			// POs should not have bubbles !?
-		_candSolver -> addUnitCNF(v, 1);
+		    Var v = _candSolver -> newVar();
+		    _candSolver -> addXorCNF(v, fPo -> getCandVar(), false, gPo -> getCandVar(), false);			// POs should not have bubbles !?
+		    _candSolver -> addUnitCNF(v, 1);
 		}
+        else if( solver == 2 ) {
+            Var v = _s -> newVar();
+            _rmSolver -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);
+            _rmSolver -> addUnitCNF(v, 0);
+        }
 		return;
 	}
 // end of test
@@ -156,12 +164,16 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g, int solver)
 		//std::cout << "XORing: " << fPo -> getName() << "(" << fPo << ") and " << gPo -> getName() << "(" << gPo << ")" << std::endl;
 		Var v;
 		if( solver == 0 ) {
-		v = _s -> newVar();
-		_s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
+		    v = _s -> newVar();
+		    _s -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
 		}
 		else if( solver == 1 ) {
-		v = _candSolver -> newVar();
-		_candSolver -> addXorCNF(v, fPo -> getCandVar(), false, gPo -> getCandVar(), false);			// POs should not have bubbles !?
+		    v = _candSolver -> newVar();
+		    _candSolver -> addXorCNF(v, fPo -> getCandVar(), false, gPo -> getCandVar(), false);			// POs should not have bubbles !?
+		}
+        else if( solver == 2 ) {
+		    v = _rmSolver -> newVar();
+		    _rmSolver -> addXorCNF(v, fPo -> getVar(), false, gPo -> getVar(), false);			// POs should not have bubbles !?
 		}
 		// we first assert all Xors to be 1
 		// NO !! we should add an OR gate
@@ -171,15 +183,21 @@ CirMgr::addXorConstraint(CirNet* f, CirNet* g, int solver)
 	assert(Xors.size() == f -> getPoNum());
 	Var out;
 	if( solver == 0 ) {
-	out = _s -> newVar();
-	_s -> addOrCNF(out, Xors);
-	_s -> addUnitCNF(out, 1);
+	    out = _s -> newVar();
+	    _s -> addOrCNF(out, Xors);
+	    _s -> addUnitCNF(out, 1);
+        _rmOut.push_back(out);
 	}
 	else if( solver == 1 ) {
-	out = _candSolver -> newVar();
-	_candSolver -> addOrCNF(out, Xors);
-	_candSolver -> addUnitCNF(out, 1);
+	    out = _candSolver -> newVar();
+        _candSolver -> addOrCNF(out, Xors);
+	    _candSolver -> addUnitCNF(out, 1);
 	}
+    else if( solver == 2 ) {
+        out = _rmSolver -> newVar();
+        _rmSolver -> addOrCNF(out, Xors);
+        _rmSolver -> addUnitCNF(out, 0);
+    }
 }
 
 // for single error only
@@ -241,6 +259,24 @@ CirMgr::getItp()
     return itp;
 }
 
+
+CirNet*
+CirMgr::getItp(const string& name)
+{
+    string proofName = "itp.tmp";
+    _s->_solver->proof->save(proofName.c_str());
+    
+    // modified for multiple errors...
+    _isClauseOn.clear();
+    _isClauseOn = _rmOnset[name];
+    assert(_isClauseOn.size() == _rmOnset[name].size());
+    // modified for multiple errors...
+    CirNet* itp = buildItp(proofName);
+    
+    unlink(proofName.c_str());
+    return itp;
+}
+
 CirNet*
 CirMgr::buildItp(const string& fileName)
 {
@@ -271,7 +307,7 @@ CirMgr::buildItp(const string& fileName)
     //cerr << endl;
     //for(size_t i = 0; i < _isClauseOnDup.size(); ++i) cerr << _isClauseOnDup[i];
     //cerr << endl;
-    //cerr << "usedClause: ";
+    //cerr << "usedClause: " << usedClause.size();
     //for( unsigned i = 0; i < usedClause.size(); ++i )cerr  << usedClause[i] << ' ';
     //cerr << endl;
 /*
@@ -484,7 +520,7 @@ CirMgr::buildItp(const string& fileName)
     g = claItpLookUp[cid];
     // IMPORTANT!! when a new net created, every PI/PO/Gate/Topo lists shoud be mantained carefully.
     ntk -> pushBackPOList(g.getGate()); // add po to _poList
-	//cout << "po of the itp circuit: " << g->getName() << endl;
+	//cout << "po of the itp circuit: " << g.getGate()->getName() << endl;
 	//cout << "reporting ITP..." << endl;
 	//GateList topoList = ntk->buildTopoList(); // construct _topoList
     //for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) {
@@ -496,6 +532,7 @@ CirMgr::buildItp(const string& fileName)
     }
     //cout << endl;
     // FIXME: paste patch should be done outside this function
+    /*
     CirGate* po = _F->getError(0);
 	//std::cout << "itp out: " << g -> getName() << std::endl;
 	unsigned gSize = g.getGate()->getFanoutSize();
@@ -503,7 +540,8 @@ CirMgr::buildItp(const string& fileName)
 	g.getGate()->setFanout(CirGateV(po), gSize);
 	po->setFaninSize(1);
 	po->setFanin(g, 0);
-    
+    */
+    // below are some old code may be deleted 08/22
     /*
     CirGate* po = _F -> getError(0);
     for(size_t i = 0; i < po->getFanoutSize(); i++) {
@@ -542,8 +580,8 @@ CirMgr::retrieveProof( Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId
         if((tmp & 1) == 0){ // root clause
             _isClauseOnDup.push_back(_isClauseOn[root_cid]);
             // debug
-            // cerr << (_isClauseOn[cid] ? "A":"B") << " ";
-            // cerr << "R" << cid << ": ";
+            //cerr << (_isClauseOn[cid] ? "A":"B") << " ";
+            //cerr << "R" << cid << ": ";
             idx = tmp >> 1;
             if(_isClauseOn[root_cid]) {
                 if(_varGroup[idx >> 1] == NONE) _varGroup[idx >> 1] = LOCAL_ON;
@@ -728,29 +766,29 @@ CirMgr::setUpCandSolver()
 void
 CirMgr::generatePatch()
 {
-	clock_t start = clock();
-   createVarAll();
-	if( _debug ) {
-		std::cout << "var of each gate: " << std::endl;
-		const GateList& topo = _F -> totGateList();
-		//const GateList& topo = _F -> buildTopoList();
-		for( unsigned i = 0; i < topo.size(); ++i )
-			std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
-		std::cout << std::endl;
-		const GateList& topo1 = _G -> totGateList();
-		for( unsigned i = 0; i < topo1.size(); ++i )
-			std::cout << topo1[i] -> getName() << "(" << topo1[i] -> getVar() << ") ";
-		std::cout << std::endl;
-		const GateList& topo2 = _dupF -> totGateList();
-		for( unsigned i = 0; i < topo2.size(); ++i )
-			std::cout << topo2[i] -> getName() << "(" << topo2[i] -> getVar() << ") ";
-		std::cout << std::endl;
-		const GateList& topo3 = _dupG -> totGateList();
-		for( unsigned i = 0; i < topo3.size(); ++i )
-			std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
-		std::cout << std::endl;
-	}
-	std::cout << "# vars in patch solver: " << _s -> nVars() << std::endl;
+    clock_t start = clock();
+    createVarAll();
+    if( _debug ) {
+        std::cout << "var of each gate: " << std::endl;
+        const GateList& topo = _F -> totGateList();
+        //const GateList& topo = _F -> buildTopoList();
+        for( unsigned i = 0; i < topo.size(); ++i )
+            std::cout << topo[i] -> getName() << "(" << topo[i] -> getVar() << ") ";
+        std::cout << std::endl;
+        const GateList& topo1 = _G -> totGateList();
+        for( unsigned i = 0; i < topo1.size(); ++i )
+            std::cout << topo1[i] -> getName() << "(" << topo1[i] -> getVar() << ") ";
+        std::cout << std::endl;
+        const GateList& topo2 = _dupF -> totGateList();
+        for( unsigned i = 0; i < topo2.size(); ++i )
+            std::cout << topo2[i] -> getName() << "(" << topo2[i] -> getVar() << ") ";
+        std::cout << std::endl;
+        const GateList& topo3 = _dupG -> totGateList();
+        for( unsigned i = 0; i < topo3.size(); ++i )
+            std::cout << topo3[i] -> getName() << "(" << topo3[i] -> getVar() << ") ";
+        std::cout << std::endl;
+    }
+    std::cout << "# vars in patch solver: " << _s -> nVars() << std::endl;
 	
 	assert(_F -> getPiNum() == _dupF -> getPiNum());
 	tiePi(_F, _G);
@@ -855,8 +893,10 @@ CirMgr::generatePatch()
 	createVar(_F);
 	createVar(_G);
 	tiePi(_F, _G);
+    cout << "# cluases: " << _s -> getNumClauses() << endl; 
 	addToSolver(_F);
 	addToSolver(_G);
+    cout << "# cluases: " << _s -> getNumClauses() << endl; 
 	addXorConstraint(_F, _G);
    //addConstConstraint(_F);
    //addConstConstraint(_G);
@@ -998,8 +1038,10 @@ CirMgr::generatePatch(idxVec& cutIdx)
 	createVar(_F);
 	createVar(_G);
 	tiePi(_F, _G);
+    cout << "# cluases: " << _s -> getNumClauses() << endl; 
 	addToSolver(_F);
 	addToSolver(_G);
+    cout << "# cluases: " << _s -> getNumClauses() << endl; 
 	addXorConstraint(_F, _G);
    //addConstConstraint(_F);
    //addConstConstraint(_G);
