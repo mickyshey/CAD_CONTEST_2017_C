@@ -41,6 +41,39 @@ CirMgr::dupNet(CirNet* n) const
 	return newNet;
 }
 
+void
+CirMgr::miterNet(CirNet* src, CirNet* target)
+{
+    GateList totalList = src -> totGateList();
+    for( unsigned i = 2; i < totalList.size(); ++i ) {
+        CirGate* g = totalList[i];
+        if(g -> getType() == Gate_Pi) {
+            continue;
+        }
+        CirGate* dupG = target -> createGate(g -> getType(), g -> getName(), g -> getId());
+        dupG -> reserveFaninSize(g -> getFaninSize());
+        for( unsigned j = 0; j < g -> getFaninSize(); ++j ) {
+            CirGate* in = g -> getFanin(j);
+            CirGate* dupIn = target -> getGateByName(in -> getName());
+            dupG -> pushBackFanin(CirGateV(dupIn, g -> isFaninInv(j)));
+				// we do not maintain the bubble of fanout, still ok so far ...
+            dupIn -> pushBackFanout(CirGateV(dupG, false));
+        }
+    }
+    // itp do not create Gate_Po type
+    for( unsigned i = 0; i < src -> getPoNum(); ++i ) {
+        CirGate* g = src -> getPo(i);
+        target -> pushBackPOList(g);
+    }
+    
+    /*
+    for( unsigned i = 0; i < src -> getPiNum(); ++i ) {
+        CirGate* g = src -> getPi(i);
+        target -> pushBackPIList(g);
+    }
+    */
+}
+
 CirNet*
 CirMgr::connectXor(CirNet* f, CirNet* g)
 {

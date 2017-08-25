@@ -51,10 +51,10 @@ public:
     void pushBackPOList(CirGate* g)                 { _poList.push_back(g); }
     void pushBackPIList(CirGate* g)                 { _piList.push_back(g); }
 	//CirNet* constructNet();
-   void removeInvBuf(std::vector<std::string>& nameList);
+    void removeInvBuf(std::vector<std::string>& nameList);
     void sweep();
 	CirGate* createMux(CirGate* g_F, CirGate* g_dupF);
-   void randSim();
+    void randSim();
 	void knownSim();
 
 //	in cirParse.cpp
@@ -67,7 +67,7 @@ public:
 	void reportNetList() const;
 	void reportNetListRec(CirGate* g, unsigned level) const;
 	void reportTopoList() const;
-   void reportSimV() const;
+    void reportSimV() const;
 
 //	in cirSat.cpp
 	//void reassignId() const;
@@ -79,11 +79,11 @@ private:
 	unsigned 							_id;
 	CirGate*							_const0;
 	CirGate*							_const1;
-   // do not use _gateList to do anything !!!
+    // do not use _gateList to do anything !!!
 	GateList							_gateList;			
 	GateList							_piList, _poList;
 	GateList							_errorList;
-	name2GateMap					_name2GateMap;	
+	name2GateMap					    _name2GateMap;	
 	mutable GateList					_topoList;
     mutable GateList                    _totGateList;
 };

@@ -23,7 +23,7 @@ CirNet::reportGateAll() const
 	cout << endl;
 	cout << "Gates:" << endl;
 	for( unsigned i = 0; i < _gateList.size(); ++i ) {
-		if( _gateList[i] -> getType() == Gate_Buf || _gateList[i] -> getType() == Gate_Inv )
+        if( _gateList[i] -> getType() == Gate_Buf || _gateList[i] -> getType() == Gate_Inv )
 			cout << "[" << _gateList[i] -> getName() << "], id: " << _gateList[i] -> getId() << ", var: " << _gateList[i] -> getVar() << ", in0: " << _gateList[i] -> getFanin(0) -> getName() << endl;
 		else {
 			CirGate* g = _gateList[i];
@@ -87,6 +87,8 @@ CirNet::reportNetListRec(CirGate* g, unsigned level) const
 	}
 	// print out address
 	//std::cout << ", " << g;
+    // print out var
+    std::cout << ", " << g -> getVar();
 	if( g -> isRef() ) { cout << " (*)" << endl; return; }
 	cout << endl;
 	g -> setToRef();
