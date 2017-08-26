@@ -46,7 +46,7 @@ cleanall: clean
 
 ctags:	  
 	@rm -f src/tags
-	@for pkg in $(SRCPKGS) main; \
+	@for pkg in $(SRCPKGS); \
 	do \
 		echo "Tagging $$pkg..."; \
 		cd src; ctags -a $$pkg/*.cpp $$pkg/*.h; cd ..; \
