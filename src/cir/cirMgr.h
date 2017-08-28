@@ -58,6 +58,7 @@ public:
     CirNet* getPath() 					{ return _patch; }
     unsigned getNumClauses() const 	{ return _s -> getNumClauses(); }
     unsigned getNumVars() const		{ return _s -> nVars(); }
+    unsigned getErrorNum() const    { return _F -> getErrorNum(); }
 
     //	in cirParse.cpp
     bool readVerilog(const string& filename, bool isF);

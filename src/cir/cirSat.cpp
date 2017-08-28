@@ -3,6 +3,7 @@
 #include <cassert>
 #include <queue>
 #include <set>
+#include <unordered_set>
 #include <iomanip>
 
 #include "cir/cirMgr.h"
@@ -293,7 +294,7 @@ CirMgr::buildItp(const string& fileName)
     CirGateV g2;
     int i, cid, tmp, idx, tmp_cid, w;
 	string wireName = "w";
-    set<CirGate*> commonGate;
+    unordered_set<CirGate*> commonGate;
 
 	ntk -> createConst(0);
 	ntk -> createConst(1);
@@ -526,13 +527,12 @@ CirMgr::buildItp(const string& fileName)
     //for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) {
     //    cerr << ntk -> getGate(i) -> getName() << endl;
     //}
-    for(std::set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
+    for(std::unordered_set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
         //CirGate* tmp = *it; cout << tmp -> getName() << "   ";
         ntk -> pushBackPIList(*it);
     }
     //cout << endl;
     // FIXME: paste patch should be done outside this function
-    /*
     CirGate* po = _F->getError(0);
 	//std::cout << "itp out: " << g -> getName() << std::endl;
 	unsigned gSize = g.getGate()->getFanoutSize();
@@ -540,7 +540,6 @@ CirMgr::buildItp(const string& fileName)
 	g.getGate()->setFanout(CirGateV(po), gSize);
 	po->setFaninSize(1);
 	po->setFanin(g, 0);
-    */
     // below are some old code may be deleted 08/22
     /*
     CirGate* po = _F -> getError(0);
@@ -1015,15 +1014,17 @@ CirMgr::generatePatch(idxVec& cutIdx)
 	if( isSat ) return;
    std::cout << "generating patch ..." << std::endl;
 	_patch = getItp();
-	if( _debug ) {
-		std::cout << "report patch: " << std::endl;
-		_patch -> reportNetList();
-		std::cout << "after patching..." << std::endl;
-		std::cout << "_F: " << std::endl;
-		_F -> reportNetList();
-		std::cout << "_G: " << std::endl;
-		_G -> reportNetList();
-	}
+	/* if( _debug ) { */
+		/* std::cout << "report patch: " << std::endl; */
+		/* _patch -> reportNetList(); */
+      std::cout << "PI of patch: " << std::endl;
+      _patch -> reportPi();
+		/* std::cout << "after patching..." << std::endl; */
+		/* std::cout << "_F: " << std::endl; */
+		/* _F -> reportNetList(); */
+		/* std::cout << "_G: " << std::endl; */
+		/* _G -> reportNetList(); */
+	/* } */
 	std::cout << "time: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::endl;
 
 // verify patch validity

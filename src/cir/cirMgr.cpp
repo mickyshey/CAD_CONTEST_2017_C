@@ -19,6 +19,7 @@ CirMgr::test()
 {
 
 	removeInvBuf();
+   return;
 	removeCandFromFanoutCone();
 
     _dupF = dupNet(_F);
