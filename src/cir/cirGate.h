@@ -87,6 +87,7 @@ public:
     std::string getBestGateName()               { return _bestGateName; }
     void setBestGateName(const std::string s)   { _bestGateName = s; }
     void pushBackTypeNamePair(const GateType& t, const string& s)  { _removedGate.push_back({t, s}); }
+    const std::pair<GateType, std::string>& getTypeNamePair(unsigned idx)  { return _removedGate[idx]; }
     unsigned getRemovedGateSize() const         { return _removedGate.size(); }
     // bool isConst0() { return (getType() == Gate_Const) && (!(CirGateV)*this.isInv()); }
     // bool isConst1() { return (getType() == Gate_Const) && ((CirGateV)*this.isInv()); }

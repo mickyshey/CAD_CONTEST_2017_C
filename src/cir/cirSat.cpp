@@ -527,19 +527,39 @@ CirMgr::buildItp(const string& fileName)
     //for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) {
     //    cerr << ntk -> getGate(i) -> getName() << endl;
     //}
-    for(std::unordered_set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
-        //CirGate* tmp = *it; cout << tmp -> getName() << "   ";
-        ntk -> pushBackPIList(*it);
-    }
+
+   for(std::unordered_set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
+      // modified by mlllk
+      // add external inv to fit the smallest weight during 'removeInvBuf()'
+      CirGate* g = *it;
+      if( g -> getBestGateName().size() ) {
+         std::string target = g -> getBestGateName();
+         std::cout << "target: " << g -> getBestGateName() << std::endl;
+         // count the inv number
+         unsigned invCount = 0;
+         for( unsigned i = 0; i < g -> getRemovedGateSize(); ++i ) {
+            std::pair<GateType, std::string> typeNamePair = g -> getTypeNamePair(i);
+            if( typeNamePair.first == Gate_Inv ) {
+               ++invCount;
+            }
+            if( typeNamePair.second == g -> getBestGateName() ) break;
+         }
+         std::cout << "invCount: " << invCount << std::endl;
+         ntk -> pushBackPIList(*it);
+      }
+      else ntk -> pushBackPIList(*it);
+         // end of modification
+   }
+
     //cout << endl;
     // FIXME: paste patch should be done outside this function
-    CirGate* po = _F->getError(0);
-	//std::cout << "itp out: " << g -> getName() << std::endl;
-	unsigned gSize = g.getGate()->getFanoutSize();
-    g.getGate()->setFanoutSize(gSize + 1);
-	g.getGate()->setFanout(CirGateV(po), gSize);
-	po->setFaninSize(1);
-	po->setFanin(g, 0);
+    /* CirGate* po = _F->getError(0); */
+	/* //std::cout << "itp out: " << g -> getName() << std::endl; */
+	/* unsigned gSize = g.getGate()->getFanoutSize(); */
+    /* g.getGate()->setFanoutSize(gSize + 1); */
+	/* g.getGate()->setFanout(CirGateV(po), gSize); */
+	/* po->setFaninSize(1); */
+	/* po->setFanin(g, 0); */
     // below are some old code may be deleted 08/22
     /*
     CirGate* po = _F -> getError(0);
@@ -1029,26 +1049,26 @@ CirMgr::generatePatch(idxVec& cutIdx)
 
 // verify patch validity
 
-	std::cerr << "checking patch validity ..." << std::endl;
-	_s->reset();
-	// IMPORTANT !! we first create var for candidates
-	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
-		Var v = _s -> newVar();
-		_sortedCandGate[i] -> setVar(v);
-	}
-	createVar(_F);
-	createVar(_G);
-	tiePi(_F, _G);
-    cout << "# cluases: " << _s -> getNumClauses() << endl; 
-	addToSolver(_F);
-	addToSolver(_G);
-    cout << "# cluases: " << _s -> getNumClauses() << endl; 
-	addXorConstraint(_F, _G);
-   //addConstConstraint(_F);
-   //addConstConstraint(_G);
-	_s -> simplify();
-	bool eqCheck = solve();
-	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
+	/* std::cerr << "checking patch validity ..." << std::endl; */
+	/* _s->reset(); */
+	/* // IMPORTANT !! we first create var for candidates */
+	/* for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) { */
+	/* 	Var v = _s -> newVar(); */
+	/* 	_sortedCandGate[i] -> setVar(v); */
+	/* } */
+	/* createVar(_F); */
+	/* createVar(_G); */
+	/* tiePi(_F, _G); */
+    /* cout << "# cluases: " << _s -> getNumClauses() << endl; */ 
+	/* addToSolver(_F); */
+	/* addToSolver(_G); */
+    /* cout << "# cluases: " << _s -> getNumClauses() << endl; */ 
+	/* addXorConstraint(_F, _G); */
+   /* //addConstConstraint(_F); */
+   /* //addConstConstraint(_G); */
+	/* _s -> simplify(); */
+	/* bool eqCheck = solve(); */
+	/* cout << (eqCheck ? "SAT" : "UNSAT") << endl; */
 
 }
 
