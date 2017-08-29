@@ -545,6 +545,23 @@ CirMgr::buildItp(const string& fileName)
             if( typeNamePair.second == g -> getBestGateName() ) break;
          }
          std::cout << "invCount: " << invCount << std::endl;
+         if( invCount % 2 ) {
+            std::cout << "should insert inv..." << std::endl;
+            // insert inv for gate named 'wX'
+            for( unsigned i = 0; i < g -> getFanoutSize(); ++i ) {
+               CirGate* fanout = g -> getFanout(i);
+               if( fanout -> getName()[0] != 'w' ) continue;
+               std::cout << fanout -> getName() << std::endl;
+               unsigned idx = (fanout -> getFanin(0) == g ? 0 : 1);
+               assert(fanout -> getFanin(idx) == g);
+               // insert inv between fanout and g
+               CirGate* inv = ntk -> createGate(Gate_Inv, wireName + "_modifiedForPatch");
+               inv -> pushBackFanin(CirGateV(g, false));
+               inv -> pushBackFanout(CirGateV(fanout, false));
+               g -> setFanout(CirGateV(inv, false), i);
+               fanout -> setFanin(CirGateV(inv, false), idx);
+            }
+         }
          ntk -> pushBackPIList(*it);
       }
       else ntk -> pushBackPIList(*it);
