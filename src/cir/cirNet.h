@@ -50,6 +50,7 @@ public:
     const GateList& totGateList() const;
     void pushBackPOList(CirGate* g)                 { _poList.push_back(g); }
     void pushBackPIList(CirGate* g)                 { _piList.push_back(g); }
+    void swapPI(CirGate* g, CirGate* target);
 	//CirNet* constructNet();
     void removeInvBuf(std::vector<std::string>& nameList);
     void sweep();

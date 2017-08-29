@@ -4,6 +4,7 @@
 #include <queue>
 #include <set>
 #include <unordered_set>
+#include <unordered_map>
 #include <iomanip>
 
 #include "cir/cirMgr.h"
@@ -295,6 +296,7 @@ CirMgr::buildItp(const string& fileName)
     int i, cid, tmp, idx, tmp_cid, w;
 	string wireName = "w";
     unordered_set<CirGate*> commonGate;
+    unordered_map<std::string, CirGate*> createdPi;
 
 	ntk -> createConst(0);
 	ntk -> createConst(1);
@@ -379,8 +381,21 @@ CirMgr::buildItp(const string& fileName)
                 }
 
                 if(_varGroup[idx >> 1] == COMMON) {
-                    g = CirGateV((_var2Gate.find(idx >> 1))->second, false);
+
+                   // modified by mlllk
+                   // make patch totally indepedent with _F
+                   std::string piName = _var2Gate.find(idx >> 1) -> second -> getName();
+                   if( createdPi.find(piName) == createdPi.end() ) {
+                      // the createdPi type is Gate_Buf, which can be changed afterwards
+                      CirGate* patchPi = ntk -> createGate(Gate_Pi, piName);
+                      createdPi.insert({piName, patchPi});
+                      g = CirGateV(patchPi, false);
+                   }
+                   else g = CirGateV(createdPi.at(piName), false);
+                    /* g = CirGateV((_var2Gate.find(idx >> 1))->second, false); */
+                   // end of modification
                     g1 = g;
+
                     commonGate.insert(g.getGate());
                     //g1 = (_var2Gate.find(idx >> 1))->second;
                     if((idx & 1) == 1) {
@@ -411,7 +426,20 @@ CirMgr::buildItp(const string& fileName)
                         if(tmp == 0) break;
                         idx += tmp;
                         if(_varGroup[idx >> 1] == COMMON) {
-                            g2 = CirGateV((_var2Gate.find(idx >> 1))->second, false);
+
+                            // modified by mlllk
+                            // make patch totally indepedent with _F
+                            std::string piName = _var2Gate.find(idx >> 1) -> second -> getName();
+                            if( createdPi.find(piName) == createdPi.end() ) {
+                               // the createdPi type is Gate_Buf, which can be changed afterwards
+                               CirGate* patchPi = ntk -> createGate(Gate_Pi, piName);
+                               createdPi.insert({piName, patchPi});
+                               g2 = CirGateV(patchPi, false);
+                            }
+                            else g2 = CirGateV(createdPi.at(piName), false);
+                            /* g2 = CirGateV((_var2Gate.find(idx >> 1))->second, false); */
+                            // end of modification
+
                             commonGate.insert(g2.getGate());
                             if((idx & 1) == 1) {
                                 
@@ -562,9 +590,13 @@ CirMgr::buildItp(const string& fileName)
                fanout -> setFanin(CirGateV(inv, false), idx);
             }
          }
-         ntk -> pushBackPIList(*it);
+         // create a dummy gate for this newly patch pi
+         CirGate* dummy = ntk -> createGate(Gate_Pi, target);
+         // swap gate in _piList
+         ntk -> swapPI(dummy, g);
+         delete g;
       }
-      else ntk -> pushBackPIList(*it);
+      /* else ntk -> pushBackPIList(*it); */
          // end of modification
    }
 

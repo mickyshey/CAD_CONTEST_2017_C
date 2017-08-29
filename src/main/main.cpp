@@ -14,9 +14,10 @@ int main(int argc, char** argv) {
       std::cout << "single error ..." << std::endl;
       cirMgr.test();
    }
-   else
-	   cirMgr.testRM();	
+   else cirMgr.testRM();	
     cirMgr.writeToPatch(argv[4]);
+    std::cout << "write patch done ..." << std::endl;
     cirMgr.writeToOut(argv[5], argv[1]);
+    std::cout << "write out done ..." << std::endl;
 }
 

@@ -50,8 +50,8 @@ remove:
 	@rm -f $(EXEC)
 	@echo 'Removing out.v patch.v F_miter.v'
 	@rm -f out.v patch.v F_miter.v
-	@echo 'Removing test.out'
-	@rm -f test.out
+	@echo 'Removing *.out'
+	@rm -f *.out
 
 ctags:	  
 	@rm -f src/tags

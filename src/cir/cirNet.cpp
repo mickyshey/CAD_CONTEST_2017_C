@@ -216,6 +216,17 @@ CirNet::totGateList() const
 }
 
 void
+CirNet::swapPI(CirGate* g, CirGate* target)
+{
+   for( unsigned i = 0; i < _piList.size(); ++i ) {
+      if( _piList[i] == target ) {
+         _piList[i] = g;
+         return;
+      }
+   }
+}
+
+void
 CirNet::removeInvBuf(std::vector<std::string>& nameList)
 {
 	std::unordered_set<std::string> nameHash;
