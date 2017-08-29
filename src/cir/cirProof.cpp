@@ -34,8 +34,27 @@ CirMgr::genProofModel(SatSolverV& solver)
 void
 CirMgr::checkValidPatch()
 {
+   // connect patch back to _F
+
 	_s -> reset();
 	// create OFF set
+	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+		Var v = _s -> newVar();
+		_sortedCandGate[i] -> setVar(v);
+	}
+	createVar(_F);
+	createVar(_G);
+	tiePi(_F, _G);
+    cout << "# cluases: " << _s -> getNumClauses() << endl; 
+	addToSolver(_F);
+	addToSolver(_G);
+    cout << "# cluases: " << _s -> getNumClauses() << endl; 
+	addXorConstraint(_F, _G);
+   //addConstConstraint(_F);
+   //addConstConstraint(_G);
+	_s -> simplify();
+	bool eqCheck = solve();
+	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
 	
 	
 }

@@ -640,7 +640,9 @@ CirMgr::buildItp(const string& fileName)
                unsigned idx = (fanout -> getFanin(0) == g ? 0 : 1);
                assert(fanout -> getFanin(idx) == g);
                // insert inv between fanout and g
-               CirGate* inv = ntk -> createGate(Gate_Inv, wireName + "_modifiedForPatch");
+							std::string name = wireName + myToString(_patchGateCount);
+							_patchGateCount++;
+               CirGate* inv = ntk -> createGate(Gate_Inv, name + "_modified");
                inv -> pushBackFanout(CirGateV(fanout, false));
                fanout -> setFanin(CirGateV(inv, false), idx);
                /* inv -> pushBackFanin(CirGateV(g, false)); */
@@ -1154,8 +1156,8 @@ CirMgr::generatePatch(idxVec& cutIdx)
    std::cout << "generating patch ..." << std::endl;
 	_patch = getItp();
 	/* if( _debug ) { */
-		std::cout << "report patch: " << std::endl;
-		_patch -> reportNetList();
+		/* std::cout << "report patch: " << std::endl; */
+		/* _patch -> reportNetList(); */
       std::cout << "PI of patch: " << std::endl;
       _patch -> reportPi();
 		/* std::cout << "after patching..." << std::endl; */
@@ -1167,6 +1169,7 @@ CirMgr::generatePatch(idxVec& cutIdx)
 	std::cout << "time: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::endl;
 
 // verify patch validity
+   /* checkValidPatch(); */
 
 	/* std::cerr << "checking patch validity ..." << std::endl; */
 	/* _s->reset(); */
