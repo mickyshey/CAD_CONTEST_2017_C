@@ -18,6 +18,14 @@ void
 CirMgr::test()
 {
 
+   // modified by mlllk
+   // for checking patch validity
+   /* _FF = dupNet(_F); */
+   /* for( unsigned i = 0; i < _candNameList.size(); ++i ) { */
+   /*    _candFF.push_back(_candNameList[i]); */
+   /* } */
+   // end of modification
+
 	removeInvBuf();
 	removeCandFromFanoutCone();
 

@@ -36,6 +36,7 @@ class CirMgr
 public:
     explicit CirMgr(const string& name = ""): 
         _name(name),
+        _FF(NULL),
         _F(NULL),
         _G(NULL),
         _dupF(NULL),
@@ -126,6 +127,7 @@ public:
     void UNSATGeneralizationWithUNSATCore(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin, idxVec& generalizedCut);
     void SATGeneralization(idxVec& cutIdx);
     void getCutWithDecisionOrdered(bool zeroFirst, unsigned& bestCost);
+    unsigned searchInvCount(std::string bestName, std::string gateName);
 
     // in cirMulti.cpp
     void formulaRM(CirNet* f, CirNet* g, int solver); // _s = 0; _rmSolver = 1;
@@ -153,6 +155,7 @@ public:
 
 private:
 	string 								_name;
+   CirNet*                       _FF; // for checking patch validity
 	CirNet*								_F;
 	CirNet*								_G;
 	CirNet*								_dupF;
@@ -164,6 +167,7 @@ private:
     SatSolverV*                         _rmSolver;     // for cofactor reduction
     CirNet*                             _out;
 	vector<string>						_candNameList;
+   vector<string>                _candFF;
 	vector<CirGate*>					_sortedCandGate;
 	vector<bool>						_muxAssignment;
 	VarMap	                            _costVar2Gate;

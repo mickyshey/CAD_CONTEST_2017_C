@@ -66,6 +66,10 @@ void
 CirPiGate::addToSolver(SatSolverV* s, int solver) const
 {
    assert(solver <= 2);
+   if(_in.size() == 0) return;
+   if( solver == 0 ) s -> addEqCNF(_var, getFaninVar(0), isFaninInv(0));
+   else if( solver == 1 ) s -> addEqCNF(_candVar, getFaninCandVar(0), isFaninInv(0));
+   else if( solver == 2 ) s -> addEqCNF(_rmVar, getFaninRMVar(0), isFaninInv(0));
 }
 
 void
