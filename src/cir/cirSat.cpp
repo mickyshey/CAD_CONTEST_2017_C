@@ -408,17 +408,34 @@ CirMgr::buildItp(const string& fileName)
                         std::string name = wireName + myToString(_patchGateCount);
                         _patchGateCount++;
                         g = CirGateV(ntk->createGate(Gate_Inv, name), false);
-                        g.getGate()->pushBackFanin(g1);
-                        //cout << g1.getGate() -> getFanoutSize() << endl;
-                        for(int j = 0; j < g1.getGate() -> getFanoutSize(); j++) {
-                            //cout << j << " " << g1.getGate() -> getFanout(j) -> getName() << endl;
-                            CirGateV tmpG = CirGateV(g1.getGate() -> getFanout(j));
-                            //cout << "tmpG: " << tmpG.getGate() << endl;
-                            g.getGate() -> pushBackFanout(tmpG);
+                        std::cout << "creating inv: " << g.getGate() -> getName() << std::endl;
+
+                        // modified by mlllk
+                        // carefully maintain the connection between inv and g1
+                        for( unsigned j = 0; j < g1.getGate() -> getFanoutSize(); ++j ) {
+                           CirGate* fanout = g1.getGate() -> getFanout(j);
+                           unsigned idx = (fanout -> getFanin(0) == g1.getGate() ? 0 : 1);
+                           assert(fanout -> getFanin(idx) == g1.getGate());
+                           fanout -> setFanin(g, idx);
+                           g.getGate() -> pushBackFanout(CirGateV(fanout, false));
                         }
                         g1.getGate() -> clearFanout();
                         g1.getGate() -> pushBackFanout(g);
                         assert(g1.getGate()->getFanoutSize() == 1);
+                        g.getGate() -> pushBackFanin(g1);
+                        // end of modification
+
+                        /* g.getGate()->pushBackFanin(g1); */
+                        /* //cout << g1.getGate() -> getFanoutSize() << endl; */
+                        /* for(int j = 0; j < g1.getGate() -> getFanoutSize(); j++) { */
+                        /*     //cout << j << " " << g1.getGate() -> getFanout(j) -> getName() << endl; */
+                        /*     CirGateV tmpG = CirGateV(g1.getGate() -> getFanout(j)); */
+                        /*     //cout << "tmpG: " << tmpG.getGate() << endl; */
+                        /*     g.getGate() -> pushBackFanout(tmpG); */
+                        /* } */
+                        /* g1.getGate() -> clearFanout(); */
+                        /* g1.getGate() -> pushBackFanout(g); */
+                        /* assert(g1.getGate()->getFanoutSize() == 1); */
                         g1 = g;
 
 					    // g.flipInv();
@@ -451,14 +468,31 @@ CirMgr::buildItp(const string& fileName)
                                 std::string name = wireName + myToString(_patchGateCount);
                                 _patchGateCount++;
                                 CirGateV invG = CirGateV(ntk->createGate(Gate_Inv, name), false);
-                                invG.getGate()->pushBackFanin(g2);
-                                for(int j = 0; j < g2.getGate() -> getFanoutSize(); j++) {
-                                    CirGateV tmpG = CirGateV(g2.getGate() -> getFanout(j));
-                                    invG.getGate() -> pushBackFanout(tmpG);
-                                }
-                                g2.getGate() -> clearFanout();
-                                g2.getGate() -> pushBackFanout(invG);
-                                assert(g2.getGate()->getFanoutSize() == 1);
+                                std::cout << "creating inv: " << invG.getGate() -> getName() << std::endl; 
+
+                        // modified by mlllk
+                        // carefully maintain the connection between inv and g1
+                        for( unsigned j = 0; j < g2.getGate() -> getFanoutSize(); ++j ) {
+                           CirGate* fanout = g2.getGate() -> getFanout(j);
+                           unsigned idx = (fanout -> getFanin(0) == g2.getGate() ? 0 : 1);
+                           assert(fanout -> getFanin(idx) == g2.getGate());
+                           fanout -> setFanin(invG, idx);
+                           invG.getGate() -> pushBackFanout(CirGateV(fanout, false));
+                        }
+                        g2.getGate() -> clearFanout();
+                        g2.getGate() -> pushBackFanout(invG);
+                        assert(g2.getGate()->getFanoutSize() == 1);
+                        invG.getGate() -> pushBackFanin(g2);
+                        // end of modification
+                        
+                                /* invG.getGate()->pushBackFanin(g2); */
+                                /* for(int j = 0; j < g2.getGate() -> getFanoutSize(); j++) { */
+                                /*     CirGateV tmpG = CirGateV(g2.getGate() -> getFanout(j)); */
+                                /*     invG.getGate() -> pushBackFanout(tmpG); */
+                                /* } */
+                                /* g2.getGate() -> clearFanout(); */
+                                /* g2.getGate() -> pushBackFanout(invG); */
+                                /* assert(g2.getGate()->getFanoutSize() == 1); */
                                 g2 = invG;
 							    // g2.flipInv();
 
@@ -562,13 +596,24 @@ CirMgr::buildItp(const string& fileName)
 
     std::cout << "before modification" << std::endl;
     ntk -> reportPi();
+    std::cout << "patch before modification" << std::endl;
+    ntk -> reportNetList();
 
    for(std::unordered_set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
       // modified by mlllk
       // add external inv to fit the smallest weight during 'removeInvBuf()'
       CirGate* g = *it;
+
+      if( g -> getName() == "g124" ) {
+         std::cout << "fanout of g124: " << std::endl;
+         for( unsigned i = 0; i < g -> getFanoutSize(); ++i ) {
+            std::cout << g -> getFanout(i) -> getName() << std::endl;
+         }
+      }
+
       if( g -> getBestGateName().size() ) {
          std::string target = g -> getBestGateName();
+         std::cout << "gate: " << g -> getName() << std::endl;
          std::cout << "target: " << g -> getBestGateName() << std::endl;
          // delete g in _piList
          ntk -> deletePI(g);
@@ -608,6 +653,9 @@ CirMgr::buildItp(const string& fileName)
          else {
             // modify the connection between g/fanout
             for( unsigned i = 0; i < g -> getFanoutSize(); ++i ) {
+               if( g -> getName() == "g124" ) {
+                  std::cout << "fanout: " << g -> getFanout(i) -> getName() << std::endl;
+               }
                CirGate* fanout = g -> getFanout(i);
                assert(fanout -> getName()[0] == 'w');
                unsigned idx = (fanout -> getFanin(0) == g ? 0 : 1);
@@ -1106,8 +1154,8 @@ CirMgr::generatePatch(idxVec& cutIdx)
    std::cout << "generating patch ..." << std::endl;
 	_patch = getItp();
 	/* if( _debug ) { */
-		/* std::cout << "report patch: " << std::endl; */
-		/* _patch -> reportNetList(); */
+		std::cout << "report patch: " << std::endl;
+		_patch -> reportNetList();
       std::cout << "PI of patch: " << std::endl;
       _patch -> reportPi();
 		/* std::cout << "after patching..." << std::endl; */
