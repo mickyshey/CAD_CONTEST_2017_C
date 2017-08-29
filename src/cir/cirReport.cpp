@@ -164,3 +164,12 @@ CirMgr::reportFanoutConeRec(CirGate* g, unsigned level) const
 		reportFanoutConeRec(g -> getFanout(i), level + 1);
 	
 }
+
+void
+CirNet::reportPi() const
+{
+   for( unsigned i = 0; i < getPiNum(); ++i ) {
+      std::cout << getPi(i) -> getName() << "  ";
+   }
+   std::cout << std::endl;
+}

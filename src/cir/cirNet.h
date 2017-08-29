@@ -33,8 +33,8 @@ public:
     unsigned getGateNum() const						{ return _gateList.size(); }
 	unsigned getErrorNum() const					{ return _errorList.size(); }
     CirGate* getConst(bool val) 					{ if(val) return _const1; else return _const0; }
-	CirGate* getPi(unsigned idx) 					{ return _piList[idx]; }
-	CirGate* getPo(unsigned idx) 					{ return _poList[idx]; }
+	CirGate* getPi(unsigned idx) const			{ return _piList[idx]; }
+	CirGate* getPo(unsigned idx) const			{ return _poList[idx]; }
     CirGate* getGate(unsigned id) 					{ return _gateList[id]; }
 	CirGate* getError(unsigned idx)					{ return _errorList[idx]; }
 	CirGate* getGateByName(const string& n) 		{ return _name2GateMap[n]; }
@@ -67,7 +67,8 @@ public:
 	void reportNetList() const;
 	void reportNetListRec(CirGate* g, unsigned level) const;
 	void reportTopoList() const;
-    void reportSimV() const;
+   void reportSimV() const;
+   void reportPi() const;
 
 //	in cirSat.cpp
 	//void reassignId() const;

@@ -248,10 +248,14 @@ CirNet::removeInvBuf(std::vector<std::string>& nameList)
 			assert(_totGateList[i] -> getFaninSize() == 1 );
 			if( nameList.size() && _totGateList[i] -> getWeight() ) {
 				assert(nameHash.find(_totGateList[i] -> getName()) != nameHash.end());
-				// update the weight of fanin gate
+				// update the weight of fanin gate if necessary
 				CirGate* tmpG = _totGateList[i] -> getFanin(0);
-				if( _totGateList[i] -> getWeight() < tmpG -> getWeight() )
+				if( _totGateList[i] -> getWeight() < tmpG -> getWeight() ) {
 					tmpG -> setWeight(_totGateList[i] -> getWeight());
+               tmpG -> setBestGateName(_totGateList[i] -> getName());
+            }
+            // record GateType and name for patch modification
+            tmpG -> pushBackTypeNamePair(_totGateList[i] -> getType(), _totGateList[i] -> getName());
 				// delete the name in nameHash
 				nameHash.erase(nameHash.find(_totGateList[i] -> getName()));
 			}
@@ -297,7 +301,14 @@ CirNet::removeInvBuf(std::vector<std::string>& nameList)
 		nameHash.clear();
 		nameList.swap(tmpList);
 		tmpList.clear();
+
+      // report the removed gate
+      for( unsigned i = 0; i < nameList.size(); ++i ) {
+         CirGate* g = getGateByName(nameList[i]);
+         std::cout << g -> getName() << "  " << g -> getRemovedGateSize() << std::endl;
+      }
 	}
+
 	std::cout << "# gates deleted: " << count << endl;
 }
 

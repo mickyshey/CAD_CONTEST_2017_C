@@ -144,8 +144,8 @@ CirMgr::test()
       getCutWithDecisionOrdered(true, bestCost);	// zeroFirst
 		std::cout << std::endl << "curr bestCost: " << bestCost << std::endl;
 		if( _allExplored ) break;
-      getCutWithDecisionOrdered(false, bestCost);	// oneFirst
-		std::cout << std::endl << "curr bestCost: " << bestCost << std::endl;
+      /* getCutWithDecisionOrdered(false, bestCost);	// oneFirst */
+		/* std::cout << std::endl << "curr bestCost: " << bestCost << std::endl; */
       ++loopCount;
    }
    std::cout << "bestCost: " << getCost(_bestCut) << std::endl;

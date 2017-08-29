@@ -44,15 +44,22 @@ cleanall: clean
 	@echo "Removing bin/*..."
 	@rm -f bin/*
 
+remove:
+	@echo "Removing $(EXEC)..."
+	@rm -f bin/$(EXEC)
+	@rm -f $(EXEC)
+	@echo 'Removing out.v patch.v'
+	@rm -f out.v patch.v
+
 ctags:	  
 	@rm -f src/tags
-	@for pkg in $(SRCPKGS) main; \
+	@for pkg in $(SRCPKGS); \
 	do \
 		echo "Tagging $$pkg..."; \
-		cd src; ctags -a $$pkg/*.cpp $$pkg/*.h; cd ..; \
+		cd src; ctags $$pkg/*.cpp $$pkg/*.h; cd ..; \
 	done
 	@echo "Tagging $(MAIN)..."
-	@cd src; ctags -a $(MAIN)/*.cpp $(MAIN)/*.h
+	@cd src; ctags $(MAIN)/*.cpp $(MAIN)/*.h
 
 32:
 	@for pkg in $(REFPKGS); \

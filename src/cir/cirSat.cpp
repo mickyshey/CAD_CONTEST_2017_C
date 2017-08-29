@@ -3,6 +3,7 @@
 #include <cassert>
 #include <queue>
 #include <set>
+#include <unordered_set>
 #include <iomanip>
 
 #include "cir/cirMgr.h"
@@ -295,7 +296,7 @@ CirMgr::buildItp(const string& fileName)
     CirGateV g2;
     int i, cid, tmp, idx, tmp_cid;
 	string wireName = "w";
-    set<CirGate*> commonGate;
+    unordered_set<CirGate*> commonGate;
 
 	ntk -> createConst(0);
 	ntk -> createConst(1);
@@ -527,21 +528,56 @@ CirMgr::buildItp(const string& fileName)
     //for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) {
     //    cerr << ntk -> getGate(i) -> getName() << endl;
     //}
-    for(std::set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
-        //CirGate* tmp = *it; cout << tmp -> getName() << "   ";
-        ntk -> pushBackPIList(*it);
-    }
+
+   for(std::unordered_set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
+      // modified by mlllk
+      // add external inv to fit the smallest weight during 'removeInvBuf()'
+      CirGate* g = *it;
+      if( g -> getBestGateName().size() ) {
+         std::string target = g -> getBestGateName();
+         std::cout << "target: " << g -> getBestGateName() << std::endl;
+         // count the inv number
+         unsigned invCount = 0;
+         for( unsigned i = 0; i < g -> getRemovedGateSize(); ++i ) {
+            std::pair<GateType, std::string> typeNamePair = g -> getTypeNamePair(i);
+            if( typeNamePair.first == Gate_Inv ) {
+               ++invCount;
+            }
+            if( typeNamePair.second == g -> getBestGateName() ) break;
+         }
+         std::cout << "invCount: " << invCount << std::endl;
+         if( invCount % 2 ) {
+            std::cout << "should insert inv..." << std::endl;
+            // insert inv for gate named 'wX'
+            for( unsigned i = 0; i < g -> getFanoutSize(); ++i ) {
+               CirGate* fanout = g -> getFanout(i);
+               if( fanout -> getName()[0] != 'w' ) continue;
+               std::cout << fanout -> getName() << std::endl;
+               unsigned idx = (fanout -> getFanin(0) == g ? 0 : 1);
+               assert(fanout -> getFanin(idx) == g);
+               // insert inv between fanout and g
+               CirGate* inv = ntk -> createGate(Gate_Inv, wireName + "_modifiedForPatch");
+               inv -> pushBackFanin(CirGateV(g, false));
+               inv -> pushBackFanout(CirGateV(fanout, false));
+               g -> setFanout(CirGateV(inv, false), i);
+               fanout -> setFanin(CirGateV(inv, false), idx);
+            }
+         }
+         ntk -> pushBackPIList(*it);
+      }
+      else ntk -> pushBackPIList(*it);
+         // end of modification
+   }
+
     //cout << endl;
     // FIXME: paste patch should be done outside this function
-    /*
-    CirGate* po = _F->getError(0);
-	//std::cout << "itp out: " << g -> getName() << std::endl;
-	unsigned gSize = g.getGate()->getFanoutSize();
-    g.getGate()->setFanoutSize(gSize + 1);
-	g.getGate()->setFanout(CirGateV(po), gSize);
-	po->setFaninSize(1);
-	po->setFanin(g, 0);
-    */
+    /* CirGate* po = _F->getError(0); */
+	/* //std::cout << "itp out: " << g -> getName() << std::endl; */
+	/* unsigned gSize = g.getGate()->getFanoutSize(); */
+    /* g.getGate()->setFanoutSize(gSize + 1); */
+	/* g.getGate()->setFanout(CirGateV(po), gSize); */
+	/* po->setFaninSize(1); */
+	/* po->setFanin(g, 0); */
     // below are some old code may be deleted 08/22
     /*
     CirGate* po = _F -> getError(0);
@@ -1016,39 +1052,41 @@ CirMgr::generatePatch(idxVec& cutIdx)
 	if( isSat ) return;
    std::cout << "generating patch ..." << std::endl;
 	_patch = getItp();
-	if( _debug ) {
-		std::cout << "report patch: " << std::endl;
-		_patch -> reportNetList();
-		std::cout << "after patching..." << std::endl;
-		std::cout << "_F: " << std::endl;
-		_F -> reportNetList();
-		std::cout << "_G: " << std::endl;
-		_G -> reportNetList();
-	}
+	/* if( _debug ) { */
+		/* std::cout << "report patch: " << std::endl; */
+		/* _patch -> reportNetList(); */
+      std::cout << "PI of patch: " << std::endl;
+      _patch -> reportPi();
+		/* std::cout << "after patching..." << std::endl; */
+		/* std::cout << "_F: " << std::endl; */
+		/* _F -> reportNetList(); */
+		/* std::cout << "_G: " << std::endl; */
+		/* _G -> reportNetList(); */
+	/* } */
 	std::cout << "time: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::endl;
 
 // verify patch validity
 
-	std::cerr << "checking patch validity ..." << std::endl;
-	_s->reset();
-	// IMPORTANT !! we first create var for candidates
-	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
-		Var v = _s -> newVar();
-		_sortedCandGate[i] -> setVar(v);
-	}
-	createVar(_F);
-	createVar(_G);
-	tiePi(_F, _G);
-    cout << "# cluases: " << _s -> getNumClauses() << endl; 
-	addToSolver(_F);
-	addToSolver(_G);
-    cout << "# cluases: " << _s -> getNumClauses() << endl; 
-	addXorConstraint(_F, _G);
-   //addConstConstraint(_F);
-   //addConstConstraint(_G);
-	_s -> simplify();
-	bool eqCheck = solve();
-	cout << (eqCheck ? "SAT" : "UNSAT") << endl;
+	/* std::cerr << "checking patch validity ..." << std::endl; */
+	/* _s->reset(); */
+	/* // IMPORTANT !! we first create var for candidates */
+	/* for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) { */
+	/* 	Var v = _s -> newVar(); */
+	/* 	_sortedCandGate[i] -> setVar(v); */
+	/* } */
+	/* createVar(_F); */
+	/* createVar(_G); */
+	/* tiePi(_F, _G); */
+    /* cout << "# cluases: " << _s -> getNumClauses() << endl; */ 
+	/* addToSolver(_F); */
+	/* addToSolver(_G); */
+    /* cout << "# cluases: " << _s -> getNumClauses() << endl; */ 
+	/* addXorConstraint(_F, _G); */
+   /* //addConstConstraint(_F); */
+   /* //addConstConstraint(_G); */
+	/* _s -> simplify(); */
+	/* bool eqCheck = solve(); */
+	/* cout << (eqCheck ? "SAT" : "UNSAT") << endl; */
 
 }
 
