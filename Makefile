@@ -48,8 +48,10 @@ remove:
 	@echo "Removing $(EXEC)..."
 	@rm -f bin/$(EXEC)
 	@rm -f $(EXEC)
-	@echo 'Removing out.v patch.v'
-	@rm -f out.v patch.v
+	@echo 'Removing out.v patch.v F_miter.v'
+	@rm -f out.v patch.v F_miter.v
+	@echo 'Removing test.out'
+	@rm -f test.out
 
 ctags:	  
 	@rm -f src/tags
