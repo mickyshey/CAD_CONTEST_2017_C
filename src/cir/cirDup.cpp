@@ -45,13 +45,15 @@ void
 CirMgr::miterNet(CirNet* src, CirNet* target)
 {
     GateList totalList = src -> totGateList();
+    CirGate* dupG;
     for( unsigned i = 2; i < totalList.size(); ++i ) {
         CirGate* g = totalList[i];
         if(g -> getType() == Gate_Pi) {
-            continue;
+            dupG = target -> getGateByName(g -> getName());
+        } else {
+            dupG = target -> createGate(g -> getType(), g -> getName(), g -> getId());
+            dupG -> reserveFaninSize(g -> getFaninSize());
         }
-        CirGate* dupG = target -> createGate(g -> getType(), g -> getName(), g -> getId());
-        dupG -> reserveFaninSize(g -> getFaninSize());
         for( unsigned j = 0; j < g -> getFaninSize(); ++j ) {
             CirGate* in = g -> getFanin(j);
             CirGate* dupIn = target -> getGateByName(in -> getName());
@@ -62,6 +64,7 @@ CirMgr::miterNet(CirNet* src, CirNet* target)
     }
     // itp do not create Gate_Po type
     for( unsigned i = 0; i < src -> getPoNum(); ++i ) {
+        cerr << src -> getPo(i) -> getName() << " po name\n";
         CirGate* g = src -> getPo(i);
         target -> pushBackPOList(g);
     }

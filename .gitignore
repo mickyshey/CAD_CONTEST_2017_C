@@ -16,5 +16,6 @@ bin/rpgen
 # ignore output files
 out.v
 patch.v
+F_miter.v
 # ignore tags
 src/tags
