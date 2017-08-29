@@ -85,10 +85,12 @@ public:
 
     // for patch modification
     std::string getBestGateName()               { return _bestGateName; }
+    std::vector<std::pair<GateType, std::string> >& getRemovedGate() { return _removedGate; }
     void setBestGateName(const std::string s)   { _bestGateName = s; }
     void pushBackTypeNamePair(const GateType& t, const string& s)  { _removedGate.push_back({t, s}); }
     const std::pair<GateType, std::string>& getTypeNamePair(unsigned idx)  { return _removedGate[idx]; }
     unsigned getRemovedGateSize() const         { return _removedGate.size(); }
+    void swapRemovedGateAndCloneBestGateName(CirGate* g)  { _removedGate.swap(g -> getRemovedGate()); _bestGateName = g -> getBestGateName();}
     // bool isConst0() { return (getType() == Gate_Const) && (!(CirGateV)*this.isInv()); }
     // bool isConst1() { return (getType() == Gate_Const) && ((CirGateV)*this.isInv()); }
 

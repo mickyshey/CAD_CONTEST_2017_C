@@ -216,14 +216,15 @@ CirNet::totGateList() const
 }
 
 void
-CirNet::swapPI(CirGate* g, CirGate* target)
+CirNet::deletePI(CirGate* g)
 {
    for( unsigned i = 0; i < _piList.size(); ++i ) {
-      if( _piList[i] == target ) {
-         _piList[i] = g;
+      if( _piList[i] == g ) {
+         _piList.erase(_piList.begin() + i);
          return;
       }
    }
+   assert(0);
 }
 
 void

@@ -389,6 +389,8 @@ CirMgr::buildItp(const string& fileName)
                    if( createdPi.find(piName) == createdPi.end() ) {
                       // the createdPi type is Gate_Buf, which can be changed afterwards
                       CirGate* patchPi = ntk -> createGate(Gate_Pi, piName);
+                      // clone the key info 
+                      patchPi -> swapRemovedGateAndCloneBestGateName(_var2Gate.find(idx >> 1) -> second);
                       createdPi.insert({piName, patchPi});
                       g = CirGateV(patchPi, false);
                    }
@@ -434,6 +436,7 @@ CirMgr::buildItp(const string& fileName)
                             if( createdPi.find(piName) == createdPi.end() ) {
                                // the createdPi type is Gate_Buf, which can be changed afterwards
                                CirGate* patchPi = ntk -> createGate(Gate_Pi, piName);
+                               patchPi -> swapRemovedGateAndCloneBestGateName(_var2Gate.find(idx >> 1) -> second);
                                createdPi.insert({piName, patchPi});
                                g2 = CirGateV(patchPi, false);
                             }
@@ -557,6 +560,9 @@ CirMgr::buildItp(const string& fileName)
     //    cerr << ntk -> getGate(i) -> getName() << endl;
     //}
 
+    std::cout << "before modification" << std::endl;
+    ntk -> reportPi();
+
    for(std::unordered_set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
       // modified by mlllk
       // add external inv to fit the smallest weight during 'removeInvBuf()'
@@ -564,6 +570,10 @@ CirMgr::buildItp(const string& fileName)
       if( g -> getBestGateName().size() ) {
          std::string target = g -> getBestGateName();
          std::cout << "target: " << g -> getBestGateName() << std::endl;
+         // delete g in _piList
+         ntk -> deletePI(g);
+         // create a dummy gate for this newly patch pi
+         CirGate* dummy = ntk -> createGate(Gate_Pi, target);
          // count the inv number
          unsigned invCount = 0;
          for( unsigned i = 0; i < g -> getRemovedGateSize(); ++i ) {
@@ -579,23 +589,34 @@ CirMgr::buildItp(const string& fileName)
             // insert inv for gate named 'wX'
             for( unsigned i = 0; i < g -> getFanoutSize(); ++i ) {
                CirGate* fanout = g -> getFanout(i);
-               if( fanout -> getName()[0] != 'w' ) continue;
-               std::cout << fanout -> getName() << std::endl;
+               /* if( fanout -> getName()[0] != 'w' ) continue; */
+               assert(fanout -> getName()[0] == 'w');
+               /* std::cout << fanout -> getName() << std::endl; */
                unsigned idx = (fanout -> getFanin(0) == g ? 0 : 1);
                assert(fanout -> getFanin(idx) == g);
                // insert inv between fanout and g
                CirGate* inv = ntk -> createGate(Gate_Inv, wireName + "_modifiedForPatch");
-               inv -> pushBackFanin(CirGateV(g, false));
                inv -> pushBackFanout(CirGateV(fanout, false));
-               g -> setFanout(CirGateV(inv, false), i);
                fanout -> setFanin(CirGateV(inv, false), idx);
+               /* inv -> pushBackFanin(CirGateV(g, false)); */
+               /* g -> setFanout(CirGateV(inv, false), i); */
+               // connect to dummy
+               inv -> pushBackFanin(CirGateV(dummy, false));
+               dummy -> pushBackFanout(CirGateV(inv, false));
             }
          }
-         // create a dummy gate for this newly patch pi
-         CirGate* dummy = ntk -> createGate(Gate_Pi, target);
-         // swap gate in _piList
-         ntk -> swapPI(dummy, g);
-         delete g;
+         else {
+            // modify the connection between g/fanout
+            for( unsigned i = 0; i < g -> getFanoutSize(); ++i ) {
+               CirGate* fanout = g -> getFanout(i);
+               assert(fanout -> getName()[0] == 'w');
+               unsigned idx = (fanout -> getFanin(0) == g ? 0 : 1);
+               assert(fanout -> getFanin(idx) == g);
+               // connect to dummy
+               fanout -> setFanin(CirGateV(dummy, false), idx);
+               dummy -> pushBackFanout(CirGateV(fanout, false));
+            }
+         }
       }
       /* else ntk -> pushBackPIList(*it); */
          // end of modification
