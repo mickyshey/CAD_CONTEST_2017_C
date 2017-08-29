@@ -180,6 +180,7 @@ private:
     // for restore
     std::vector<Var>					_varsDup;
     // for cofactor reduction
+    static unsigned                     _patchGateCount; // to create gate name in multiple errors
     std::vector< vector<bool> >         _rvset;
     std::vector<CirNet*>                _rcset;
     std::vector<Var>                    _rmOut;

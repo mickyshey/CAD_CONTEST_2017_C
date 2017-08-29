@@ -11,6 +11,8 @@
 
 using namespace std;
 
+unsigned CirMgr::_patchGateCount = 0;
+
 void
 CirMgr::createVarAll() const
 {
@@ -292,7 +294,7 @@ CirMgr::buildItp(const string& fileName)
     CirGateV g;
     CirGateV g1;
     CirGateV g2;
-    int i, cid, tmp, idx, tmp_cid, w;
+    int i, cid, tmp, idx, tmp_cid;
 	string wireName = "w";
     unordered_set<CirGate*> commonGate;
 
@@ -363,7 +365,6 @@ CirMgr::buildItp(const string& fileName)
     cerr << "*********** END DEBUGGING **************" << endl;
 	// END OF MY DEBUGGING
 */
-	w = 0;
     for(i = 0; i < (int)usedClause.size(); i++) {
         cid = usedClause[i];
         rdr.seek(clausePos[cid]);
@@ -387,8 +388,8 @@ CirMgr::buildItp(const string& fileName)
 
                         //std::cout << "need to flip inv: " << std::endl;
                         //std::cout << g.getGate() << "   " << g1.getGate() << std::endl;
-                        std::string name = wireName + myToString(w);
-                        w++;
+                        std::string name = wireName + myToString(_patchGateCount);
+                        _patchGateCount++;
                         g = CirGateV(ntk->createGate(Gate_Inv, name), false);
                         g.getGate()->pushBackFanin(g1);
                         //cout << g1.getGate() -> getFanoutSize() << endl;
@@ -416,8 +417,8 @@ CirMgr::buildItp(const string& fileName)
                             if((idx & 1) == 1) {
                                 
                                 //std::cout << "need to flip g2" << endl;
-                                std::string name = wireName + myToString(w);
-                                w++;
+                                std::string name = wireName + myToString(_patchGateCount);
+                                _patchGateCount++;
                                 CirGateV invG = CirGateV(ntk->createGate(Gate_Inv, name), false);
                                 invG.getGate()->pushBackFanin(g2);
                                 for(int j = 0; j < g2.getGate() -> getFanoutSize(); j++) {
@@ -433,8 +434,8 @@ CirMgr::buildItp(const string& fileName)
                             }
                             // or
                             //cerr << "created OR gate w(" << w << ")"  << endl; // for debug
-							std::string name = wireName + myToString(w);
-							w++;
+							std::string name = wireName + myToString(_patchGateCount);
+                            _patchGateCount++;
                             g = CirGateV(ntk->createGate(Gate_Or, name), false);
                             g.getGate()->pushBackFanin(g1);
                             g.getGate()->pushBackFanin(g2);
@@ -477,8 +478,8 @@ CirMgr::buildItp(const string& fileName)
                         } else {
                             // or
                             //cerr << "created OR gate w(" << w << ")"  << endl; // for debug
-							std::string name = wireName + myToString(w);
-							w++;
+							std::string name = wireName + myToString(_patchGateCount);
+							_patchGateCount++;
                             g = CirGateV(ntk->createGate(Gate_Or, name), false);
                             g.getGate()->pushBackFanin(g1);
                             g.getGate()->pushBackFanin(g2);
@@ -500,8 +501,8 @@ CirMgr::buildItp(const string& fileName)
                         } else {
                             // and
                             //cerr << "created AND gate w(" << w << ")"  << endl; // for debug
-							std::string name = wireName + myToString(w);
-							w++;
+							std::string name = wireName + myToString(_patchGateCount);
+							_patchGateCount++;
                             g = CirGateV(ntk->createGate(Gate_And, name), false);
                             g.getGate()->pushBackFanin(g1);
                             g.getGate()->pushBackFanin(g2);
