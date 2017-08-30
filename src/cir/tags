@@ -17,7 +17,7 @@ CirConstGate	cirGate.h	/^CirGateType(CirConstGate);$/;"	v
 CirErrorGate	cirGate.h	/^CirGateType(CirErrorGate);$/;"	v
 CirGate	cirGate.h	/^    CirGate(const string& name = "", unsigned id = 0): $/;"	f	class:CirGate
 CirGate	cirGate.h	/^class CirGate$/;"	c
-CirGateType	cirGate.h	155;"	d
+CirGateType	cirGate.h	168;"	d
 CirGateV	cirGate.h	/^    explicit CirGateV(CirGate* g = 0, bool inv = false): _gateV(reinterpret_cast<size_t>(g)) {$/;"	f	class:CirGateV
 CirGateV	cirGate.h	/^class CirGateV$/;"	c
 CirInvGate	cirGate.h	/^CirGateType(CirInvGate);$/;"	v
@@ -65,11 +65,14 @@ UNSATGeneralizationWithUNSATCore	cirSat.cpp	/^CirMgr::UNSATGeneralizationWithUNS
 VAR_GROUP	cirMgr.h	/^enum VAR_GROUP$/;"	g
 VarMap	cirMgr.h	/^typedef std::unordered_map<Var, CirGate*> VarMap;$/;"	t
 _F	cirMgr.h	/^	CirNet*								_F;$/;"	m	class:CirMgr
+_FF	cirMgr.h	/^   CirNet*                       _FF; \/\/ for checking patch validity$/;"	m	class:CirMgr
 _G	cirMgr.h	/^	CirNet*								_G;$/;"	m	class:CirMgr
 _READER_H_	reader.h	10;"	d
 _allExplored	cirMgr.h	/^    bool                                _allExplored;$/;"	m	class:CirMgr
 _bestCut	cirMgr.h	/^    idxVec                              _bestCut;$/;"	m	class:CirMgr
+_bestGateName	cirGate.h	/^    std::string            _bestGateName;$/;"	m	class:CirGate
 _blockingClauses	cirMgr.h	/^    std::vector<std::vector<bool> >		_blockingClauses;$/;"	m	class:CirMgr
+_candFF	cirMgr.h	/^   vector<string>                _candFF;$/;"	m	class:CirMgr
 _candNameList	cirMgr.h	/^	vector<string>						_candNameList;$/;"	m	class:CirMgr
 _candSolver	cirMgr.h	/^    SatSolverV*                         _candSolver;   \/\/ for gen valid cut$/;"	m	class:CirMgr
 _candVar	cirGate.h	/^    Var                     _candVar;$/;"	m	class:CirGate
@@ -100,10 +103,13 @@ _name2GateMap	cirNet.h	/^	name2GateMap					    _name2GateMap;	$/;"	m	class:CirNe
 _out	cirGate.h	/^    GateVList               _out;$/;"	m	class:CirGate
 _out	cirMgr.h	/^    CirNet*                             _out;$/;"	m	class:CirMgr
 _patch	cirMgr.h	/^	CirNet*								_patch;$/;"	m	class:CirMgr
+_patchGateCount	cirMgr.h	/^    static unsigned                     _patchGateCount; \/\/ to create gate name in multiple errors$/;"	m	class:CirMgr
+_patchGateCount	cirSat.cpp	/^unsigned CirMgr::_patchGateCount = 0;$/;"	m	class:CirMgr	file:
 _piList	cirNet.h	/^	GateList							_piList, _poList;$/;"	m	class:CirNet
 _poList	cirNet.h	/^	GateList							_piList, _poList;$/;"	m	class:CirNet
 _rcset	cirMgr.h	/^    std::vector<CirNet*>                _rcset;$/;"	m	class:CirMgr
 _ref	cirGate.h	/^    mutable unsigned        _ref;$/;"	m	class:CirGate
+_removedGate	cirGate.h	/^    std::vector<std::pair<GateType, std::string> >    _removedGate;$/;"	m	class:CirGate
 _rmOnset	cirMgr.h	/^    rmOnset                             _rmOnset;$/;"	m	class:CirMgr
 _rmOnsetDup	cirMgr.h	/^    rmOnset                             _rmOnsetDup;$/;"	m	class:CirMgr
 _rmOut	cirMgr.h	/^    std::vector<Var>                    _rmOut;$/;"	m	class:CirMgr
@@ -171,6 +177,7 @@ createVar	cirSat.cpp	/^CirNet::createVar(SatSolverV* s, int solver) const$/;"	f	
 createVar4CostSolver	cirCost.cpp	/^CirMgr::createVar4CostSolver()$/;"	f	class:CirMgr
 createVarAll	cirSat.cpp	/^CirMgr::createVarAll() const$/;"	f	class:CirMgr
 cutTest	cirCost.cpp	/^CirMgr::cutTest(idxVec& cutIdx)$/;"	f	class:CirMgr
+deletePI	cirNet.cpp	/^CirNet::deletePI(CirGate* g)$/;"	f	class:CirNet
 dfsFromGate	cirNet.cpp	/^CirNet::dfsFromGate(CirGate* g) const$/;"	f	class:CirNet
 dfsFromGateRec	cirNet.cpp	/^CirNet::dfsFromGateRec(CirGate* g, GateList& list, std::unordered_set<std::string>& nameHash) const$/;"	f	class:CirNet
 dupNet	cirDup.cpp	/^CirMgr::dupNet(CirNet* n) const$/;"	f	class:CirMgr
@@ -184,6 +191,7 @@ generalizeCut	cirSim.cpp	/^CirMgr::generalizeCut(assignmentVec& t_1, assignmentV
 generatePatch	cirSat.cpp	/^CirMgr::generatePatch()$/;"	f	class:CirMgr
 generatePatch	cirSat.cpp	/^CirMgr::generatePatch(idxVec& cutIdx)$/;"	f	class:CirMgr
 get64	reader.cpp	/^unsigned long long Reader::get64(){$/;"	f	class:Reader
+getBestGateName	cirGate.h	/^    std::string getBestGateName()               { return _bestGateName; }$/;"	f	class:CirGate
 getCandVar	cirGate.h	/^    Var  getCandVar()                               { return _candVar; }$/;"	f	class:CirGate
 getChar	reader.cpp	/^unsigned int Reader::getChar(){$/;"	f	class:Reader
 getConst	cirNet.h	/^    CirGate* getConst(bool val) 					{ if(val) return _const1; else return _const0; }$/;"	f	class:CirNet
@@ -192,6 +200,7 @@ getCostVar	cirGate.h	/^    Var  getCostVar()                               { ret
 getCut	cirCost.cpp	/^CirMgr::getCut(idxVec& cutIdx, bool zeroFirst)$/;"	f	class:CirMgr
 getCutWithDecisionOrdered	cirSat.cpp	/^CirMgr::getCutWithDecisionOrdered(bool zeroFirst, unsigned& bestCost)$/;"	f	class:CirMgr
 getError	cirNet.h	/^	CirGate* getError(unsigned idx)					{ return _errorList[idx]; }$/;"	f	class:CirNet
+getErrorNum	cirMgr.h	/^    unsigned getErrorNum() const    { return _F -> getErrorNum(); }$/;"	f	class:CirMgr
 getErrorNum	cirNet.h	/^	unsigned getErrorNum() const					{ return _errorList.size(); }$/;"	f	class:CirNet
 getF	cirMgr.h	/^    CirNet* getF() 						{ return _F; }$/;"	f	class:CirMgr
 getFanin	cirGate.h	/^    CirGate* getFanin(unsigned idx) const           { assert(idx < _in.size()); return _in[idx].getGate(); }$/;"	f	class:CirGate
@@ -210,20 +219,22 @@ getGate	cirGate.h	/^    CirGate* getGate() const    { return (CirGate*)(_gateV &
 getGate	cirNet.h	/^    CirGate* getGate(unsigned id) 					{ return _gateList[id]; }$/;"	f	class:CirNet
 getGateByName	cirNet.h	/^	CirGate* getGateByName(const string& n) 		{ return _name2GateMap[n]; }$/;"	f	class:CirNet
 getGateNum	cirNet.h	/^    unsigned getGateNum() const						{ return _gateList.size(); }$/;"	f	class:CirNet
-getId	cirGate.h	/^    unsigned getId()                    { return _id; }$/;"	f	class:CirGate
+getId	cirGate.h	/^    unsigned getId()                            { return _id; }$/;"	f	class:CirGate
 getImpVar	cirGate.h	/^    Var  getImpVar()                                { return _impVar; }$/;"	f	class:CirGate
 getItp	cirSat.cpp	/^CirMgr::getItp()$/;"	f	class:CirMgr
 getItp	cirSat.cpp	/^CirMgr::getItp(const string& name)$/;"	f	class:CirMgr
-getName	cirGate.h	/^    const string& getName()         { return _name; }$/;"	f	class:CirGate
+getName	cirGate.h	/^    const string& getName()                     { return _name; }$/;"	f	class:CirGate
 getName	cirNet.h	/^	const string& getName() const					{ return _name; }$/;"	f	class:CirNet
 getNumClauses	cirMgr.h	/^    unsigned getNumClauses() const 	{ return _s -> getNumClauses(); }$/;"	f	class:CirMgr
 getNumVars	cirMgr.h	/^    unsigned getNumVars() const		{ return _s -> nVars(); }$/;"	f	class:CirMgr
 getPath	cirMgr.h	/^    CirNet* getPath() 					{ return _patch; }$/;"	f	class:CirMgr
-getPi	cirNet.h	/^	CirGate* getPi(unsigned idx) 					{ return _piList[idx]; }$/;"	f	class:CirNet
+getPi	cirNet.h	/^	CirGate* getPi(unsigned idx) const			{ return _piList[idx]; }$/;"	f	class:CirNet
 getPiNum	cirNet.h	/^    unsigned getPiNum() const						{ return _piList.size(); }$/;"	f	class:CirNet
-getPo	cirNet.h	/^	CirGate* getPo(unsigned idx) 					{ return _poList[idx]; }$/;"	f	class:CirNet
+getPo	cirNet.h	/^	CirGate* getPo(unsigned idx) const			{ return _poList[idx]; }$/;"	f	class:CirNet
 getPoNum	cirNet.h	/^    unsigned getPoNum() const						{ return _poList.size(); }$/;"	f	class:CirNet
 getRMVar	cirGate.h	/^    Var  getRMVar()                                 { return _rmVar; }$/;"	f	class:CirGate
+getRemovedGate	cirGate.h	/^    std::vector<std::pair<GateType, std::string> >& getRemovedGate() { return _removedGate; }$/;"	f	class:CirGate
+getRemovedGateSize	cirGate.h	/^    unsigned getRemovedGateSize() const         { return _removedGate.size(); }$/;"	f	class:CirGate
 getSimV	cirGate.h	/^    size_t getSimV() { return _simV; }$/;"	f	class:CirGate
 getTotalCost	cirCost.cpp	/^CirMgr::getTotalCost()$/;"	f	class:CirMgr
 getType	cirGate.cpp	/^CirAndGate::getType() const$/;"	f	class:CirAndGate
@@ -239,8 +250,9 @@ getType	cirGate.cpp	/^CirPiGate::getType() const$/;"	f	class:CirPiGate
 getType	cirGate.cpp	/^CirPoGate::getType() const$/;"	f	class:CirPoGate
 getType	cirGate.cpp	/^CirXnorGate::getType() const$/;"	f	class:CirXnorGate
 getType	cirGate.cpp	/^CirXorGate::getType() const$/;"	f	class:CirXorGate
+getTypeNamePair	cirGate.h	/^    const std::pair<GateType, std::string>& getTypeNamePair(unsigned idx)  { return _removedGate[idx]; }$/;"	f	class:CirGate
 getVar	cirGate.h	/^    Var  getVar()                                   { return _var; }$/;"	f	class:CirGate
-getWeight	cirGate.h	/^    unsigned getWeight()                { return _weight; }$/;"	f	class:CirGate
+getWeight	cirGate.h	/^    unsigned getWeight()                        { return _weight; }$/;"	f	class:CirGate
 idxVec	cirMgr.h	/^typedef std::vector<unsigned> idxVec;$/;"	t
 incRef	cirGate.h	/^    static void incRef()            { ++_globalRef; }$/;"	f	class:CirGate
 init	cirNet.cpp	/^CirNet::init()$/;"	f	class:CirNet
@@ -269,6 +281,7 @@ pushBackFanin	cirGate.h	/^    void pushBackFanin(CirGateV gateV)              { 
 pushBackFanout	cirGate.h	/^    void pushBackFanout(CirGateV gateV)             { _out.push_back(gateV); }$/;"	f	class:CirGate
 pushBackPIList	cirNet.h	/^    void pushBackPIList(CirGate* g)                 { _piList.push_back(g); }$/;"	f	class:CirNet
 pushBackPOList	cirNet.h	/^    void pushBackPOList(CirGate* g)                 { _poList.push_back(g); }$/;"	f	class:CirNet
+pushBackTypeNamePair	cirGate.h	/^    void pushBackTypeNamePair(const GateType& t, const string& s)  { _removedGate.push_back({t, s}); }$/;"	f	class:CirGate
 randSim	cirMgr.h	/^    void randSim(CirNet* n) const { n -> randSim(); }$/;"	f	class:CirMgr
 randSim	cirNet.cpp	/^CirNet::randSim()$/;"	f	class:CirNet
 readVerilog	cirParse.cpp	/^CirMgr::readVerilog(const string& filename, bool isF)$/;"	f	class:CirMgr
@@ -297,6 +310,7 @@ reportGateAll	cirReport.cpp	/^CirNet::reportGateAll() const$/;"	f	class:CirNet
 reportMuxAssignment	cirReport.cpp	/^CirMgr::reportMuxAssignment() const$/;"	f	class:CirMgr
 reportNetList	cirReport.cpp	/^CirNet::reportNetList() const$/;"	f	class:CirNet
 reportNetListRec	cirReport.cpp	/^CirNet::reportNetListRec(CirGate* g, unsigned level) const$/;"	f	class:CirNet
+reportPi	cirReport.cpp	/^CirNet::reportPi() const$/;"	f	class:CirNet
 reportSimV	cirReport.cpp	/^CirNet::reportSimV() const$/;"	f	class:CirNet
 reportSortedCand	cirReport.cpp	/^CirMgr::reportSortedCand() const$/;"	f	class:CirMgr
 reportTopoList	cirReport.cpp	/^CirNet::reportTopoList() const$/;"	f	class:CirNet
@@ -305,14 +319,17 @@ reserveFanoutSize	cirGate.h	/^    void reserveFanoutSize(unsigned s)            
 restoreTiedGates	cirCost.cpp	/^CirMgr::restoreTiedGates()$/;"	f	class:CirMgr
 retrieveProof	cirSat.cpp	/^CirMgr::retrieveProof( Reader& rdr, vector<unsigned>& clausePos, vector<ClauseId>& usedClause )$/;"	f	class:CirMgr
 rmOnset	cirMgr.h	/^typedef std::unordered_map<string, vector<bool> > rmOnset;$/;"	t
+searchInvCount	cirSat.cpp	/^CirMgr::searchInvCount(const std::string& bestName, const std::string& gateName)$/;"	f	class:CirMgr
+searchInvCountRec	cirSat.cpp	/^CirMgr::searchInvCountRec(CirGate* g, CirGate* target, unsigned& invCount)$/;"	f	class:CirMgr
 seek	reader.cpp	/^void Reader::seek( const unsigned int to ){$/;"	f	class:Reader
+setBestGateName	cirGate.h	/^    void setBestGateName(const std::string s)   { _bestGateName = s; }$/;"	f	class:CirGate
 setCandVar	cirGate.h	/^    void setCandVar(Var v)                          { _candVar = v; }$/;"	f	class:CirGate
 setCostVar	cirGate.h	/^    void setCostVar(Var v)                          { _costVar = v; }$/;"	f	class:CirGate
 setFanin	cirGate.h	/^    void setFanin(CirGateV gateV, unsigned idx)     { assert(idx < _in.size()); _in[idx] = gateV; }$/;"	f	class:CirGate
 setFaninSize	cirGate.h	/^    void setFaninSize(unsigned s)                   { _in.resize(s); }$/;"	f	class:CirGate
 setFanout	cirGate.h	/^    void setFanout(CirGateV gateV, unsigned idx)    { assert(idx < _out.size()); _out[idx] = gateV; }$/;"	f	class:CirGate
 setFanoutSize	cirGate.h	/^    void setFanoutSize(unsigned s)                  { _out.resize(s); }$/;"	f	class:CirGate
-setId	cirGate.h	/^    void setId(unsigned i)          { _id = i; }$/;"	f	class:CirGate
+setId	cirGate.h	/^    void setId(unsigned i)                      { _id = i; }$/;"	f	class:CirGate
 setImpVar	cirGate.h	/^    void setImpVar(Var v)                           { _impVar = v; }$/;"	f	class:CirGate
 setInv	cirGate.h	/^    void setInv()               { _gateV |= (size_t)INV_MASK; }$/;"	f	class:CirGateV
 setName	cirMgr.h	/^    void setName(const string& n ) 	{ _name = n; }$/;"	f	class:CirMgr
@@ -323,7 +340,7 @@ setToRef	cirGate.h	/^    void setToRef()                 { _ref = _globalRef; }$
 setUpCandSolver	cirSat.cpp	/^CirMgr::setUpCandSolver()$/;"	f	class:CirMgr
 setUpImpVar	cirSat.cpp	/^CirMgr::setUpImpVar()$/;"	f	class:CirMgr
 setVar	cirGate.h	/^    void setVar(Var v)                              { _var = v; }$/;"	f	class:CirGate
-setWeight	cirGate.h	/^    void setWeight(unsigned w)  { _weight = w; }$/;"	f	class:CirGate
+setWeight	cirGate.h	/^    void setWeight(unsigned w)                  { _weight = w; }$/;"	f	class:CirGate
 simulate	cirGate.cpp	/^CirAndGate::simulate() {$/;"	f	class:CirAndGate
 simulate	cirGate.cpp	/^CirBufGate::simulate() {$/;"	f	class:CirBufGate
 simulate	cirGate.cpp	/^CirConstGate::simulate() {$/;"	f	class:CirConstGate
@@ -341,6 +358,7 @@ size	reader.h	/^	unsigned int 	size;$/;"	m	class:Reader
 solve	cirMgr.h	/^    bool solve() { return _s -> solve(); }$/;"	f	class:CirMgr
 sortCandidate	cirCost.cpp	/^CirMgr::sortCandidate()$/;"	f	class:CirMgr
 sortGateByWeight	cirCost.cpp	/^bool sortGateByWeight(CirGate* a, CirGate* b)$/;"	f
+swapRemovedGateAndCloneBestGateName	cirGate.h	/^    void swapRemovedGateAndCloneBestGateName(CirGate* g)  { _removedGate.swap(g -> getRemovedGate()); _bestGateName = g -> getBestGateName();}$/;"	f	class:CirGate
 sweep	cirNet.cpp	/^CirNet::sweep()$/;"	f	class:CirNet
 test	cirMgr.cpp	/^CirMgr::test()$/;"	f	class:CirMgr
 testRM	cirMgr.cpp	/^CirMgr::testRM()$/;"	f	class:CirMgr

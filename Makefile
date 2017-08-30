@@ -58,10 +58,10 @@ ctags:
 	@for pkg in $(SRCPKGS); \
 	do \
 		echo "Tagging $$pkg..."; \
-		cd src; ctags $$pkg/*.cpp $$pkg/*.h; cd ..; \
+		cd src/$$pkg; ctags *.cpp *.h; cd ../..; \
 	done
 	@echo "Tagging $(MAIN)..."
-	@cd src; ctags $(MAIN)/*.cpp $(MAIN)/*.h
+	@cd src/$(MAIN); ctags *.cpp *.h; cd ../..;
 
 32:
 	@for pkg in $(REFPKGS); \

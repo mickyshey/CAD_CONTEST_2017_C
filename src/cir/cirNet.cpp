@@ -315,10 +315,10 @@ CirNet::removeInvBuf(std::vector<std::string>& nameList)
 		tmpList.clear();
 
       // report the removed gate
-      for( unsigned i = 0; i < nameList.size(); ++i ) {
-         CirGate* g = getGateByName(nameList[i]);
-         std::cout << g -> getName() << "  " << g -> getRemovedGateSize() << std::endl;
-      }
+      /* for( unsigned i = 0; i < nameList.size(); ++i ) { */
+      /*    CirGate* g = getGateByName(nameList[i]); */
+      /*    std::cout << g -> getName() << "  " << g -> getRemovedGateSize() << std::endl; */
+      /* } */
 	}
 
 	std::cout << "# gates deleted: " << count << endl;

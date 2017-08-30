@@ -158,6 +158,7 @@ CirMgr::test()
    }
    std::cout << "bestCost: " << getCost(_bestCut) << std::endl;
    generatePatch(_bestCut);
+   checkValidPatch();
    return;
 
 /*************************************/
