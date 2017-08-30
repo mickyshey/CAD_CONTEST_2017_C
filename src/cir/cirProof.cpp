@@ -34,17 +34,17 @@ CirMgr::genProofModel(SatSolverV& solver)
 void
 CirMgr::checkValidPatch()
 {
-   // connect patch back to _F
+   // connect patch back to _FF
    // connect patch_po to error, assuming single error
    CirGate* patchPo = _patch -> getPo(0);
    assert(patchPo -> getFanoutSize() == 0);
-   assert(_F -> getError(0) -> getFaninSize() == 0);
-   patchPo -> pushBackFanout(CirGateV(_F -> getError(0), false));
-   _F -> getError(0) -> pushBackFanin(CirGateV(patchPo, false));
+   assert(_FF -> getError(0) -> getFaninSize() == 0);
+   patchPo -> pushBackFanout(CirGateV(_FF -> getError(0), false));
+   _FF -> getError(0) -> pushBackFanin(CirGateV(patchPo, false));
    // connect patch_pi to corresponding candidates
    for( unsigned i = 0; i < _patch -> getPiNum(); ++i ) {
       CirGate* patchPi = _patch -> getPi(i);
-      CirGate* target = _F -> getGateByName(patchPi -> getName());
+      CirGate* target = _FF -> getGateByName(patchPi -> getName());
       assert(target);
       assert(patchPi -> getFaninSize() == 0);
       patchPi -> pushBackFanin(CirGateV(target,false));
@@ -52,16 +52,21 @@ CirMgr::checkValidPatch()
    }
 
 	_s -> reset();
-	for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) {
+	/* for( unsigned i = 0; i < _sortedCandGate.size(); ++i ) { */
+	/* 	Var v = _s -> newVar(); */
+	/* 	_sortedCandGate[i] -> setVar(v); */
+	/* } */
+	for( unsigned i = 0; i < _candFF.size(); ++i ) {
 		Var v = _s -> newVar();
-		_sortedCandGate[i] -> setVar(v);
+      _FF -> getGateByName(_candFF[i]) -> setVar(v);
+		//_sortedCandGate[i] -> setVar(v);
 	}
-	createVar(_F);
+	createVar(_FF);
 	createVar(_G);
-	tiePi(_F, _G);
-	addToSolver(_F);
+	tiePi(_FF, _G);
+	addToSolver(_FF);
 	addToSolver(_G);
-	addXorConstraint(_F, _G);
+	addXorConstraint(_FF, _G);
 	_s -> simplify();
 	bool eqCheck = solve();
 	cout << (eqCheck ? "SAT" : "UNSAT") << endl;

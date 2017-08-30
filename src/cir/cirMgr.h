@@ -127,7 +127,8 @@ public:
     void UNSATGeneralizationWithUNSATCore(idxVec& cutIdx, std::vector<Lit>& Lit_vec_origin, idxVec& generalizedCut);
     void SATGeneralization(idxVec& cutIdx);
     void getCutWithDecisionOrdered(bool zeroFirst, unsigned& bestCost);
-    unsigned searchInvCount(std::string bestName, std::string gateName);
+    unsigned searchInvCount(const std::string& bestName, const std::string& gateName);
+    void searchInvCountRec(CirGate* g, CirGate* best, unsigned& invCount);
 
     // in cirMulti.cpp
     void formulaRM(CirNet* f, CirNet* g, int solver); // _s = 0; _rmSolver = 1;
