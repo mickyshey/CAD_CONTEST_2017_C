@@ -632,6 +632,7 @@ CirMgr::buildItp(const string& fileName)
                dummy -> pushBackFanout(CirGateV(fanout, false));
             }
          }
+      delete g;
       }
       /* else ntk -> pushBackPIList(*it); */
          // end of modification

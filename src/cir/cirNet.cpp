@@ -218,6 +218,8 @@ CirNet::totGateList() const
 void
 CirNet::deletePI(CirGate* g)
 {
+   assert(_name2GateMap.find(g -> getName()) != _name2GateMap.end());
+   _name2GateMap.erase(_name2GateMap.find(g -> getName()));
    for( unsigned i = 0; i < _piList.size(); ++i ) {
       if( _piList[i] == g ) {
          _piList.erase(_piList.begin() + i);
