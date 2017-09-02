@@ -408,7 +408,7 @@ CirMgr::buildItp(const string& fileName)
                         std::string name = wireName + myToString(_patchGateCount);
                         _patchGateCount++;
                         g = CirGateV(ntk->createGate(Gate_Inv, name), false);
-                        std::cout << "creating inv: " << g.getGate() -> getName() << std::endl;
+                        /* std::cout << "creating inv: " << g.getGate() -> getName() << std::endl; */
 
                         // modified by mlllk
                         g.getGate()->pushBackFanin(g1);
@@ -632,6 +632,7 @@ CirMgr::buildItp(const string& fileName)
                dummy -> pushBackFanout(CirGateV(fanout, false));
             }
          }
+      delete g;
       }
       /* else ntk -> pushBackPIList(*it); */
          // end of modification
@@ -1134,8 +1135,6 @@ CirMgr::generatePatch(idxVec& cutIdx)
 	std::cout << "time: " << (double)(clock() - start) / CLOCKS_PER_SEC << std::endl;
 
 // verify patch validity
-   checkValidPatch();
-
 	/* std::cerr << "checking patch validity ..." << std::endl; */
 	/* _s->reset(); */
 	/* // IMPORTANT !! we first create var for candidates */

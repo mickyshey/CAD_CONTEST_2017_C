@@ -19,3 +19,7 @@ patch.v
 F_miter.v
 # ignore tags
 src/tags
+src/cir/tags
+src/sat/tags
+src/util/tags
+src/main/tags
