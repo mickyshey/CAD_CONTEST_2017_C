@@ -223,7 +223,6 @@ CirNet::deletePI(CirGate* g)
    for( unsigned i = 0; i < _piList.size(); ++i ) {
       if( _piList[i] == g ) {
          _piList.erase(_piList.begin() + i);
-         _name2GateMap.erase(g -> getName());
          return;
       }
    }
