@@ -566,12 +566,12 @@ CirMgr::buildItp(const string& fileName)
     //for( unsigned i = 0; i < ntk -> getGateNum(); ++i ) {
     //    cerr << ntk -> getGate(i) -> getName() << endl;
     //}
-
+/*
     std::cout << "before modification" << std::endl;
     ntk -> reportPi();
     std::cout << "patch before modification" << std::endl;
     ntk -> reportNetList();
-
+*/
    for(std::unordered_set<CirGate*>::iterator it = commonGate.begin(); it != commonGate.end(); ++it) {
       // modified by mlllk
       // add external inv to fit the smallest weight during 'removeInvBuf()'
@@ -596,7 +596,7 @@ CirMgr::buildItp(const string& fileName)
          /*    } */
          /*    if( typeNamePair.second == g -> getBestGateName() ) break; */
          /* } */
-         std::cout << "invCount: " << invCount << std::endl;
+         std::cerr << "invCount: " << invCount << std::endl;
          if( invCount % 2 ) {
             std::cout << "should insert inv..." << std::endl;
             // insert inv for gate named 'wX'
@@ -608,8 +608,8 @@ CirMgr::buildItp(const string& fileName)
                unsigned idx = (fanout -> getFanin(0) == g ? 0 : 1);
                assert(fanout -> getFanin(idx) == g);
                // insert inv between fanout and g
-							std::string name = wireName + myToString(_patchGateCount);
-							_patchGateCount++;
+               std::string name = wireName + myToString(_patchGateCount);
+               _patchGateCount++;
                CirGate* inv = ntk -> createGate(Gate_Inv, name + "_modified");
                inv -> pushBackFanout(CirGateV(fanout, false));
                fanout -> setFanin(CirGateV(inv, false), idx);
@@ -1434,7 +1434,7 @@ CirMgr::searchInvCount(const std::string& bestName, const std::string& gateName)
 void
 CirMgr::searchInvCountRec(CirGate* g, CirGate* target, unsigned& invCount)
 {
-   /* std::cout << "g name: " << g -> getName() << std::endl; */
+   std::cerr << "g name: " << g -> getName() << std::endl; 
    if( g == target ) return;
    assert(g -> getType() == Gate_Inv || g -> getType() == Gate_Buf);
    if( g -> getType() == Gate_Inv ) ++invCount;

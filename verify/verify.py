@@ -131,11 +131,16 @@ def miter_f(patchFile, outFile):
   g = open(outFile, "r")
   for line in g:
     if line[0:8] == "wire t_0":
-        line = line[:8] + " , "
+        #line = line[:8] + " , "
+        line += "wire "
         line += " , ".join(wires)
         line += ";\n"
     if line[0:5] == "patch":
-      f.write("buf ( t_0, " + output_pin[0] + " );\n") # FIXME: for multiple errors
+      i = 0;
+      for x in output_pin:
+        f.write("buf ( t_" + str(i) + ", " + x + " );\n")
+        i += 1
+      #f.write("buf ( t_0, " + output_pin[0] + " );\n") # FIXME: for multiple errors
       g.close()
       break
     f.write(line)

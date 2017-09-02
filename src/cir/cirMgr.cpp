@@ -166,10 +166,17 @@ CirMgr::test()
 void
 CirMgr::testRM()
 {
+    // modified by mlllk
+    // for checking patch validity
+    _FF = dupNet(_F);
+    for( unsigned i = 0; i < _candNameList.size(); ++i ) {
+        _candFF.push_back(_candNameList[i]);
+    }
+    // end of modification
     removeInvBuf();
     removeCandFromFanoutCone();
 
-	sortCandidate();	// sort by increasing weight
+    sortCandidate();	// sort by increasing weight
 
 	if( _debug ) {
 		std::cout << "report sortedCand: " << std::endl;
@@ -261,14 +268,17 @@ CirMgr::testRM()
             */
             _patch = new CirNet;
             _patch -> setName("patch");
-            // insert base nodes of _patch PI, which is all PIs now
-            for( unsigned i = 0; i < _F -> getPiNum(); ++i ) {
-                CirGate* g = _F -> getPi(i);
-                CirGate* dupG = _patch -> createGate(g -> getType(), g -> getName(), g -> getId());
-            }
             for( unsigned i = 0; i < _F -> getErrorNum(); ++i ) {
                 CirNet* tmpPatch = new CirNet;
                 tmpPatch = getItp(_F -> getError(i) -> getName());
+                tmpPatch -> reportPi();
+                if( _patch -> getPiNum() == 0 ) {
+                    for( unsigned j = 0; j < tmpPatch -> getPiNum(); ++j ) {
+                        CirGate* g = tmpPatch -> getPi(j);
+                        CirGate* dupG = _patch -> createGate(g -> getType(), g -> getName(), g -> getId());
+                    }
+                }
+                _patch -> reportPi();
                 //tmpPatch -> reportNetList();
                 miterNet(tmpPatch, _patch);
             }

@@ -49,7 +49,9 @@ CirMgr::miterNet(CirNet* src, CirNet* target)
     for( unsigned i = 2; i < totalList.size(); ++i ) {
         CirGate* g = totalList[i];
         if(g -> getType() == Gate_Pi) {
+            //cerr << g -> getType() << "  " << g -> getName() << endl;
             dupG = target -> getGateByName(g -> getName());
+            //cerr << dupG -> getType() << "  " << dupG -> getName() << endl;
         } else {
             dupG = target -> createGate(g -> getType(), g -> getName(), g -> getId());
             dupG -> reserveFaninSize(g -> getFaninSize());
@@ -58,15 +60,16 @@ CirMgr::miterNet(CirNet* src, CirNet* target)
             CirGate* in = g -> getFanin(j);
             CirGate* dupIn = target -> getGateByName(in -> getName());
             dupG -> pushBackFanin(CirGateV(dupIn, g -> isFaninInv(j)));
-				// we do not maintain the bubble of fanout, still ok so far ...
+			// we do not maintain the bubble of fanout, still ok so far ...
             dupIn -> pushBackFanout(CirGateV(dupG, false));
         }
     }
     // itp do not create Gate_Po type
     for( unsigned i = 0; i < src -> getPoNum(); ++i ) {
-        cerr << src -> getPo(i) -> getName() << " po name\n";
+        // cerr << src -> getPo(i) -> getName() << " po name\n";
         CirGate* g = src -> getPo(i);
-        target -> pushBackPOList(g);
+        CirGate* dupG = target -> getGateByName(g -> getName());
+        target -> pushBackPOList(dupG);
     }
     
     /*
