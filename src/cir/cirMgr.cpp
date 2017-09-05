@@ -51,7 +51,6 @@ CirMgr::test()
 		reportSortedCand();
 	}
 
-	createVar4CostSolver();
 
 
 /*************************************/
@@ -60,6 +59,10 @@ CirMgr::test()
 
 	initCandSolver();
 	setUpCandSolver();
+   reduceCandidates();
+   std::cout << "biggest weight in cand: " << _sortedCandGate.back() -> getWeight() << std::endl;
+	createVar4CostSolver();
+
 	assignmentVec t_1, t_0;
 	idxVec candIdx;
 	idxVec cutIdx;
@@ -106,7 +109,8 @@ CirMgr::test()
 /*************************************/
 // cutSolver cut generalization
 /*************************************/
-	unsigned bestCost = 1e10;	
+	unsigned bestCost = (_bestCut.size() ? getCost(_bestCut) : 1e10);	
+   std::cout << "initialized cost: " << bestCost << std::endl;
 
 	// tiePI
 /*
@@ -147,18 +151,18 @@ CirMgr::test()
 	std::cout << "size of cand: " << _sortedCandGate.size() << std::endl;
    unsigned loopCount = 0;
    while( 1 ) {
-      if( loopCount >= 1 ) break;
+      if( loopCount >= 2 ) break;
       if( _allExplored ) break;
       getCutWithDecisionOrdered(true, bestCost);	// zeroFirst
 		std::cout << std::endl << "curr bestCost: " << bestCost << std::endl;
 		if( _allExplored ) break;
-      /* getCutWithDecisionOrdered(false, bestCost);	// oneFirst */
-		/* std::cout << std::endl << "curr bestCost: " << bestCost << std::endl; */
+      getCutWithDecisionOrdered(false, bestCost);	// oneFirst
+		std::cout << std::endl << "curr bestCost: " << bestCost << std::endl;
       ++loopCount;
    }
    std::cout << "bestCost: " << getCost(_bestCut) << std::endl;
    generatePatch(_bestCut);
-   //checkValidPatch();
+   checkValidPatch();
    return;
 
 /*************************************/
@@ -478,6 +482,59 @@ CirMgr::removeCandFromFanoutConeRec(CirGate* g, std::unordered_set<std::string>&
 
 	for( unsigned i = 0; i < g -> getFanoutSize(); ++i )
 		removeCandFromFanoutConeRec(g -> getFanout(i), nameHash, tmpPoList);
+}
+
+void
+CirMgr::reduceCandidates()
+{
+   unsigned size = _sortedCandGate.size();
+   if( size < 100 ) return;
+	vector<Lit> Lit_vec_origin;
+	idxVec tmpCut, generalizedCut;
+   unsigned cutSizePerRound = _sortedCandGate.size() / 20;
+   std::cout << "size of cand: " << size << std::endl;
+   std::cout << "size per round: " << cutSizePerRound << std::endl;
+	unsigned cutCount = 0;
+	while( 1 ) {
+		for( unsigned i = cutCount * cutSizePerRound; i < (cutCount + 1) * cutSizePerRound; ++i ) {
+			tmpCut.push_back(i);
+		}
+		std::cout << "tmp size: " << tmpCut.size() << std::endl;
+		assert(tmpCut.size() == (cutCount + 1) * cutSizePerRound);
+		assumeCut(tmpCut, Lit_vec_origin);
+		_candSolver -> simplify();
+		bool candSAT = _candSolver -> assump_solve();
+		if( candSAT ) {
+			/* SATGeneralization(generalizedCut); */			
+			/* addBlockingCut(generalizedCut, true); */
+			++cutCount;
+		}
+		else {
+	      UNSATGeneralizationWithUNSATCore(tmpCut, Lit_vec_origin, generalizedCut);
+			/* addBlockingCut(generalizedCut, false); */
+			_bestCut.swap(generalizedCut);
+
+         std::cout << "before optional addition: " << tmpCut.size() << std::endl;
+         // push the same weighted gate into _sortedCandGate (optional)
+         unsigned weight = _sortedCandGate[tmpCut.back()] -> getWeight();
+         unsigned idx = (cutCount + 1) * cutSizePerRound;
+         while( 1 ) {
+            if( _sortedCandGate[idx] -> getWeight() != weight ) break;
+            tmpCut.push_back(idx);
+            ++idx;
+         }
+         std::cout << "after optional addition: " << tmpCut.size() << std::endl;
+
+         // swap the tmpCut with _sortedCandGate
+         GateList tmpList;
+         for( unsigned i = 0; i < tmpCut.size(); ++i ) {
+            tmpList.push_back(_sortedCandGate[tmpCut[i]]);   
+         }
+         _sortedCandGate.swap(tmpList);
+         tmpList.clear();
+			break;
+		}
+	}
 }
 
 void

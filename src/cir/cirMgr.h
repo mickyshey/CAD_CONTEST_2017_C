@@ -78,6 +78,7 @@ public:
     void removeInvBuf();
     void removeCandFromFanoutCone();
     void removeCandFromFanoutConeRec(CirGate* g, std::unordered_set<std::string>& nameHash, GateList& tmpPoList);
+    void reduceCandidates();
     void writeToPatch(const string& fileName);
     void writeToOut(const string& fileName, const string& inputFile);
 
