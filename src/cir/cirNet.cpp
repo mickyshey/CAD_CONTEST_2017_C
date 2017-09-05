@@ -410,3 +410,17 @@ CirNet::knownSim()
       _topoList[i] -> simulate();
    }
 }
+
+void
+CirNet::maintainPoList(GateList& tmpPoList)
+{
+   GateList tmpList;
+   for( unsigned i = 0; i < tmpPoList.size(); ++i ) {
+      assert( _name2GateMap.find(tmpPoList[i] -> getName()) != _name2GateMap.end() );
+      CirGate* g = _name2GateMap.at(tmpPoList[i] -> getName());
+      tmpList.push_back(g);
+   }
+   assert(tmpPoList.size() == tmpList.size());
+   _poList.swap(tmpList);
+   tmpList.clear();
+}

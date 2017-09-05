@@ -173,3 +173,12 @@ CirNet::reportPi() const
    }
    std::cout << std::endl;
 }
+
+void
+CirNet::reportPo() const
+{
+   for( unsigned i = 0; i < getPoNum(); ++i ) {
+      std::cout << getPo(i) -> getName() << "  ";
+   }
+   std::cout << std::endl;
+}

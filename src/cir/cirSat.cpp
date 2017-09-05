@@ -137,7 +137,7 @@ void
 CirMgr::addXorConstraint(CirNet* f, CirNet* g, int solver)
 {
 	assert(solver <= 2);
-	assert(f -> getPoNum() == g -> getPoNum());
+	//assert(f -> getPoNum() == g -> getPoNum());
 // test
 	if( f -> getPoNum() == 1 ) {
 		CirGate* fPo = f -> getPo(0);
@@ -454,7 +454,7 @@ CirMgr::buildItp(const string& fileName)
                                 std::string name = wireName + myToString(_patchGateCount);
                                 _patchGateCount++;
                                 CirGateV invG = CirGateV(ntk->createGate(Gate_Inv, name), false);
-                                std::cout << "creating inv: " << invG.getGate() -> getName() << std::endl; 
+                                /* std::cout << "creating inv: " << invG.getGate() -> getName() << std::endl; */ 
 
                         // modified by mlllk
                                 invG.getGate()->pushBackFanin(g2);
@@ -579,8 +579,6 @@ CirMgr::buildItp(const string& fileName)
 
       if( g -> getBestGateName().size() ) {
          std::string target = g -> getBestGateName();
-         std::cout << "gate: " << g -> getName() << std::endl;
-         std::cout << "target: " << g -> getBestGateName() << std::endl;
          // delete g in _piList
          ntk -> deletePI(g);
          // create a dummy gate for this newly patch pi
@@ -596,9 +594,7 @@ CirMgr::buildItp(const string& fileName)
          /*    } */
          /*    if( typeNamePair.second == g -> getBestGateName() ) break; */
          /* } */
-         std::cerr << "invCount: " << invCount << std::endl;
          if( invCount % 2 ) {
-            std::cout << "should insert inv..." << std::endl;
             // insert inv for gate named 'wX'
             for( unsigned i = 0; i < g -> getFanoutSize(); ++i ) {
                CirGate* fanout = g -> getFanout(i);
@@ -1124,8 +1120,8 @@ CirMgr::generatePatch(idxVec& cutIdx)
 	/* if( _debug ) { */
 		/* std::cout << "report patch: " << std::endl; */
 		/* _patch -> reportNetList(); */
-      std::cout << "PI of patch: " << std::endl;
-      _patch -> reportPi();
+      /* std::cout << "PI of patch: " << std::endl; */
+      /* _patch -> reportPi(); */
 		/* std::cout << "after patching..." << std::endl; */
 		/* std::cout << "_F: " << std::endl; */
 		/* _F -> reportNetList(); */
@@ -1300,7 +1296,7 @@ CirMgr::getCutWithDecisionOrdered(bool zeroFirst, unsigned& bestCost)
 			break;
 		}
 		if( !getCut(cutIdx, zeroFirst) ) {
-			std::cout << "all solution space explored ..." << std::endl;
+			std::cout << "\nall solution space explored ..." << std::endl;
 			_allExplored = true;
 			break;
 		}
@@ -1433,7 +1429,6 @@ CirMgr::searchInvCount(const std::string& bestName, const std::string& gateName)
 void
 CirMgr::searchInvCountRec(CirGate* g, CirGate* target, unsigned& invCount)
 {
-   std::cerr << "g name: " << g -> getName() << std::endl; 
    if( g == target ) return;
    assert(g -> getType() == Gate_Inv || g -> getType() == Gate_Buf);
    if( g -> getType() == Gate_Inv ) ++invCount;

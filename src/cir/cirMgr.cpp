@@ -158,7 +158,7 @@ CirMgr::test()
    }
    std::cout << "bestCost: " << getCost(_bestCut) << std::endl;
    generatePatch(_bestCut);
-   checkValidPatch();
+   //checkValidPatch();
    return;
 
 /*************************************/
@@ -433,6 +433,7 @@ void
 CirMgr::removeCandFromFanoutCone()
 {
 	std::unordered_set<std::string> nameHash;
+   GateList tmpPoList;
 	for( unsigned i = 0; i < _candNameList.size(); ++i ) {
 		nameHash.insert(_candNameList[i]);
 	}
@@ -441,8 +442,14 @@ CirMgr::removeCandFromFanoutCone()
 	//std::cout << "report fanout cone of error: " << std::endl;
 	//reportFanoutCone(_F -> getError(0));
 
+   /* std::cout << "before:" << std::endl; */
+   /* _F -> reportPo(); */
 	CirGate::incRef();
-	removeCandFromFanoutConeRec(_F -> getError(0), nameHash);
+	removeCandFromFanoutConeRec(_F -> getError(0), nameHash, tmpPoList);
+   _G -> maintainPoList(tmpPoList);
+   _F -> swapPoList(tmpPoList);
+   /* std::cout << "after:" << std::endl; */
+   /* _F -> reportPo(); */
 	
 	std::vector<std::string> tmpList;
 	tmpList.reserve(nameHash.size());
@@ -454,7 +461,7 @@ CirMgr::removeCandFromFanoutCone()
 }
 
 void
-CirMgr::removeCandFromFanoutConeRec(CirGate* g, std::unordered_set<std::string>& nameHash)
+CirMgr::removeCandFromFanoutConeRec(CirGate* g, std::unordered_set<std::string>& nameHash, GateList& tmpPoList)
 {
 	if( g -> isRef() ) return;
 	g -> setToRef();
@@ -463,8 +470,14 @@ CirMgr::removeCandFromFanoutConeRec(CirGate* g, std::unordered_set<std::string>&
 		g -> setWeight(0);
 		nameHash.erase(nameHash.find(g -> getName()));
 	}
+
+   // detect PO
+   if( g -> getType() == Gate_Po ) {
+      tmpPoList.push_back(g);
+   }
+
 	for( unsigned i = 0; i < g -> getFanoutSize(); ++i )
-		removeCandFromFanoutConeRec(g -> getFanout(i), nameHash);
+		removeCandFromFanoutConeRec(g -> getFanout(i), nameHash, tmpPoList);
 }
 
 void

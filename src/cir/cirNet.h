@@ -57,6 +57,8 @@ public:
 	CirGate* createMux(CirGate* g_F, CirGate* g_dupF);
     void randSim();
 	void knownSim();
+   void maintainPoList(GateList& tmpPoList);
+   void swapPoList(GateList& tmpPoList) { _poList.swap(tmpPoList); tmpPoList.clear(); }
 
 //	in cirParse.cpp
 	bool parse(const string& filename);
@@ -70,6 +72,7 @@ public:
 	void reportTopoList() const;
    void reportSimV() const;
    void reportPi() const;
+   void reportPo() const;
 
 //	in cirSat.cpp
 	//void reassignId() const;
