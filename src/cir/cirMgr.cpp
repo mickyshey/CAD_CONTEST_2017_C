@@ -450,8 +450,8 @@ CirMgr::removeCandFromFanoutCone()
    /* _F -> reportPo(); */
 	CirGate::incRef();
 	removeCandFromFanoutConeRec(_F -> getError(0), nameHash, tmpPoList);
-   _G -> maintainPoList(tmpPoList);
-   _F -> swapPoList(tmpPoList);
+   /* _G -> maintainPoList(tmpPoList); */
+   /* _F -> swapPoList(tmpPoList); */
    /* std::cout << "after:" << std::endl; */
    /* _F -> reportPo(); */
 	
@@ -475,10 +475,10 @@ CirMgr::removeCandFromFanoutConeRec(CirGate* g, std::unordered_set<std::string>&
 		nameHash.erase(nameHash.find(g -> getName()));
 	}
 
-   // detect PO
-   if( g -> getType() == Gate_Po ) {
-      tmpPoList.push_back(g);
-   }
+   /* // detect PO */
+   /* if( g -> getType() == Gate_Po ) { */
+   /*    tmpPoList.push_back(g); */
+   /* } */
 
 	for( unsigned i = 0; i < g -> getFanoutSize(); ++i )
 		removeCandFromFanoutConeRec(g -> getFanout(i), nameHash, tmpPoList);
