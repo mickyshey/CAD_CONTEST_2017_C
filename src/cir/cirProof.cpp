@@ -34,6 +34,7 @@ CirMgr::genProofModel(SatSolverV& solver)
 void
 CirMgr::checkValidPatch()
 {
+   std::cout << "checking patch validity ..." << std::endl;
    // connect patch back to _FF
    // connect patch_po to error, assuming single error
    CirGate* patchPo = _patch -> getPo(0);
