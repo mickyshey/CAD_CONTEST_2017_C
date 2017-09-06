@@ -27,7 +27,7 @@ CirMgr::test()
    // end of modification
 
 	removeInvBuf();
-	removeCandFromFanoutCone();
+	removeCandFromFanoutCone(true); // removePo = true
 
     _dupF = dupNet(_F);
     _dupG = dupNet(_G);
@@ -434,7 +434,7 @@ CirMgr::removeInvBuf()
 }
 
 void
-CirMgr::removeCandFromFanoutCone()
+CirMgr::removeCandFromFanoutCone(bool removePo)
 {
 	std::unordered_set<std::string> nameHash;
    GateList tmpPoList;
@@ -450,8 +450,10 @@ CirMgr::removeCandFromFanoutCone()
    /* _F -> reportPo(); */
 	CirGate::incRef();
 	removeCandFromFanoutConeRec(_F -> getError(0), nameHash, tmpPoList);
-   /* _G -> maintainPoList(tmpPoList); */
-   /* _F -> swapPoList(tmpPoList); */
+   if( removePo ) {
+      _G -> maintainPoList(tmpPoList);
+      _F -> swapPoList(tmpPoList);
+   }
    /* std::cout << "after:" << std::endl; */
    /* _F -> reportPo(); */
 	
@@ -475,10 +477,10 @@ CirMgr::removeCandFromFanoutConeRec(CirGate* g, std::unordered_set<std::string>&
 		nameHash.erase(nameHash.find(g -> getName()));
 	}
 
-   /* // detect PO */
-   /* if( g -> getType() == Gate_Po ) { */
-   /*    tmpPoList.push_back(g); */
-   /* } */
+   // detect PO
+   if( g -> getType() == Gate_Po ) {
+      tmpPoList.push_back(g);
+   }
 
 	for( unsigned i = 0; i < g -> getFanoutSize(); ++i )
 		removeCandFromFanoutConeRec(g -> getFanout(i), nameHash, tmpPoList);
@@ -499,7 +501,7 @@ CirMgr::reduceCandidates()
 		for( unsigned i = cutCount * cutSizePerRound; i < (cutCount + 1) * cutSizePerRound; ++i ) {
 			tmpCut.push_back(i);
 		}
-		std::cout << "tmp size: " << tmpCut.size() << std::endl;
+		/* std::cout << "tmp size: " << tmpCut.size() << std::endl; */
 		assert(tmpCut.size() == (cutCount + 1) * cutSizePerRound);
 		assumeCut(tmpCut, Lit_vec_origin);
 		_candSolver -> simplify();

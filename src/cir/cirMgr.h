@@ -76,7 +76,7 @@ public:
     void testRM();
     void createMux4Candidates();
     void removeInvBuf();
-    void removeCandFromFanoutCone();
+    void removeCandFromFanoutCone(bool removePo = false);
     void removeCandFromFanoutConeRec(CirGate* g, std::unordered_set<std::string>& nameHash, GateList& tmpPoList);
     void reduceCandidates();
     void writeToPatch(const string& fileName);
