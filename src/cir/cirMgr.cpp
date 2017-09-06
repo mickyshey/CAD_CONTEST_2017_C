@@ -525,10 +525,16 @@ CirMgr::reduceCandidates()
          }
          std::cout << "after optional addition: " << tmpCut.size() << std::endl;
 
+         // clear all other weights
+         for( unsigned i = idx; i < _sortedCandGate.size(); ++i ) {
+            _sortedCandGate[i] -> setWeight(0);
+         }
+
          // swap the tmpCut with _sortedCandGate
          GateList tmpList;
          for( unsigned i = 0; i < tmpCut.size(); ++i ) {
-            tmpList.push_back(_sortedCandGate[tmpCut[i]]);   
+            tmpList.push_back(_sortedCandGate[i]);   
+            //tmpList.push_back(_sortedCandGate[tmpCut[i]]);   
          }
          _sortedCandGate.swap(tmpList);
          tmpList.clear();

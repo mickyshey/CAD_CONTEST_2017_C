@@ -36,8 +36,8 @@ CirNet::createVar(SatSolverV* s, int solver) const
 	totGateList();
 	for( unsigned i = 0; i < _totGateList.size(); ++i ) {
 		// IMPORTANT !! we first create var for candidates
-		if( _totGateList[i] -> getVar() ) continue;
-		//if( _totGateList[i] -> getWeight() ) continue;
+		/* if( _totGateList[i] -> getVar() ) continue; */
+		if( _totGateList[i] -> getWeight() ) continue;
 		Var v = s -> newVar();
 		if( solver == 0 ) _totGateList[i] -> setVar(v);
 		else if( solver == 1 ) _totGateList[i] -> setCandVar(v);
