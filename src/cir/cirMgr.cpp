@@ -236,14 +236,16 @@ CirMgr::testRM()
     }
     numClauses = _s -> getNumClauses(); // update numClauses
     _rvset.push_back(rv);
-
-    // print rv0
-    for( unsigned i = 0; i < _rvset.size(); ++i ) {
-        vector<bool> tmp = _rvset[i];
-        for( unsigned j = 0; j < tmp.size(); ++j ) {
-            cout << tmp[j] << " ";
+    
+    if(_debug) {
+        // print rv0
+        for( unsigned i = 0; i < _rvset.size(); ++i ) {
+            vector<bool> tmp = _rvset[i];
+            for( unsigned j = 0; j < tmp.size(); ++j ) {
+                cout << tmp[j] << " ";
+            }
+            cout << endl;
         }
-        cout << endl;
     }
 
     // set up RM solver
@@ -276,14 +278,14 @@ CirMgr::testRM()
             for( unsigned i = 0; i < _F -> getErrorNum(); ++i ) {
                 CirNet* tmpPatch = new CirNet;
                 tmpPatch = getItp(_F -> getError(i) -> getName());
-                tmpPatch -> reportPi();
+                //tmpPatch -> reportPi();
                 if( _patch -> getPiNum() == 0 ) {
                     for( unsigned j = 0; j < tmpPatch -> getPiNum(); ++j ) {
                         CirGate* g = tmpPatch -> getPi(j);
                         CirGate* dupG = _patch -> createGate(g -> getType(), g -> getName(), g -> getId());
                     }
                 }
-                _patch -> reportPi();
+                //_patch -> reportPi();
                 //tmpPatch -> reportNetList();
                 miterNet(tmpPatch, _patch);
             }
